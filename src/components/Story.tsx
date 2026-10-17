@@ -70,6 +70,7 @@ export default function Story() {
   const el = useRef<Record<string, HTMLElement | null>>({})
   const reg = (k: string) => (n: HTMLElement | null) => { el.current[k] = n }
   const [idx, setIdx] = useState(0)
+  const [over, setOver] = useState(false)
   const [gl, setGl] = useState(false)
   const idxRef = useRef(0)
 
@@ -80,6 +81,21 @@ export default function Story() {
     const go = () => setGl(true)
     const t = 'requestIdleCallback' in window ? (window as any).requestIdleCallback(go, { timeout: 1800 }) : setTimeout(go, 900)
     return () => { 'cancelIdleCallback' in window ? (window as any).cancelIdleCallback(t) : clearTimeout(t) }
+  }, [])
+
+  // hide the step counter + dots once the sequence has scrolled away (so they never sit over the nav on later sections)
+  useEffect(() => {
+    let raf = 0
+    const check = () => {
+      raf = 0
+      const r = root.current?.getBoundingClientRect()
+      if (r) setOver(r.bottom < innerHeight - 24)
+    }
+    const on = () => { if (!raf) raf = requestAnimationFrame(check) }
+    check()
+    addEventListener('scroll', on, { passive: true })
+    addEventListener('resize', on)
+    return () => { removeEventListener('scroll', on); removeEventListener('resize', on); if (raf) cancelAnimationFrame(raf) }
   }, [])
 
   useEffect(() => {
@@ -269,7 +285,7 @@ export default function Story() {
             </div>
           </div>
 
-          <div className="dots" role="group" aria-label="Story steps">
+          <div className={'dots' + (over ? ' off' : '')} role="group" aria-label="Story steps" aria-hidden={over || undefined}>
             <b aria-live="polite">{String(idx + 1).padStart(2, '0')} / 07</b>
             {STEPS.map((st, i) => (
               <button key={st.n} type="button" className={i === idx ? 'on' : ''} aria-label={`Step ${st.n}: ${st.label}`} aria-current={i === idx ? 'step' : undefined} onClick={() => goStep(i)}>

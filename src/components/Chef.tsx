@@ -26,9 +26,9 @@ const pad = (n: number) => String(n).padStart(2, '0')
  * Interaction: three notched tickets hang from a rail. Desktop: all three visible, they slide down 24px and fade in
  * (500ms, staggered 0/120/240ms, once, transform + opacity only) when the rail is 35% in view.
  * Mobile: the strip is a swipeable scroll-snap carousel (prev/next buttons, keyboard arrows on the focusable track,
- * counter follows the scroll); each ticket animates in on its own at 30% visible.
+ * counter follows the scroll); each ticket animates in on its own as soon as it peeks in.
  * Reduced motion: final state at once, no animation. Without JS tickets are simply visible.
- * PREVIEW ONLY: dashed "Confirm OK to publish" and NEED tags stay until Marsaun answers. Never invent facts here.
+ * Background publishing approved by Marsaun. Years cooking and signature dish stay NEED tags. Never invent facts here.
  */
 export default function Chef() {
   const sec = useRef<HTMLElement>(null)
@@ -54,7 +54,7 @@ export default function Chef() {
         else (e.target as HTMLElement).classList.add('in')
         io.unobserve(e.target)
       }),
-      { threshold: mq.matches ? 0.3 : 0.35 },
+      { threshold: mq.matches ? 0.04 : 0.35 },
     )
     // desktop: the whole strip triggers once; mobile: each ticket triggers by itself
     if (mq.matches) cards.forEach((c) => io.observe(c))
@@ -100,16 +100,9 @@ export default function Chef() {
             <h2 id="chef-t" className="disp">Meet<br /><em>Marsaun Cook.</em></h2>
             <p className="chef-sub">The cook behind every tray.</p>
             <div className="chef-story">
-              <h3>Marsaun’s story, in his words:</h3>
-              {/* PREVIEW ONLY: the confirm tags stay until Marsaun OKs publishing his background. Story text is verbatim. */}
-              <p>
-                {CHEF_STORY.map((s, k) => (
-                  <span key={k}>
-                    {s.text}{' '}
-                    {s.confirm && <><Need title="CONFIRM WITH MARSAUN: OK to publish background">Confirm OK to publish</Need>{' '}</>}
-                  </span>
-                ))}
-              </p>
+              <h3>Marsaun’s story</h3>
+              {/* Background and wording approved by Marsaun/Andrew: no confirm tags. */}
+              <p>{CHEF_STORY}</p>
             </div>
             <dl className="chef-strip">
               <div><dt>Years cooking</dt><dd><Need /></dd></div>

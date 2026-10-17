@@ -14,12 +14,14 @@ export default function Header() {
   const ref = useRef<HTMLElement>(null)
   const [open, setOpen] = useState(false)
 
-  // theme follows whatever section sits under the header: story (transparent), dark, or light
+  // One rule: the header takes the tone of the section directly beneath its bottom edge (charcoal over dark sections,
+  // bone over light ones, transparent over the story). Sampling the bottom edge means anchor jumps (scroll-margin = header
+  // height) land with the header already matching the section you arrive at.
   useEffect(() => {
     let raf = 0
     const tick = () => {
       raf = 0
-      const y = 46
+      const y = (ref.current?.offsetHeight ?? 64) + 1
       let theme = 'story'
       document.querySelectorAll<HTMLElement>('[data-theme]').forEach((el) => {
         const r = el.getBoundingClientRect()

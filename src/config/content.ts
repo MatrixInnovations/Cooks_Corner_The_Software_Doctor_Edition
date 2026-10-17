@@ -59,15 +59,12 @@ export const JINGLE = {
 }
 
 /**
- * "Meet the chef" (The Chef's Pass). Story is verbatim from Andrew (apostrophes typeset as \u2019); do not paraphrase.
- * PREVIEW ONLY: the "Confirm OK to publish" tags after the education and law-enforcement sentences stay until Marsaun OKs it.
+ * "Meet the chef" (The Chef's Pass). Story is the approved text from Andrew (apostrophes typeset as \u2019); do not paraphrase.
+ * Marsaun approved publishing his background and this exact wording (Andrew: "move forward with it"). No confirm tags.
  * Years cooking, signature dish and why he started cooking are NEED FROM MARSAUN: never invent them.
  */
-export const CHEF_STORY = [
-  { text: 'I\u2019m Marsaun Cook, founder of Cook\u2019s Corner LLC. My path to meal prep grew from my love of food and the culinary foundation I built at Johnson & Wales University, where I earned degrees in Culinary Arts and Food Service Management.', confirm: true },
-  { text: 'After years of serving my community in law enforcement, I brought that same commitment and work ethic into the kitchen, creating flavorful, thoughtfully prepared meals that make the week easier for busy people.', confirm: true },
-  { text: 'What began with my passion for cooking has grown into a Charlotte meal-prep business built on care, consistency, and good food.', confirm: false },
-] as const
+export const CHEF_STORY =
+  'Marsaun built Cook\u2019s Corner on three things: care, consistency and good food. His path to meal prep grew from his love of food and the culinary foundation he built at Johnson & Wales University, where he earned degrees in Culinary Arts and Food Service Management. After years serving his community in law enforcement, he brought that same commitment and work ethic into the kitchen. Today he makes flavorful, thoughtfully prepared meals that make the week easier for busy people.'
 
 /** Ticket copy (approved by Andrew). Ticket 02 items come only from the known client menu. */
 export const CHEF_TICKET_01 = { name: 'Marsaun Cook', role: 'Founder, Cook\u2019s Corner LLC', line: 'A Charlotte meal-prep business built on his passion for cooking.' }
