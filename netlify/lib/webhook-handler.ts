@@ -1,6 +1,7 @@
 import { sendOrderConfirmation } from './email'
+import { sendKitchenTicket, type KitchenResult } from './kitchen-ticket'
 import { fail, json, readBody } from './http'
-import { orderFromSession, type OrderStore } from './orders'
+import { orderFromSession, type OrderRecord, type OrderStore } from './orders'
 import type { Env, Stripe, StripeClient } from './types'
 
 export type WebhookDeps = {
@@ -43,6 +44,13 @@ export async function handleStripeWebhook(req: Request, deps: WebhookDeps): Prom
     if (!existing) {
       const order = orderFromSession(session, deps.now?.())
       await store.putOrder(order)
+      // Kitchen ticket: first time this order is recorded only (duplicates/retries skip this block). Never fails the webhook.
+      const ticket = await notifyKitchen(order, deps)
+      if (ticket.reason !== 'disabled') {
+        try { await store.putOrder({ ...order, kitchenTicket: { sent: ticket.sent, ...(ticket.reason ? { reason: ticket.reason } : {}), at: (deps.now?.() ?? new Date()).toISOString() } }) }
+        catch (e) { console.error('stripe-webhook: could not record kitchen ticket status', (e as Error).name) }
+      }
+      console.log('stripe-webhook: kitchen ticket:', ticket.sent ? 'sent' : ticket.reason)
       const mail = await sendOrderConfirmation(order, deps.env, deps.fetch)
       console.log('stripe-webhook: order stored', session.id.slice(-8), 'email:', mail.sent ? 'sent' : mail.reason)
     }
@@ -52,4 +60,9 @@ export async function handleStripeWebhook(req: Request, deps: WebhookDeps): Prom
     console.error('stripe-webhook: storage error', (e as Error).name)
     return fail(500, 'storage_error', 'Could not store the order. Stripe will retry.')
   }
+}
+
+async function notifyKitchen(order: OrderRecord, deps: WebhookDeps): Promise<KitchenResult> {
+  try { return await sendKitchenTicket(order, deps.env, deps.fetch) }
+  catch (e) { console.error('stripe-webhook: kitchen ticket error', (e as Error).name); return { sent: false, reason: 'error' } }
 }

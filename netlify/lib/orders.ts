@@ -16,6 +16,8 @@ export type OrderRecord = {
   allergyNote: string
   policiesAcceptedAt: string | null
   stripe: { paymentIntent: string | null; subscription: string | null; customer: string | null }
+  /** Kitchen-ticket email outcome (set by the webhook after the order is stored; absent on older orders). */
+  kitchenTicket?: { sent: boolean; reason?: string; at: string }
 }
 
 export interface OrderStore {
