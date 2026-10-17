@@ -15,7 +15,7 @@ export function Packages() {
   return (
     <section id="packages" className="sec bone" data-theme="light" aria-labelledby="pk-t">
       <div className="wrap">
-        <Head eyebrow="05 · Meal packages" title={<span id="pk-t">Pick how many meals<br />your week needs.</span>} sub="Each package is built from the menu below." />
+        <Head eyebrow="05 · Meal packages" title={<span id="pk-t">Pick how many meals<br className="m" /> your week needs.</span>} sub="Each package is built from the menu below." />
         <div className="stack-banner">
           <Photo file={p.file} alt={p.alt} />
         </div>

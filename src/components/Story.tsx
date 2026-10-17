@@ -170,7 +170,7 @@ export default function Story() {
     const p = PHOTOS[k] as { file: string; alt: string; fit?: { x?: number; y?: number; scale?: number } }
     const f = p.fit
     return (
-      <div className="layer" ref={reg(key)} key={key}>
+      <div className={`layer l-${key}`} ref={reg(key)} key={key}>
         <div className="fit" style={f ? { transform: `translate(${f.x ?? 0}%, ${f.y ?? 0}%) scale(${f.scale ?? 1})` } : undefined}>
           <Photo file={p.file} alt={p.alt} priority={priority} />
         </div>

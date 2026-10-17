@@ -10,7 +10,7 @@ const run = async (name, vp, qs, extra = async () => {}, opts = {}) => {
   await p.evaluate(() => document.fonts.ready)
   await p.waitForTimeout(opts.wait ?? 1200)
   await extra(p)
-  await p.screenshot({ path: `shots/${name}.png`, fullPage: !!opts.full })
+  await p.screenshot({ path: `${process.env.SHOTS_DIR || 'shots'}/${name}.png`, fullPage: !!opts.full })
   await ctx.close()
 }
 const D = { width: 1440, height: 900 }, M = { width: 390, height: 844 }

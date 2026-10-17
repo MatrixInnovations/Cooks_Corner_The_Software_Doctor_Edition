@@ -39,6 +39,7 @@ export const PHOTOS = {
   sealed: {
     file: 'stack-sealed',
     alt: 'Six sealed meal-prep containers stacked, lids closed, ready to go.',
+    fit: { x: 0, y: 6, scale: 1.0 },
   },
 } satisfies Record<string, PhotoSlot>
 
