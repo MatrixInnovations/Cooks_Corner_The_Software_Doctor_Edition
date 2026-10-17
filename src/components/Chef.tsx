@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { BIZ, CHEF_MENU_ITEMS, CHEF_STORY, CHEF_TICKET_01, CHEF_TICKET_03 } from '../config/content'
+import { BIZ, CHEF_FACTS, CHEF_MENU_ITEMS, CHEF_STORY, CHEF_TICKET_01, CHEF_TICKET_03 } from '../config/content'
 import { PORTRAIT } from '../config/photos'
-import { Need, OrderButton } from './ui'
+import { OrderButton } from './ui'
 
 /** Round "CC / Charlotte" stamp (SVG, saffron on charcoal). */
 function Seal() {
@@ -28,7 +28,7 @@ const pad = (n: number) => String(n).padStart(2, '0')
  * Mobile: the strip is a swipeable scroll-snap carousel (prev/next buttons, keyboard arrows on the focusable track,
  * counter follows the scroll); each ticket animates in on its own as soon as it peeks in.
  * Reduced motion: final state at once, no animation. Without JS tickets are simply visible.
- * Background publishing approved by Marsaun. Years cooking and signature dish stay NEED tags. Never invent facts here.
+ * Background publishing approved by Marsaun. Years cooking and signature dish come from CHEF_FACTS (Andrew). Never invent facts here.
  */
 export default function Chef() {
   const sec = useRef<HTMLElement>(null)
@@ -105,9 +105,9 @@ export default function Chef() {
               <p>{CHEF_STORY}</p>
             </div>
             <dl className="chef-strip">
-              <div><dt>Years cooking</dt><dd><Need /></dd></div>
+              <div><dt>Years cooking</dt><dd className="v">{CHEF_FACTS.years}</dd></div>
               <div><dt>Pickup</dt><dd className="v">Cooked fresh for pickup on Old Statesville Rd.</dd></div>
-              <div><dt>Signature dish</dt><dd><Need /></dd></div>
+              <div><dt>Signature dish</dt><dd className="v">{CHEF_FACTS.signature}</dd></div>
             </dl>
             <div className="chef-btns">
               <OrderButton className="btn p">Order now</OrderButton>

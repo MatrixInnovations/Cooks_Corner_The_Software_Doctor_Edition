@@ -61,7 +61,7 @@ export const JINGLE = {
 /**
  * "Meet the chef" (The Chef's Pass). Story is the approved text from Andrew (apostrophes typeset as \u2019); do not paraphrase.
  * Marsaun approved publishing his background and this exact wording (Andrew: "move forward with it"). No confirm tags.
- * Years cooking, signature dish and why he started cooking are NEED FROM MARSAUN: never invent them.
+ * Years cooking and signature dish are answered in CHEF_FACTS; never invent other facts.
  */
 export const CHEF_STORY =
   'Marsaun built Cook\u2019s Corner on three things: care, consistency and good food. His path to meal prep grew from his love of food and the culinary foundation he built at Johnson & Wales University, where he earned degrees in Culinary Arts and Food Service Management. After years serving his community in law enforcement, he brought that same commitment and work ethic into the kitchen. Today he makes flavorful, thoughtfully prepared meals that make the week easier for busy people.'
@@ -69,6 +69,8 @@ export const CHEF_STORY =
 /** Ticket copy (approved by Andrew). Ticket 02 items come only from the known client menu. */
 export const CHEF_TICKET_01 = { name: 'Marsaun Cook', role: 'Founder, Cook\u2019s Corner LLC', line: 'A Charlotte meal-prep business built on his passion for cooking.' }
 export const CHEF_TICKET_03 = { head: ['Care.', 'Consistency.', 'Good food.'], why: 'It started with a love of food, and a goal to make the week easier for busy people.' }
+/** Fact strip answers from Andrew (he said "going on 20 years"; shown as "Almost 20 years"). */
+export const CHEF_FACTS = { years: 'Almost 20 years', signature: 'Honey Nut Salmon' }
 export const CHEF_MENU_ITEMS = ['Ribeye', 'Chicken', 'Turkey', 'Shrimp', 'Salmon', 'Scallops', 'Grilled asparagus', 'Sweet potato'] as const
 
 export const MENU = {

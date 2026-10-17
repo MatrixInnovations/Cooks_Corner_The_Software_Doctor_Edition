@@ -32,7 +32,7 @@ Each slot is a 16:9 image with the dish on the right and space on the left for t
 One 100vh of scroll per step, seven steps plus a short hold. Values are smoothed with a critically damped lerp (0.08), no bounce, transform and opacity only. `prefers-reduced-motion` shows each step's final state with a 200 ms opacity fade and skips three.js. The ticket prints in six stepped increments. Test hooks: `?s=2.5` pins the story position, `?nosteam` skips three.js.
 
 ## Still open (kept visible on the page as "Need from Marsaun" tags)
-$575 / 12-meal subscription period (shows a "Confirm monthly" tag), subscription menu contents and billing/pause/cancel, delivery address method, catering group sizes/example menus/travel distance, photos, years cooking, signature dish.
+$575 / 12-meal subscription period (shows a "Confirm monthly" tag), subscription menu contents and billing/pause/cancel, delivery address method, catering group sizes/example menus/travel distance, photos.
 
 ## Confirmed by Andrew (now on the page)
 Business name Cook's Corner; planned domain cookscornerllc.com (placeholder, not live; the EIN is internal and is NOT on the site); pickup or delivery 48 hours after the order; delivery fee $15 within 25 miles; "List allergies prior to ordering*" note; policies section (verbatim text in `src/config/content.ts`, `POLICIES`).
