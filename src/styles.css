@@ -529,6 +529,7 @@ a{color:inherit}
 .tb .tn b{font-weight:700}
 .tb .tn.m{color:#4a4236;margin-top:4px}
 .tb .nw{white-space:nowrap}
+.tb .tb-day small{display:block;font-weight:500;font-size:12px;line-height:1.35;color:#4a4236;margin-top:2px}
 .tb-ob{margin-top:10px;font-weight:600;font-size:14px;line-height:1.3;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .tb-ticket .need{color:var(--need-on-bone);background:rgba(138,90,0,.1);border-color:#8a5a00}
 .tb-tot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:14px;padding-top:12px;border-top:2px dashed rgba(23,20,15,.3)}

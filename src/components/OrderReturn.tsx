@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { BIZ } from '../config/content'
+import { formatDay, isDay, isOpenDay } from '../shared/schedule'
 
 type Kind = 'success' | 'cancelled'
 
@@ -10,6 +11,13 @@ function readReturn(): Kind | '' {
   return c === 'success' || c === 'cancelled' ? c : ''
 }
 
+/** The day we scheduled at checkout (?day=YYYY-MM-DD). Display only: ignored unless it is a real open day. */
+function readDay(): string {
+  if (typeof window === 'undefined') return ''
+  const d = new URLSearchParams(window.location.search).get('day')
+  return isDay(d) && isOpenDay(d) ? d : ''
+}
+
 /**
  * Full-width confirmation panel pinned to the top of the page after Stripe sends the customer back
  * (?checkout=success&session_id=... or ?checkout=cancelled). Stays until closed. The query string is
@@ -17,6 +25,7 @@ function readReturn(): Kind | '' {
  */
 export default function OrderReturn() {
   const [kind, setKind] = useState<Kind | ''>(readReturn)
+  const [day] = useState(readDay)
   const closeBtn = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -24,6 +33,7 @@ export default function OrderReturn() {
     const u = new URL(window.location.href)
     u.searchParams.delete('checkout')
     u.searchParams.delete('session_id')
+    u.searchParams.delete('day')
     window.history.replaceState(null, '', u.pathname + u.search)
   }, [kind])
 
@@ -36,7 +46,7 @@ export default function OrderReturn() {
           <b className="or-t">{ok ? 'Thank you! Your order is in.' : 'No charge was made.'}</b>
           <p>
             {ok
-              ? 'Your pickup or delivery will happen 48 hours after your order. Check your email for your Stripe receipt.'
+              ? `${day ? `Your pickup or delivery day: ${formatDay(day, true)}, 11 AM to 7 PM. If that day fills up first, we move you to the next open day.` : 'Your pickup or delivery is at least 48 hours after your order, on the next open day.'} Check your email for your Stripe receipt.`
               : 'Your checkout was cancelled. Build your tray again whenever you’re ready.'}
           </p>
           <p className="or-dm">Questions? DM <a href={BIZ.instagramUrl} target="_blank" rel="noopener">{BIZ.instagram}</a></p>

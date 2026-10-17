@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { BIZ, NO_SAME_DAY, ORDER_CUTOFF, ORDER_NOTE, PICKUP_HOURS_SHORT, POLICIES } from '../config/content'
+import { BIZ, DAILY_LIMIT, NO_SAME_DAY, ORDER_CUTOFF, ORDER_NOTE, ORDER_ROLLOVER, PICKUP_HOURS_SHORT, POLICIES } from '../config/content'
+import { earliestDay, formatDay } from '../shared/schedule'
 import {
   DELIVERY_FEE_CENTS, MAX_ALLERGY_NOTE, MENU_ITEMS, ONE_TIME_PACKAGES, SAUCES, dollars, packageFor, totalCents,
   type Fulfillment,
@@ -43,6 +44,8 @@ function Panel({ s, set, cap, total, idp, pay }: { s: State; set: (p: Partial<St
   const filled = [true, s.proteins.length > 0, s.vegetables.length + s.starches.length > 0, s.sauces.length > 0]
   const sauceNames = s.sauces.map((id) => SAUCES.find((x) => x.id === id)?.name ?? id)
   const sides = [...s.vegetables, ...s.starches]
+  // rules-only estimate (the server also checks the 10-a-day limit when you pay)
+  const day = earliestDay(new Date())
   const missing = [...(s.proteins.length === 0 ? ['choose your proteins'] : []), ...(pay.accepted ? [] : ['tick the policy box'])]
   const desc = `Tray preview: ${s.proteins.length ? s.proteins.join(', ') : 'no proteins yet'}${s.vegetables.length ? ', vegetable' : ''}${s.starches.length ? ', starch' : ''}.`
   return (
@@ -89,7 +92,11 @@ function Panel({ s, set, cap, total, idp, pay }: { s: State; set: (p: Partial<St
             </>
           )}
           <div className="tb-ob">{ORDER_CUTOFF}</div>
-          <p className="tn m">{NO_SAME_DAY} Ready 48 hours after your order is placed.</p>
+          <p className="tn m">{NO_SAME_DAY} {ORDER_ROLLOVER}</p>
+          <p className="tn tb-day" data-testid="earliest-day">
+            {s.fulfillment === 'pickup' ? 'Pickup' : 'Delivery'} day: <b>{formatDay(day)}</b>
+            <small>Earliest day if you order now. At least 48 hours out. {DAILY_LIMIT}</small>
+          </p>
           <div className="tb-tot">
             <span className="k">Subtotal<small>{s.fulfillment === 'pickup' ? 'Pickup · no fee' : `Includes ${dollars(DELIVERY_FEE_CENTS)} delivery`}</small></span>
             <span className="t" aria-live="polite">{dollars(total)}</span>
@@ -203,7 +210,7 @@ export default function TrayBuilder() {
             <p className="tb-sub">Pick a package, fill it, and watch your week come together.</p>
           </div>
           <dl className="tb-facts">
-            <div><dt>Ready in</dt><dd>48 hours after you order</dd></div>
+            <div><dt>Ready in</dt><dd>48+ hours after you order</dd></div>
             <div><dt>Pickup</dt><dd>{PICKUP_HOURS_SHORT}</dd></div>
             <div><dt>Delivery</dt><dd>{dollars(DELIVERY_FEE_CENTS)} fee</dd></div>
           </dl>

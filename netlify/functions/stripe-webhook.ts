@@ -1,4 +1,5 @@
 import Stripe from 'stripe'
+import { blobCapacityStore } from '../lib/capacity'
 import { blobOrderStore } from '../lib/orders'
 import { handleStripeWebhook } from '../lib/webhook-handler'
 
@@ -8,6 +9,7 @@ export default async (req: Request) =>
     // constructEvent only does local HMAC verification; the key is not used to call Stripe here
     stripe: () => new Stripe(process.env.STRIPE_SECRET_KEY ?? 'sk_test_unset'),
     orders: blobOrderStore,
+    capacity: blobCapacityStore,
   })
 
 export const config = { path: '/api/stripe-webhook' }

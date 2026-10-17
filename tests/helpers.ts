@@ -38,3 +38,7 @@ export function memoryOrders(): OrderStore & { orders: Map<string, OrderRecord>;
   }
 }
 export { memoryStore }
+
+import { kvCapacityStore, memoryKv } from '../netlify/lib/capacity'
+/** Capacity store on the in-memory conditional-write KV (same claim logic as the Netlify Blobs store). */
+export const memoryCapacity = () => { const kv = memoryKv(); return { kv, store: kvCapacityStore(kv) } }

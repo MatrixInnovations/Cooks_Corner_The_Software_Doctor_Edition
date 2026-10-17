@@ -1,3 +1,4 @@
+import { assignOrderDay, dailyCap, reservedFromEnv, reservedWithStripe, type CapacityStore } from './capacity'
 import { sendOrderConfirmation } from './email'
 import { sendKitchenTicket, type KitchenResult } from './kitchen-ticket'
 import { fail, json, readBody } from './http'
@@ -8,6 +9,8 @@ export type WebhookDeps = {
   env: Env
   stripe: () => StripeClient
   orders: () => Promise<OrderStore>
+  /** Per-day order counters. Omitted = orders are recorded without a day (tests / older setups). */
+  capacity?: () => Promise<CapacityStore>
   fetch?: typeof fetch
   now?: () => Date
 }
@@ -42,7 +45,14 @@ export async function handleStripeWebhook(req: Request, deps: WebhookDeps): Prom
     if (await store.hasEvent(event.id)) return json(200, { received: true, duplicate: true })
     const existing = await store.getOrder(session.id)
     if (!existing) {
-      const order = orderFromSession(session, deps.now?.())
+      let order = orderFromSession(session, deps.now?.())
+      if (deps.capacity) {
+        // Final, race-safe day assignment (conditional write per day). Throws on storage trouble so Stripe retries the webhook.
+        // Order time = when the customer started checkout, so a slow payment never costs them a day.
+        const reserved = await reservedWithStripe(deps.env, deps.stripe, reservedFromEnv(deps.env))
+        const a = await assignOrderDay(await deps.capacity(), new Date(session.created * 1000), session.id, dailyCap(deps.env), order.estimatedDay, reserved)
+        order = { ...order, assignedDay: a.day, dayMoved: a.day !== null && order.estimatedDay != null && a.day !== order.estimatedDay }
+      }
       await store.putOrder(order)
       // Kitchen ticket: first time this order is recorded only (duplicates/retries skip this block). Never fails the webhook.
       const ticket = await notifyKitchen(order, deps)

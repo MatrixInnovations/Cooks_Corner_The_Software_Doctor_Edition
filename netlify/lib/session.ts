@@ -1,5 +1,6 @@
 import type Stripe from 'stripe'
 import { DELIVERY_FEE_CENTS, SAUCES, packageFor, planFor } from '../../src/shared/catalog'
+import { formatDay, isDay } from '../../src/shared/schedule'
 import type { CheckoutRequest } from './cart'
 
 export const META_SEP = ' | '
@@ -17,6 +18,7 @@ export function buildSessionParams(
   siteUrl: string,
   now: Date = new Date(),
   paymentMethodTypes: Stripe.Checkout.SessionCreateParams.AllowedPaymentMethodType[] = ['card'],
+  assignedDay?: string | null,
 ): Stripe.Checkout.SessionCreateParams {
   const sub = req.mode === 'subscription'
   const unit = sub ? planFor(req.meals)!.priceCents : packageFor(req.meals)!.priceCents
@@ -42,6 +44,7 @@ export function buildSessionParams(
       price_data: { currency: 'usd', unit_amount: DELIVERY_FEE_CENTS, product_data: { name: 'Delivery' } },
     })
   }
+  const day = isDay(assignedDay) ? assignedDay : null
   const metadata: Record<string, string> = {
     source: 'cooks-corner-site',
     mode: req.mode,
@@ -54,12 +57,14 @@ export function buildSessionParams(
     allergy_note: clip(req.allergyNote, 500),
     policies_accepted_at: now.toISOString(),
     catalog_total_cents: String(unit + (delivery && !sub ? DELIVERY_FEE_CENTS : 0)),
+    // expected day at checkout; the webhook makes the final, capacity-checked assignment when the payment is recorded
+    ...(day ? { assigned_day: day } : {}),
   }
   const params: Stripe.Checkout.SessionCreateParams = {
     mode: req.mode,
     line_items,
     metadata,
-    success_url: `${siteUrl}/?checkout=success&session_id={CHECKOUT_SESSION_ID}#build`,
+    success_url: `${siteUrl}/?checkout=success&session_id={CHECKOUT_SESSION_ID}${day ? `&day=${day}` : ''}#build`,
     cancel_url: `${siteUrl}/?checkout=cancelled#build`,
     // Card only (Apple Pay / Google Pay still ride on card). With Stripe's dynamic list no method is pre-selected and a click on
     // "Pay" with nothing chosen only flashes a small "payment method required" note, which looked like Pay did nothing (pickup has
@@ -68,7 +73,9 @@ export function buildSessionParams(
     phone_number_collection: { enabled: true },
     billing_address_collection: 'auto',
     custom_text: {
-      submit: { message: `By paying you accept the order changes and refunds policy, the food allergy notice and the reheating and storage guide: ${siteUrl}/#policies` },
+      submit: {
+        message: `${day ? `Your ${delivery ? 'delivery' : 'pickup'} day: ${formatDay(day, true)}, 11 AM to 7 PM. If that day fills up first, we move you to the next open day. ` : ''}By paying you accept the order changes and refunds policy, the food allergy notice and the reheating and storage guide: ${siteUrl}/#policies`,
+      },
     },
     ...(delivery ? { shipping_address_collection: { allowed_countries: ['US' as const] } } : {}),
   }

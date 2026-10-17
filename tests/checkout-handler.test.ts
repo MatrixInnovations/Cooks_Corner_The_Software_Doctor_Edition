@@ -15,7 +15,7 @@ describe('create-checkout-session handler (Stripe mocked)', () => {
     const { s, d } = deps()
     const r = await handleCreateCheckout(post(goodCart(), { 'idempotency-key': 'abcdef123456' }), d)
     expect(r.status).toBe(200)
-    expect(await body(r)).toEqual({ id: 'cs_test_123', url: 'https://checkout.stripe.test/c/pay/cs_test_123' })
+    expect(await body(r)).toMatchObject({ id: 'cs_test_123', url: 'https://checkout.stripe.test/c/pay/cs_test_123' })
     expect(s.create).toHaveBeenCalledTimes(1)
     const [params, opts] = s.create.mock.calls[0] as any[]
     expect(params.line_items[0].price_data.unit_amount).toBe(15000)

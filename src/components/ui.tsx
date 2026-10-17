@@ -1,5 +1,5 @@
 import { createContext, useContext, useRef, type ReactNode } from 'react'
-import { BIZ, NEED, NO_SAME_DAY, ORDER_CUTOFF, ORDER_NOTE, POLICIES } from '../config/content'
+import { BIZ, NEED, NO_SAME_DAY, ORDER_CUTOFF, ORDER_NOTE, ORDER_ROLLOVER, POLICIES } from '../config/content'
 import { FEATURES } from '../config/features'
 
 /** A visible open question for the client. Keep until Marsaun answers. */
@@ -41,7 +41,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
             Checkout isn’t switched on yet. <span ref={what} className="od-what" />
           </p>
           <p>
-            To order, call <a href={BIZ.phoneHref}>{BIZ.phone}</a>, send a DM to <a href={BIZ.instagramUrl} rel="noopener">{BIZ.instagram}</a> on Instagram, or email <a href={`mailto:${BIZ.email}`}>{BIZ.email}</a>. {ORDER_CUTOFF}. {NO_SAME_DAY}
+            To order, call <a href={BIZ.phoneHref}>{BIZ.phone}</a>, send a DM to <a href={BIZ.instagramUrl} rel="noopener">{BIZ.instagram}</a> on Instagram, or email <a href={`mailto:${BIZ.email}`}>{BIZ.email}</a>. {ORDER_CUTOFF}. {NO_SAME_DAY} {ORDER_ROLLOVER}
           </p>
           <p className="od-note"><a href={`#${POLICIES.allergy.id}`} onClick={() => ref.current?.close()}>{ORDER_NOTE}</a></p>
           <p>

@@ -1,3 +1,4 @@
+import { isDay } from '../../src/shared/schedule'
 import { META_SEP } from './session'
 import type { Stripe } from './types'
 
@@ -17,6 +18,12 @@ export type OrderRecord = {
   policiesAcceptedAt: string | null
   stripe: { paymentIntent: string | null; subscription: string | null; customer: string | null }
   /** Kitchen-ticket email outcome (set by the webhook after the order is stored; absent on older orders). */
+  /** Fulfillment day ('YYYY-MM-DD', New York) the order is scheduled for. null = no room in the lookahead, schedule by hand. Absent on older orders. */
+  assignedDay?: string | null
+  /** The day shown/recorded at checkout, before the final capacity check at payment time. */
+  estimatedDay?: string | null
+  /** True when the order landed later than the checkout estimate because that day filled before payment completed. */
+  dayMoved?: boolean
   kitchenTicket?: { sent: boolean; reason?: string; at: string }
 }
 
@@ -46,6 +53,7 @@ export function orderFromSession(s: Stripe.Checkout.Session, now: Date = new Dat
     fulfillment: m.fulfillment === 'delivery' ? 'delivery' : 'pickup',
     deliveryAddress: ship,
     tray: { meals: Number(m.meals) || 0, proteins: list(m.proteins), vegetables: list(m.vegetables), starches: list(m.starches), sauces: list(m.sauces) },
+    estimatedDay: isDay(m.assigned_day) ? m.assigned_day : null,
     allergyNote: m.allergy_note ?? '',
     policiesAcceptedAt: m.policies_accepted_at ?? null,
     stripe: {

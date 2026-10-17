@@ -1,4 +1,5 @@
 import { dollars } from '../../src/shared/catalog'
+import { formatDay, isDay } from '../../src/shared/schedule'
 import type { OrderRecord } from './orders'
 import type { Env } from './types'
 
@@ -20,7 +21,9 @@ export async function sendOrderConfirmation(order: OrderRecord, env: Env, fetchI
     `Proteins: ${t.proteins.join(', ') || 'n/a'}`,
     `Sides: ${[...t.vegetables, ...t.starches].join(', ') || 'n/a'}`,
     `Sauces: ${t.sauces.join(', ') || 'none'}`,
-    `${order.fulfillment === 'delivery' ? 'Delivery' : 'Pickup'}: ready 48 hours after your order. Pickup is Tuesday through Saturday, 11 AM to 7 PM.`,
+    isDay(order.assignedDay)
+      ? `Your ${order.fulfillment === 'delivery' ? 'delivery' : 'pickup'} day: ${formatDay(order.assignedDay, true)}, 11 AM to 7 PM.`
+      : `${order.fulfillment === 'delivery' ? 'Delivery' : 'Pickup'}: at least 48 hours after your order. We will confirm your day.`,
     order.allergyNote ? `Allergies you listed: ${order.allergyNote}` : 'No allergies listed.',
     '',
     "Questions? DM @_cooks_corner_ on Instagram or call 704.350.5827.",

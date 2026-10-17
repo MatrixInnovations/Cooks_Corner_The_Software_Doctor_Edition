@@ -19,8 +19,9 @@ export const SAUCES = [
   { name: 'Spank Sauce', desc: 'Greek yogurt base, preferably for salmon' },
   { name: 'Spice Man', desc: 'sweet Thai chili base' },
 ] as const
-export const PICKUP_HOURS = 'Tuesday through Saturday, 11 AM to 7 PM unless advised otherwise. No Sundays.'
-export const PICKUP_HOURS_SHORT = 'Tue\u2013Sat, 11 AM\u20137 PM'
+/** Monday is on the schedule because Andrew said Monday has 5 slots left for new orders (the other 5 are Marsaun's monthly subscribers). PENDING Andrew/Marsaun OK; keep in sync with OPEN_WEEKDAYS in src/shared/schedule.ts. */
+export const PICKUP_HOURS = 'Monday through Saturday, 11 AM to 7 PM unless advised otherwise. No Sundays.'
+export const PICKUP_HOURS_SHORT = 'Mon\u2013Sat, 11 AM\u20137 PM'
 export const ORDERING = 'Order by checking out on the site or sending us a DM on Instagram.'
 export const CATERING_HOW = 'Catering is special and custom. Request it by phone and/or DM.'
 
@@ -77,9 +78,11 @@ export const CHEF_MENU_ITEMS = ['Ribeye', 'Chicken', 'Turkey', 'Shrimp', 'Salmon
 export const MENU = MENU_ITEMS
 
 export const ORDER_NOTE = 'List allergies prior to ordering*'
-export const TURNAROUND = 'Pickup or delivery happens 48 hours after your order is placed.'
+export const TURNAROUND = 'Pickup or delivery is at least 48 hours after your order is placed, on the next open day.'
 export const ORDER_CUTOFF = 'Order cutoff: Sunday at 9:00 AM'
 export const NO_SAME_DAY = 'No same-day orders or pickup.'
+export const ORDER_ROLLOVER = 'Orders placed after Sunday at 9:00 AM roll over to Monday.'
+export const DAILY_LIMIT = 'We take up to 10 orders a day. When a day is full, your order moves to the next open day.'
 export const DELIVERY_FEE = '$15'
 export const SUBSCRIPTION_DELIVERY = 'Delivery is $15 each time, billed separately.'
 
@@ -89,7 +92,7 @@ export const POLICIES = {
     id: 'order-changes-and-refunds',
     title: 'ORDER CHANGES AND REFUNDS',
     paragraphs: [
-      'Order cutoff: Sunday at 9:00 AM. No same-day orders or pickup. Pickup or delivery happens 48 hours after your order is placed.',
+      'Order cutoff: Sunday at 9:00 AM. No same-day orders or pickup. Orders placed after Sunday at 9:00 AM roll over to Monday. Pickup or delivery is at least 48 hours after your order is placed, on the next open day. We take up to 10 orders a day, and when a day is full your order moves to the next open day.',
       'Please request cancellations or changes at least 48 hours before meal preparation begins. Orders canceled by that deadline are eligible for a full refund.',
       "Once preparation has started, orders generally can't be canceled or refunded because ingredients and labor have already been committed.",
       "If an order is incorrect, missing an item, or has a quality issue, contact Cook's Corner within 24 hours of pickup or delivery and include a photo when possible. We'll review the issue and offer a replacement, store credit, or refund for the affected item.",

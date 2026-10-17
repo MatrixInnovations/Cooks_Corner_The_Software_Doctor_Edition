@@ -10,6 +10,10 @@ export interface StripeClient {
       ): Promise<{ id: string; url: string | null }>
     }
   }
+  /** Optional: only used when STRIPE_COUNT_SUBSCRIPTIONS=true (needs the key to have Subscriptions: Read). */
+  subscriptions?: {
+    list(params: { limit: number; starting_after?: string }): Promise<{ data: Array<{ id: string; status?: string; metadata?: Record<string, string> | null }>; has_more: boolean }>
+  }
   webhooks: { constructEvent(payload: string, header: string, secret: string): Stripe.Event }
 }
 

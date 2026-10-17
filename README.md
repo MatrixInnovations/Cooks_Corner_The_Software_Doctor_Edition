@@ -47,7 +47,7 @@ Business name Cook's Corner; planned domain cookscornerllc.com (placeholder, not
 - Footer legal line: Cook's Corner LLC.
 
 ## v9 confirmed facts
-Instagram _cooks_corner_ (linked); sauces Spank Sauce + Spice Man; pickup Tue-Sat 11-7, no Sundays, delivery same schedule ($15); order via site or Instagram DM (the "any day, any time" wording was removed Oct 17 after the Sunday 9:00 AM cutoff and no same-day rule); catering is custom, by phone and/or DM; protein maximums 3/3/4/6; subscriptions are monthly ($400/$500/$768; $575 for 12 meals, confirmed monthly Oct 17; delivery is $15 each time, billed separately, including for subscribers); 48-hour turnaround confirmed; Reheating & Storage policy card added.
+Instagram _cooks_corner_ (linked); sauces Spank Sauce + Spice Man; pickup Mon-Sat 11-7 (Monday: 5 of 10 slots reserved for monthly subscribers), no Sundays, max 10 orders/day, delivery same schedule ($15); order via site or Instagram DM (the "any day, any time" wording was removed Oct 17 after the Sunday 9:00 AM cutoff and no same-day rule); catering is custom, by phone and/or DM; protein maximums 3/3/4/6; subscriptions are monthly ($400/$500/$768; $575 for 12 meals, confirmed monthly Oct 17; delivery is $15 each time, billed separately, including for subscribers); 48-hour turnaround confirmed; Reheating & Storage policy card added.
 
 ## Tray Builder (`#build`)
 

@@ -1,5 +1,6 @@
 import Stripe from 'stripe'
 import { handleCreateCheckout } from '../lib/checkout-handler'
+import { blobCapacityStore } from '../lib/capacity'
 import { memoryStore, type CounterStore } from '../lib/ratelimit'
 
 const fallback = memoryStore()
@@ -22,6 +23,7 @@ export default async (req: Request) =>
     env: process.env,
     stripe: (key) => new Stripe(key, { maxNetworkRetries: 1 }),
     limiter: await limiter(),
+    capacity: blobCapacityStore,
   })
 
 export const config = { path: '/api/create-checkout-session' }

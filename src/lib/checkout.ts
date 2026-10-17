@@ -8,6 +8,7 @@ export function checkoutErrorMessage(status: number | null, code?: string, detai
   if (status === 429 || code === 'rate_limited') return 'Too many checkout attempts in a row. Wait a few minutes and try again, or order by DM. (cause: rate limit)'
   if (status === 400 && details?.length) return `${details[0]} (cause: tray check)`
   if (status === 400 || status === 415 || status === 413) return `Something about this tray wasn't accepted. Refresh the page and rebuild it. ${DM} (cause: ${code ?? 'invalid request'})`
+  if (code === 'fully_booked') return `We're fully booked for now. Please order by DM. (cause: fully booked)`
   if (code === 'not_configured' || status === 503) return `Checkout is not switched on yet. Please order by DM. (cause: not configured)`
   if (status === 403) return `Checkout was blocked for this page address. Open the site from its main link and ${DM.toLowerCase()} (cause: origin)`
   if (code === 'stripe_error' || status === 502) return `Our payment provider didn't start the checkout. ${DM} (cause: payment provider)`

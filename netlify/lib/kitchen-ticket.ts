@@ -1,4 +1,5 @@
 import { dollars } from '../../src/shared/catalog'
+import { formatDay, isDay } from '../../src/shared/schedule'
 import type { OrderRecord } from './orders'
 import type { Env } from './types'
 
@@ -38,6 +39,16 @@ const etTime = (iso: string) => {
   return `${s} ET`
 }
 
+/** The day line for the ticket: the assigned day, flagged if it moved from the checkout estimate or could not be assigned. */
+export function dayLine(o: OrderRecord): { label: string; text: string; flag: boolean } {
+  const verb = o.fulfillment === 'delivery' ? 'DELIVER' : 'PICKUP'
+  if (o.assignedDay === undefined) return { label: `${verb} DAY`, text: 'not assigned (older order): ready 48 hours after the order time', flag: false }
+  if (!isDay(o.assignedDay)) return { label: `${verb} DAY`, text: 'NO DAY AVAILABLE: every day is full, schedule this one by hand', flag: true }
+  const day = formatDay(o.assignedDay, true)
+  const moved = o.dayMoved && isDay(o.estimatedDay) ? ` (MOVED from ${formatDay(o.estimatedDay)}: that day filled up)` : ''
+  return { label: `${verb} DAY`, text: `${day}${moved}, 11 AM to 7 PM`, flag: Boolean(moved) }
+}
+
 const addressLines = (a: OrderRecord['deliveryAddress']): string[] => {
   if (!a) return []
   const cityLine = [oneLine(a.city, 80), [oneLine(a.state, 20), oneLine(a.postal_code, 20)].filter(Boolean).join(' ')].filter(Boolean).join(', ')
@@ -63,7 +74,9 @@ export function buildKitchenTicket(order: OrderRecord): Ticket {
   const list = (a: string[]) => a.map((x) => oneLine(x, 80)).filter(Boolean).join(', ') || 'none'
   const addr = addressLines(order.deliveryAddress)
   const link = stripeLink(order)
-  const subject = oneLine(`New order: ${t.meals} meals, ${method}, ${amount}${name ? ` (${name})` : ''}`, 150)
+  const day = dayLine(order)
+  const dayShort = isDay(order.assignedDay) ? ` for ${formatDay(order.assignedDay)}` : ''
+  const subject = oneLine(`New order: ${t.meals} meals, ${method}${dayShort}, ${amount}${name ? ` (${name})` : ''}`, 150)
 
   const rows: Array<[string, string]> = [
     ['Package', pkg],
@@ -83,6 +96,7 @@ export function buildKitchenTicket(order: OrderRecord): Ticket {
   const text = [
     `*** ${method} ***`,
     `Order ${ref}   ${when}`,
+    `*** ${day.label}: ${day.text.toUpperCase()} ***`,
     '',
     ...rows.map(([k, v]) => `${k}: ${v}`),
     '',
@@ -104,6 +118,7 @@ export function buildKitchenTicket(order: OrderRecord): Ticket {
     '<!doctype html><html><body style="margin:0;padding:16px;font-family:Arial,Helvetica,sans-serif;color:#111;background:#fff;"><div style="max-width:560px;">',
     `<div style="background:${banner};color:#fff;font-size:28px;font-weight:bold;padding:12px 16px;letter-spacing:1px;">${method}</div>`,
     `<p style="margin:12px 0;font-size:15px;color:#333;">Order <b>${e(ref)}</b> &middot; ${e(when)}</p>`,
+    `<div style="margin:12px 0;padding:10px 14px;background:${day.flag ? '#fee2e2' : '#e0f2fe'};border:2px solid ${day.flag ? '#dc2626' : '#0369a1'};font-size:20px;font-weight:bold;">${e(day.label)}: ${e(day.text)}</div>`,
     table(rows),
     allergy
       ? `<div style="margin:16px 0;padding:12px 14px;background:#fef08a;border:3px solid #dc2626;font-size:20px;font-weight:bold;color:#7f1d1d;">ALLERGY NOTE: ${e(allergy)}</div>`

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
-import { BIZ, NO_SAME_DAY, ORDER_CUTOFF, ORDER_NOTE, PACKAGES, PICKUP_HOURS_SHORT, POLICIES, STEPS, TURNAROUND } from '../config/content'
+import { BIZ, NO_SAME_DAY, ORDER_CUTOFF, ORDER_NOTE, ORDER_ROLLOVER, PACKAGES, PICKUP_HOURS, PICKUP_HOURS_SHORT, POLICIES, STEPS, TURNAROUND } from '../config/content'
 import { PHOTOS, type PhotoKey } from '../config/photos'
 import { Need, OrderButton, Photo } from './ui'
 import { steamState } from '../three/steamState'
@@ -263,8 +263,8 @@ export default function Story() {
             <div className="eyebrow">06 · Pickup</div>
             <h2 className="disp">{STEPS[5].cap}</h2>
             <p className="sub">{BIZ.address}. {TURNAROUND}</p>
-            <p className="need-row">Tuesday through Saturday, 11 AM to 7 PM unless advised otherwise. No Sundays.</p>
-            <p className="need-row">{ORDER_CUTOFF}. {NO_SAME_DAY}</p>
+            <p className="need-row">{PICKUP_HOURS}</p>
+            <p className="need-row">{ORDER_CUTOFF}. {NO_SAME_DAY} {ORDER_ROLLOVER}</p>
           </div>
           <div className="copy cap c7" ref={reg('c7')}>
             <div className="eyebrow">07 · Done</div>
@@ -277,7 +277,7 @@ export default function Story() {
                   <div className="t-big disp" aria-hidden="true">{STEPS[6].cap}</div>
                   <div className="t-line">{BIZ.name}</div>
                   <div className="t-row">{BIZ.address}</div>
-                  <div className="t-row">Ready 48 hours after you order</div>
+                  <div className="t-row">Ready 48+ hours after you order</div>
                   <div className="t-row">Pickup {PICKUP_HOURS_SHORT}</div>
                   <OrderButton className="btn p t-btn">Order now</OrderButton>
                   <a className="t-note" href={`#${POLICIES.allergy.id}`}>{ORDER_NOTE}</a>
