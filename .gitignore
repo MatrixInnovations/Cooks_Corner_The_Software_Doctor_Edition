@@ -10,3 +10,4 @@ public/audio/*.private
 .env
 .env.*
 !.env.example
+*.local.mjs

@@ -1,5 +1,7 @@
 import type { Env } from './types'
 
+export const LAUNCH_SITE_URL = 'https://cookscornerllc.com'
+
 export type CheckoutConfig =
   | { ok: true; secretKey: string; siteUrl: string }
   | { ok: false; code: string; message: string }
@@ -14,7 +16,8 @@ export function checkoutConfig(env: Env): CheckoutConfig {
   if (!/^(sk|rk)_(test|live)_/.test(key)) return { ok: false, code: 'not_configured', message: 'Checkout is not configured correctly.' }
   if (/^(sk|rk)_live_/.test(key) && env.STRIPE_ALLOW_LIVE !== 'true')
     return { ok: false, code: 'live_key_blocked', message: 'A live Stripe key is set but live mode is not enabled (STRIPE_ALLOW_LIVE).' }
-  const raw = env.SITE_URL?.trim() || env.URL?.trim()
+  // Launch switch: SITE_LAUNCH=true pins the public origin to the real domain (same flag as tools/launch-switch.mjs). Otherwise SITE_URL (or Netlify's URL).
+  const raw = env.SITE_LAUNCH === 'true' ? LAUNCH_SITE_URL : env.SITE_URL?.trim() || env.URL?.trim()
   if (!raw) return { ok: false, code: 'not_configured', message: 'SITE_URL is not set.' }
   let siteUrl: string
   try {

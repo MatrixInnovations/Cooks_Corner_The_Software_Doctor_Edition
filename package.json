@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && node tools/launch-switch.mjs",
     "preview": "vite preview --host",
     "shots": "node tools/shots.mjs",
     "test": "vitest run",
