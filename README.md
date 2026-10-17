@@ -43,7 +43,7 @@ Business name Cook's Corner; planned domain cookscornerllc.com (placeholder, not
 - "Meet the chef": pinned portrait + four scroll stops (`CHEF_STOPS` in `src/config/content.ts`). Preview-only confirm tag; remove after Marsaun OKs it.
 - Portrait is a client photo of a person and is NOT in the repo (`public/people/` is git-ignored). Run `python3 tools/prepare-portrait.py <file>` and set `PORTRAIT.ready = true` in `src/config/photos.ts`. Until then a placeholder with a NEED tag shows.
 - "What customers say": Google quotes + anonymous text-message quotes (`REVIEWS`), 5.0 / 19 Google reviews line, preview-only confirm tag. Review screenshots stay in client-assets and are not deployed.
-- Optional jingle (`JINGLE.src` in content.ts): disabled with a NEED tag until an audio file exists; never autoplays.
+- Jingle: Marsaun's 42s file in `public/audio/` (mp3 + m4a), play/pause button in the footer; never autoplays, pauses when the tab is hidden, resets at the end.
 - Footer legal line: Cook's Corner LLC.
 
 ## v9 confirmed facts

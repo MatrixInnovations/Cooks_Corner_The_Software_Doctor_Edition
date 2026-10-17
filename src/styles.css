@@ -264,9 +264,15 @@ a{color:inherit}
 /* ---------- jingle ---------- */
 .jingle{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:14px}
 .jingle-btn{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 16px;border-radius:var(--r-btn);border:1.5px solid var(--saffron);background:transparent;color:var(--bone);font:700 13px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background-color 160ms var(--ease-out)}
-.jingle-btn:hover:not(:disabled){background:rgba(242,182,50,.14)}
-.jingle-btn:disabled{cursor:not-allowed;border-color:rgba(242,182,50,.45);color:rgba(244,236,221,.7)}
-.jingle .need{color:var(--saffron);background:rgba(242,182,50,.12);border-color:var(--saffron)}
+.jingle-btn:hover{background:rgba(242,182,50,.14)}
+.jingle-btn:focus-visible{outline:3px solid var(--bone);outline-offset:3px}
+.jingle-btn.playing{background:var(--saffron);color:var(--charcoal);border-color:var(--saffron)}
+.jingle-btn.playing:hover{background:#e0a626}
+.jbars{display:inline-flex;align-items:flex-end;gap:3px;width:16px;height:16px}
+.jbars i{display:block;flex:1;height:100%;background:currentColor;border-radius:1px;transform-origin:bottom;animation:jbar 900ms ease-in-out infinite alternate}
+.jbars i:nth-child(2){animation-delay:-300ms}.jbars i:nth-child(3){animation-delay:-600ms}
+@keyframes jbar{from{transform:scaleY(.3)}to{transform:scaleY(1)}}
+@media (prefers-reduced-motion:reduce){.jbars i{animation:none}.jbars i:nth-child(1){transform:scaleY(.6)}}
 
 /* ---------- customer quotes carousel ---------- */
 .rv-score{font:400 clamp(26px,2.6vw,36px)/1 var(--font-display);letter-spacing:.04em;color:var(--charcoal);margin-top:16px}

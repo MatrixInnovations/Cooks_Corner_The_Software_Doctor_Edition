@@ -52,9 +52,12 @@ export const SUBSCRIPTIONS = [
   { meals: 16, price: 768, confirm: false },
 ] as const
 
-/** Optional jingle. Set `src` to an audio file in /public/audio once Marsaun has one. No autoplay, ever. */
+/** Marsaun's jingle (42s). Two sources so it plays everywhere; never autoplays. Source file: client-assets/marsaun-jingle.m4a */
 export const JINGLE = {
-  src: null as string | null,
+  sources: [
+    { src: `${import.meta.env.BASE_URL}audio/cooks-corner-jingle.mp3`, type: 'audio/mpeg' },
+    { src: `${import.meta.env.BASE_URL}audio/cooks-corner-jingle.m4a`, type: 'audio/mp4' },
+  ],
   label: "Cook's Corner jingle",
 }
 
