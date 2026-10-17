@@ -68,6 +68,27 @@ describe('create-checkout-session handler (Stripe mocked)', () => {
     expect(r.status).toBe(403)
     expect(s.create).not.toHaveBeenCalled()
   })
+  it('accepts the real domain (apex and www) while SITE_URL is the preview, and returns the customer to the origin used', async () => {
+    for (const o of ['https://cookscornerllc.com', 'https://www.cookscornerllc.com', SITE]) {
+      const { s, d } = deps()
+      const r = await handleCreateCheckout(post(goodCart(), { origin: o }), d)
+      expect(r.status).toBe(200)
+      expect(r.headers.get('access-control-allow-origin')).toBe(o)
+      const params = (s.create.mock.calls[0] as unknown as [{ success_url: string; cancel_url: string }])[0]
+      expect(params.success_url.startsWith(`${o}/?checkout=success`)).toBe(true)
+      expect(params.cancel_url.startsWith(`${o}/?checkout=cancelled`)).toBe(true)
+    }
+    const pre = await handleCreateCheckout(new Request(`${SITE}/x`, { method: 'OPTIONS', headers: { origin: 'https://cookscornerllc.com' } }), deps().d)
+    expect(pre.status).toBe(204)
+  })
+  it('under SITE_LAUNCH the preview origin is refused; ALLOWED_ORIGINS adds extras (https only)', async () => {
+    const { s, d } = deps({ env: { ...ENV, SITE_LAUNCH: 'true', ALLOWED_ORIGINS: 'https://extra.example, http://insecure.example' } })
+    expect((await handleCreateCheckout(post(goodCart(), { origin: SITE }), d)).status).toBe(403)
+    expect((await handleCreateCheckout(post(goodCart(), { origin: 'https://extra.example' }), d)).status).toBe(200)
+    expect((await handleCreateCheckout(post(goodCart(), { origin: 'http://insecure.example' }), d)).status).toBe(403)
+    expect((await handleCreateCheckout(post(goodCart(), { origin: 'https://cookscornerllc.com' }), d)).status).toBe(200)
+    expect(s.create).toHaveBeenCalledTimes(2)
+  })
   it('answers CORS preflight only for the site origin', async () => {
     const { d } = deps()
     const ok = await handleCreateCheckout(new Request(`${SITE}/x`, { method: 'OPTIONS', headers: { origin: SITE } }), d)

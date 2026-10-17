@@ -3,7 +3,7 @@ import type { Env } from './types'
 export const LAUNCH_SITE_URL = 'https://cookscornerllc.com'
 
 export type CheckoutConfig =
-  | { ok: true; secretKey: string; siteUrl: string }
+  | { ok: true; secretKey: string; siteUrl: string; allowedOrigins: string[] }
   | { ok: false; code: string; message: string }
 
 /**
@@ -27,7 +27,20 @@ export function checkoutConfig(env: Env): CheckoutConfig {
   } catch {
     return { ok: false, code: 'not_configured', message: 'SITE_URL is not a valid URL.' }
   }
-  return { ok: true, secretKey: key, siteUrl }
+  return { ok: true, secretKey: key, siteUrl, allowedOrigins: allowedOrigins(siteUrl, env) }
+}
+
+/**
+ * Origins that may call the checkout endpoint (and that Stripe sends the customer back to). Always the configured site URL plus the real domain
+ * (apex and www), so the custom domain works while SITE_URL still points at the preview, and the preview keeps working until launch.
+ * Optional extras: ALLOWED_ORIGINS="https://a.example,https://b.example". Under SITE_LAUNCH the site URL is the real domain, so the preview origin is refused.
+ */
+export function allowedOrigins(siteUrl: string, env: Env): string[] {
+  const set = new Set<string>([siteUrl, LAUNCH_SITE_URL, LAUNCH_SITE_URL.replace('https://', 'https://www.')])
+  for (const x of (env.ALLOWED_ORIGINS ?? '').split(',').map((v) => v.trim()).filter(Boolean)) {
+    try { const u = new URL(x); if (u.protocol === 'https:') set.add(u.origin) } catch { /* ignore bad entry */ }
+  }
+  return [...set]
 }
 
 export const int = (v: string | undefined, d: number) => {

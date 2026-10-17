@@ -19,7 +19,7 @@ const MAX_BODY = 8 * 1024
 export async function handleCreateCheckout(req: Request, deps: CheckoutDeps): Promise<Response> {
   const cfg = checkoutConfig(deps.env)
   const origin = req.headers.get('origin')
-  const cors: Record<string, string> = cfg.ok && origin && origin === cfg.siteUrl ? { 'access-control-allow-origin': origin, vary: 'origin' } : {}
+  const cors: Record<string, string> = cfg.ok && origin && cfg.allowedOrigins.includes(origin) ? { 'access-control-allow-origin': origin, vary: 'origin' } : {}
 
   if (req.method === 'OPTIONS') {
     return cors['access-control-allow-origin']
@@ -28,7 +28,7 @@ export async function handleCreateCheckout(req: Request, deps: CheckoutDeps): Pr
   }
   if (req.method !== 'POST') return fail(405, 'method_not_allowed', 'Use POST.', undefined, { allow: 'POST, OPTIONS' })
   if (!cfg.ok) return fail(cfg.code === 'live_key_blocked' ? 500 : 503, cfg.code, cfg.message)
-  if (origin && origin !== cfg.siteUrl) return fail(403, 'bad_origin', 'Origin not allowed.')
+  if (origin && !cfg.allowedOrigins.includes(origin)) return fail(403, 'bad_origin', 'Origin not allowed.')
   if (!(req.headers.get('content-type') ?? '').toLowerCase().startsWith('application/json')) return fail(415, 'unsupported_media_type', 'Send JSON.', undefined, cors)
 
   const limit = int(deps.env.CHECKOUT_RATE_LIMIT_MAX, 10)
@@ -48,7 +48,7 @@ export async function handleCreateCheckout(req: Request, deps: CheckoutDeps): Pr
   const options = idem && /^[A-Za-z0-9_-]{8,64}$/.test(idem) ? { idempotencyKey: idem } : undefined
   try {
     const stripe = deps.stripe(cfg.secretKey)
-    const session = await stripe.checkout.sessions.create(buildSessionParams(parsed.value, cfg.siteUrl, deps.now?.(), paymentMethodTypes(deps.env)), options)
+    const session = await stripe.checkout.sessions.create(buildSessionParams(parsed.value, origin ?? cfg.siteUrl, deps.now?.(), paymentMethodTypes(deps.env)), options)
     if (!session.url) return fail(502, 'no_session_url', 'Could not start checkout.', undefined, cors)
     return json(200, { id: session.id, url: session.url }, cors)
   } catch (e) {
