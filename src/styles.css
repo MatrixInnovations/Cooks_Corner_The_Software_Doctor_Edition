@@ -197,8 +197,11 @@ a{color:inherit}
   .layer .fit{-webkit-mask-image:none;mask-image:none}
   .copy,.copy.cap{position:relative;left:auto;right:auto;top:auto;width:auto;margin:6px 20px 0;grid-row:2;grid-column:1;align-self:start}
   .copy.c2,.copy.c3,.copy.c4,.copy.c5,.copy.c6{align-self:center}
-  .l-pickup .fit{transform:translateX(5%) scale(.9)!important}
-  .l-sealed .fit{transform:none!important}
+  /* per-plate framing on mobile: each plate's subject is centered and ~85-90% of the width, with room on both sides */
+  .l-pickup .fit{transform:translateX(15.3%) scale(1.05)!important}
+  .l-empty .fit{transform:translateX(17.9%) scale(.85)!important}
+  .l-stack .fit{transform:translate(18.1%,5%)!important}
+  .l-sealed .fit{transform:translateX(-1.1%)!important}
   .eyebrow{font-size:10px;letter-spacing:.2em}
   .copy h1{font-size:clamp(50px,calc(60*var(--u)),68px);margin-top:12px;line-height:1.02}
   .copy h1 br.d{display:none}
