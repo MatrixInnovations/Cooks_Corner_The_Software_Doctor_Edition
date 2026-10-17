@@ -43,6 +43,7 @@ function Panel({ s, set, cap, total, idp, pay }: { s: State; set: (p: Partial<St
   const filled = [true, s.proteins.length > 0, s.vegetables.length + s.starches.length > 0, s.sauces.length > 0]
   const sauceNames = s.sauces.map((id) => SAUCES.find((x) => x.id === id)?.name ?? id)
   const sides = [...s.vegetables, ...s.starches]
+  const missing = [...(s.proteins.length === 0 ? ['choose your proteins'] : []), ...(pay.accepted ? [] : ['tick the policy box'])]
   const desc = `Tray preview: ${s.proteins.length ? s.proteins.join(', ') : 'no proteins yet'}${s.vegetables.length ? ', vegetable' : ''}${s.starches.length ? ', starch' : ''}.`
   return (
     <>
@@ -95,11 +96,12 @@ function Panel({ s, set, cap, total, idp, pay }: { s: State; set: (p: Partial<St
           </div>
           {FEATURES.liveCheckout ? (
             <>
-              <label className="tb-accept">
+              <label className={'tb-accept' + (pay.accepted ? ' on' : '')}>
                 <input type="checkbox" checked={pay.accepted} onChange={(e) => pay.setAccepted(e.target.checked)} />
                 <span>I accept the <a href="#policies">order changes and refunds policy and food allergy notice</a>.</span>
               </label>
-              <button type="button" className="btn p tb-checkout" disabled={!pay.accepted || s.proteins.length === 0 || pay.busy} onClick={pay.go}>{pay.busy ? 'Starting checkout…' : 'Checkout'}</button>
+              <button type="button" className="btn p tb-checkout" disabled={missing.length > 0 || pay.busy} aria-describedby={missing.length ? `${idp}-need` : undefined} onClick={pay.go}>{pay.busy ? 'Starting checkout…' : 'Checkout'}</button>
+              {missing.length > 0 && !pay.busy && <p className="tb-need-hint" id={`${idp}-need`}>{missing.length === 1 ? `${missing[0][0].toUpperCase()}${missing[0].slice(1)} to continue` : `To continue: ${missing.join(' and ')}`}</p>}
               {pay.error && <p className="tb-err" role="alert">{pay.error}</p>}
             </>
           ) : (

@@ -610,8 +610,15 @@ a{color:inherit}
 }
 @media (max-width:900px) and (prefers-reduced-motion:reduce){.tb-bar,.tb-bar.show{transition:none}}
 /* checkout (only rendered when FEATURES.liveCheckout is on) */
-.tb-accept{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:14px;line-height:1.35;font-weight:500;cursor:pointer}
-.tb-accept input{position:static!important;opacity:1!important;width:20px;height:20px;margin:1px 0 0;flex:none;accent-color:var(--btn)}
+.tb-accept{display:flex;gap:14px;align-items:center;margin-top:14px;padding:10px 12px;min-height:52px;border:2px solid transparent;border-radius:8px;font-size:15px;line-height:1.35;font-weight:600;cursor:pointer}
+.tb-accept.on{border-color:rgba(201,56,26,.35);background:rgba(201,56,26,.06)}
+/* a real, visible checkbox (the generic .tb rule hides native inputs for chips and radios) */
+.tb .tb-accept input[type=checkbox]{-webkit-appearance:none;appearance:none;position:static;opacity:1;pointer-events:auto;width:24px;height:24px;min-width:24px;margin:0;flex:none;display:grid;place-content:center;background:#fff;border:2px solid var(--btn);border-radius:3px;cursor:pointer}
+.tb .tb-accept input[type=checkbox]:checked{background:var(--btn) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7' fill='none' stroke='%23fff' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/18px 18px no-repeat}
+.tb .tb-accept input[type=checkbox]:focus-visible{outline:3px solid var(--charcoal);outline-offset:3px}
+.tb-accept:has(input:focus-visible){border-color:var(--charcoal)}
+@media (max-width:900px){.tb-accept{min-height:56px;padding:12px}.tb .tb-accept input[type=checkbox]{width:28px;height:28px;min-width:28px}.tb .tb-accept input[type=checkbox]:checked{background-size:21px 21px}}
+.tb-need-hint{margin-top:10px;font-size:14px;line-height:1.35;font-weight:700;color:#8f2410;text-align:center}
 .tb-accept a{color:var(--charcoal);text-underline-offset:3px}
 .tb-checkout:disabled{background:#8d4a3a;cursor:not-allowed}
 .tb-err{margin-top:10px;font-size:14px;font-weight:600;color:#9b2a10;text-align:center}
