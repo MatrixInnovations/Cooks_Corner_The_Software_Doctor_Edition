@@ -60,9 +60,9 @@ export const LOGO = {
  * public/people/marsaun-portrait.{jpg,webp}, then set `ready: true`.
  */
 export const PORTRAIT = {
-  ready: false,
+  ready: true,
   file: 'marsaun-portrait',
   alt: "Portrait of Marsaun Cook, founder of Cook's Corner",
   /** keep the face fully in frame: bias the crop toward the top of the image */
-  objectPosition: '50% 22%',
+  objectPosition: '50% 50%',
 }
