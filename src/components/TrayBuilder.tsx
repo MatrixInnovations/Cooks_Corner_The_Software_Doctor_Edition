@@ -4,6 +4,8 @@ import {
   DELIVERY_FEE_CENTS, MAX_ALLERGY_NOTE, MENU_ITEMS, ONE_TIME_PACKAGES, SAUCES, dollars, packageFor, totalCents,
   type Fulfillment,
 } from '../shared/catalog'
+import { FEATURES } from '../config/features'
+import { startCheckout } from '../lib/checkout'
 import { Need } from './ui'
 
 type State = { meals: number; proteins: string[]; vegetables: string[]; starches: string[]; sauces: string[]; fulfillment: Fulfillment; allergy: string }
@@ -35,7 +37,9 @@ function TrayStack({ s, className = '' }: { s: State; className?: string }) {
 
 const more = (a: string[]) => (a.length > 1 ? `${a[0]} +${a.length - 1}` : a[0])
 
-function Panel({ s, set, cap, total, idp }: { s: State; set: (p: Partial<State>) => void; cap: number; total: number; idp: string }) {
+type Pay = { accepted: boolean; setAccepted: (v: boolean) => void; busy: boolean; error: string; go: () => void }
+
+function Panel({ s, set, cap, total, idp, pay }: { s: State; set: (p: Partial<State>) => void; cap: number; total: number; idp: string; pay: Pay }) {
   const filled = [true, s.proteins.length > 0, s.vegetables.length + s.starches.length > 0, s.sauces.length > 0]
   const sauceNames = s.sauces.map((id) => SAUCES.find((x) => x.id === id)?.name ?? id)
   const sides = [...s.vegetables, ...s.starches]
@@ -89,8 +93,21 @@ function Panel({ s, set, cap, total, idp }: { s: State; set: (p: Partial<State>)
             <span className="k">Subtotal<small>{s.fulfillment === 'pickup' ? 'Pickup · no fee' : `Includes ${dollars(DELIVERY_FEE_CENTS)} delivery`}</small></span>
             <span className="t" aria-live="polite">{dollars(total)}</span>
           </div>
-          <button type="button" className="btn p tb-checkout" aria-disabled="true" onClick={(e) => e.preventDefault()}>Checkout coming soon</button>
-          <p className="tb-dm">Order by DM <a href={BIZ.instagramUrl} target="_blank" rel="noopener">{BIZ.instagram}</a> for now.</p>
+          {FEATURES.liveCheckout ? (
+            <>
+              <label className="tb-accept">
+                <input type="checkbox" checked={pay.accepted} onChange={(e) => pay.setAccepted(e.target.checked)} />
+                <span>I accept the <a href="#policies">order changes and refunds policy and food allergy notice</a>.</span>
+              </label>
+              <button type="button" className="btn p tb-checkout" disabled={!pay.accepted || s.proteins.length === 0 || pay.busy} onClick={pay.go}>{pay.busy ? 'Starting checkout…' : 'Checkout'}</button>
+              {pay.error && <p className="tb-err" role="alert">{pay.error}</p>}
+            </>
+          ) : (
+            <>
+              <button type="button" className="btn p tb-checkout" aria-disabled="true" onClick={(e) => e.preventDefault()}>Checkout coming soon</button>
+              <p className="tb-dm">Order by DM <a href={BIZ.instagramUrl} target="_blank" rel="noopener">{BIZ.instagram}</a> for now.</p>
+            </>
+          )}
           <p className="fine"><a href={`#${POLICIES.allergy.id}`}>{ORDER_NOTE}</a></p>
         </div>
       </div>
@@ -102,6 +119,9 @@ export default function TrayBuilder() {
   const [s, setS] = useState<State>(INITIAL)
   const [inView, setInView] = useState(false)
   const [live, setLive] = useState('')
+  const [accepted, setAccepted] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
   const sheet = useRef<HTMLDialogElement>(null)
   const sec = useRef<HTMLElement>(null)
   const idp = useId().replace(/:/g, '')
@@ -138,6 +158,17 @@ export default function TrayBuilder() {
       const cur = o[key]
       return { ...o, [key]: cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v] }
     })
+  const pay: Pay = {
+    accepted, setAccepted, busy, error,
+    go: async () => {
+      setBusy(true); setError('')
+      try {
+        window.location.assign(await startCheckout({ meals: s.meals, proteins: s.proteins, vegetables: s.vegetables, starches: s.starches, sauces: s.sauces, fulfillment: s.fulfillment, allergyNote: s.allergy }))
+      } catch (e) {
+        setError((e as Error).message); setBusy(false)
+      }
+    },
+  }
   const atCap = s.proteins.length >= cap
   const sides = s.vegetables.length + s.starches.length
 
@@ -239,7 +270,7 @@ export default function TrayBuilder() {
           </div>
 
           <aside className="tb-right" aria-label="Your tray and ticket">
-            <Panel s={s} set={set} cap={cap} total={total} idp={`${idp}d`} />
+            <Panel s={s} set={set} cap={cap} total={total} idp={`${idp}d`} pay={pay} />
           </aside>
         </div>
       </div>
@@ -254,7 +285,7 @@ export default function TrayBuilder() {
       </div>
       <dialog ref={sheet} className="tb-sheet" aria-label="Your ticket" onClick={(e) => e.target === sheet.current && sheet.current?.close()}>
         <div className="tb-grab"><span>Your ticket</span><button type="button" onClick={() => sheet.current?.close()}>Close</button></div>
-        <Panel s={s} set={set} cap={cap} total={total} idp={`${idp}m`} />
+        <Panel s={s} set={set} cap={cap} total={total} idp={`${idp}m`} pay={pay} />
       </dialog>
     </section>
   )

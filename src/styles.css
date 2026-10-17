@@ -609,3 +609,9 @@ a{color:inherit}
   .tb-sheet .tb-pin.p3{left:60%;top:50%}.tb-sheet .tb-pin.p4{left:74%;top:27%}.tb-sheet .tb-pin.p5{left:78%;top:90%}
 }
 @media (max-width:900px) and (prefers-reduced-motion:reduce){.tb-bar,.tb-bar.show{transition:none}}
+/* checkout (only rendered when FEATURES.liveCheckout is on) */
+.tb-accept{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:14px;line-height:1.35;font-weight:500;cursor:pointer}
+.tb-accept input{position:static!important;opacity:1!important;width:20px;height:20px;margin:1px 0 0;flex:none;accent-color:var(--btn)}
+.tb-accept a{color:var(--charcoal);text-underline-offset:3px}
+.tb-checkout:disabled{background:#8d4a3a;cursor:not-allowed}
+.tb-err{margin-top:10px;font-size:14px;font-weight:600;color:#9b2a10;text-align:center}

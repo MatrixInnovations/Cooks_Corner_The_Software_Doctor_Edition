@@ -6,3 +6,7 @@ shots
 *.log
 public/people/
 public/audio/*.private
+
+.env
+.env.*
+!.env.example

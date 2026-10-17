@@ -57,3 +57,24 @@ Order now / Choose this package scroll to the builder (`src/components/TrayBuild
 - The tray picture is a **composite**: transparent layers (`public/photos/tray/*.webp`, built by `tools/tray-layers.py`) cut from the real tray photo. There are no per-item photos yet, so any protein/side shows a generic stand-in. Need: a photo of each item.
 - Checkout is not live. `src/config/features.ts` → `liveCheckout: false` shows "Checkout coming soon, order by DM @_cooks_corner_ for now".
 - Still tagged NEED FROM MARSAUN: order cutoff, side picks per package, sauces per order (and extra cost). Honey Nut Salmon is intentionally not selectable until confirmed as a protein.
+
+## Server side: Stripe Checkout (Phase 1, branch `server/stripe-v1`)
+
+Netlify Functions (TypeScript), served at `/api/*`:
+- `POST /api/create-checkout-session` (`netlify/functions/create-checkout-session.ts`): validates the tray, prices it from `src/shared/catalog.ts` (**client prices are ignored**), creates a Stripe Checkout Session and returns `{ id, url }`.
+  - One-time packages → `payment` mode: 8/$116, 10/$150, 12/$155, 16/$190 (+$15 delivery as its own line item). Protein caps 3/3/4/6.
+  - Monthly subscriptions → `subscription` mode (`mode: "subscription"`): 8/$400, 10/$500, 16/$768. **12/$575 is disabled** until Andrew confirms the period. Delivery on subscriptions is refused until the recurring delivery fee is confirmed.
+  - Requires `acceptedPolicies: true`. Delivery orders collect a US shipping address in Checkout; phone is collected too. Tray, sauces, allergy note, pickup/delivery and the policy-acceptance time are stored in session metadata.
+  - Guards: origin check (SITE_URL), JSON only, 8 KB body cap, per-IP rate limit (default 10 / 10 min, counters hashed, kept in Netlify Blobs), optional `Idempotency-Key` header, Stripe errors never echoed to the browser, live keys refused unless `STRIPE_ALLOW_LIVE=true`.
+- `POST /api/stripe-webhook` (`netlify/functions/stripe-webhook.ts`): verifies the Stripe signature on the raw body, then on `checkout.session.completed` / `async_payment_succeeded` (paid only) stores the order in Netlify Blobs (`orders`, key = session id; `stripe-events` dedupes by event id). Idempotent. Returns 500 on storage failure so Stripe retries.
+- Optional confirmation email (`netlify/lib/email.ts`, Resend): **off** unless `ORDER_EMAIL_ENABLED=true` plus `RESEND_API_KEY` and `ORDER_EMAIL_FROM`. A failure never fails the webhook.
+- Front end: `FEATURES.liveCheckout` in `src/config/features.ts` is **false**, so the builder still shows "Checkout coming soon, order by DM". When true, the Checkout button (with a policy checkbox) calls `startCheckout()` in `src/lib/checkout.ts`.
+
+### Setup (test mode first)
+1. In Stripe (test mode) create a **restricted key** with only *Checkout Sessions: Write* (a standard `sk_test_` key also works). Copy `.env.example` → `.env` (never commit it) or add the variables in Netlify → Site configuration → Environment variables: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `SITE_URL` (https).
+2. Add a webhook endpoint `https://<site>/api/stripe-webhook` for `checkout.session.completed` and `checkout.session.async_payment_succeeded`; copy its signing secret to `STRIPE_WEBHOOK_SECRET`. Locally: `stripe listen --forward-to localhost:8888/api/stripe-webhook` then `netlify dev`.
+3. Flip `liveCheckout` to `true`, deploy, pay with Stripe test card `4242 4242 4242 4242`, and check the order appears in Blobs (`netlify blobs:list orders`).
+4. Live: use live keys and set `STRIPE_ALLOW_LIVE=true` only when Andrew approves. Turn on the Stripe Dashboard terms/refund links and tax settings as needed.
+
+### Tests
+`npm test` (vitest, 47 tests): catalog pricing and caps, request validation, session params (amounts, delivery, subscription, metadata, client-price tampering), handler (rate limit, origin, errors, live-key guard), webhook (signature, idempotency, storage, email hook). Stripe is always mocked; nothing calls Stripe. `npm run typecheck:server` type-checks the functions and tests.
