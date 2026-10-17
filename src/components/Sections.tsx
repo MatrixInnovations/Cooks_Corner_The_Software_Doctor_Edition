@@ -182,6 +182,9 @@ export function Footer() {
         <span>© {new Date().getFullYear()} Cook’s Corner LLC.</span>
         <span>Preview build. Not live. Photos are AI placeholders until Marsaun’s own.</span>
       </div>
+      <div className="wrap credit">
+        <p>Designed and Developed by Andrew Lowery, <a href="https://thesoftwaredoctor.com" target="_blank" rel="noopener">The Software Doctor<span className="sr"> (opens in a new tab)</span></a></p>
+      </div>
     </footer>
   )
 }

@@ -426,3 +426,10 @@ a{color:inherit}
 @media (prefers-reduced-motion:reduce){.dots{transition:none}}
 /* anchor jumps land flush under the (64px) mobile header so the header tone matches the section you arrive at */
 @media (max-width:820px){#policies,#order-changes-and-refunds,#food-allergy-notice,#menu,#packages,#delivery,#contact,#chef,#reviews,#subscriptions,#catering{scroll-margin-top:64px}.chef{scroll-margin-top:64px}}
+
+/* footer credit line */
+.foot .credit{margin-top:14px;text-align:center}
+.foot .credit p{margin:0;font:500 13px/1.5 var(--font-body);letter-spacing:.04em;color:var(--bone);opacity:.72}
+.foot .credit a{color:inherit;text-decoration:underline;text-decoration-color:var(--saffron);text-underline-offset:3px}
+.foot .credit a:hover{opacity:1;color:var(--bone)}
+.foot .credit a:focus-visible{outline:3px solid var(--bone);outline-offset:3px;border-radius:2px}
