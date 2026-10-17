@@ -1,3 +1,5 @@
+import { MENU_ITEMS, ONE_TIME_PACKAGES } from '../shared/catalog'
+
 /** Copy + facts. Source: copy/homepage-captions.md and the client's own flyers. No claims beyond these. */
 export const BIZ = {
   name: "Cook's Corner",
@@ -34,12 +36,8 @@ export const STEPS = [
   { n: 7, label: 'Done', cap: 'Your week is handled.' },
 ] as const
 
-export const PACKAGES = [
-  { meals: 8, price: 116, proteins: 'Up to 3 proteins' },
-  { meals: 10, price: 150, proteins: 'Up to 3 proteins' },
-  { meals: 12, price: 155, proteins: 'Up to 4 proteins' },
-  { meals: 16, price: 190, proteins: 'Up to 6 proteins' },
-] as const
+/** One-time packages: prices and protein caps come from src/shared/catalog.ts (also used by the server). */
+export const PACKAGES = ONE_TIME_PACKAGES.map((p) => ({ meals: p.meals, price: p.priceCents / 100, proteins: `Up to ${p.maxProteins} proteins` }))
 
 /**
  * Subscriptions are MONTHLY (Andrew's correction): price is per month. 8 = $400, 10 = $500, 16 = $768 are confirmed.
@@ -76,12 +74,7 @@ export const CHEF_TICKET_03 = { head: ['Care.', 'Consistency.', 'Good food.'], w
 export const CHEF_FACTS = { years: 'Almost 20 years', signature: 'Honey Nut Salmon' }
 export const CHEF_MENU_ITEMS = ['Ribeye', 'Chicken', 'Turkey', 'Shrimp', 'Salmon', 'Scallops', 'Grilled asparagus', 'Sweet potato'] as const
 
-export const MENU = {
-  Protein: ['Grilled Ribeye', 'Grilled Chicken Breast', 'Grilled Chicken Thigh', 'Ground Turkey', 'Turkey Meatballs'],
-  Seafood: ['Grilled Salmon', 'Grilled Shrimp', 'Grilled Scallops', 'Grilled Cod'],
-  Vegetables: ['Grilled Asparagus', 'Grilled Zucchini/Squash', 'Steamed Broccoli', 'Steamed Green Beans', 'Grilled Peppers', 'Roasted Carrots'],
-  Starch: ['Sweet Potato', 'Roasted Corn', 'Black Beans', 'Garlic Parmesan Mash', 'Rice Pilaf', 'Brown Rice/Quinoa'],
-} as const
+export const MENU = MENU_ITEMS
 
 export const ORDER_NOTE = 'List allergies prior to ordering*'
 export const TURNAROUND = 'Pickup or delivery happens 48 hours after your order is placed.'

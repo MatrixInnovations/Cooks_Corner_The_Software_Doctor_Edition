@@ -29,7 +29,7 @@ export function Packages() {
               <div className="pm">
                 {k.proteins}
               </div>
-              <OrderButton what={`You picked the ${k.meals}-meal package.`}>Choose this package</OrderButton>
+              <OrderButton what={`You picked the ${k.meals}-meal package.`} meals={k.meals}>Choose this package</OrderButton>
             </li>
           ))}
         </ul>

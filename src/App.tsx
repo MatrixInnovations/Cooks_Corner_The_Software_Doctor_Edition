@@ -3,6 +3,8 @@ import Story from './components/Story'
 import { Catering, Delivery, Footer, Menu, Policies, Packages, Subscriptions } from './components/Sections'
 import Reviews from './components/Reviews'
 import Chef from './components/Chef'
+import TrayBuilder from './components/TrayBuilder'
+import { FEATURES } from './config/features'
 import { OrderProvider } from './components/ui'
 
 export default function App() {
@@ -13,6 +15,7 @@ export default function App() {
       <main>
         <Story />
         <Packages />
+        {FEATURES.trayBuilder && <TrayBuilder />}
         <Menu />
         <Delivery />
         <Subscriptions />

@@ -48,3 +48,12 @@ Business name Cook's Corner; planned domain cookscornerllc.com (placeholder, not
 
 ## v9 confirmed facts
 Instagram _cooks_corner_ (linked); sauces Spank Sauce + Spice Man; pickup Tue-Sat 11-7, no Sundays, delivery same schedule ($15); order any day/time via site or Instagram DM; catering is custom, by phone and/or DM; protein maximums 3/3/4/6; subscriptions are monthly ($400/$500/$768; $575 for 12 meals awaits period confirmation); 48-hour turnaround confirmed; Reheating & Storage policy card added.
+
+## Tray Builder (`#build`)
+
+Order now / Choose this package scroll to the builder (`src/components/TrayBuilder.tsx`). Flow: package (8/10/12/16) → proteins (caps 3/3/4/6) → sides → sauces (Spank Sauce, Spice Man) → allergy note → pickup or delivery (+$15) on the ticket.
+- Prices, caps, menu and validation live in `src/shared/catalog.ts` (pure TS, also used by the server Functions; the server never trusts client prices).
+- Desktop: sticky tray picture + ticket column (shrinks on short screens). Mobile: slim button-red bar that opens a full-screen ticket sheet.
+- The tray picture is a **composite**: transparent layers (`public/photos/tray/*.webp`, built by `tools/tray-layers.py`) cut from the real tray photo. There are no per-item photos yet, so any protein/side shows a generic stand-in. Need: a photo of each item.
+- Checkout is not live. `src/config/features.ts` → `liveCheckout: false` shows "Checkout coming soon, order by DM @_cooks_corner_ for now".
+- Still tagged NEED FROM MARSAUN: order cutoff, side picks per package, sauces per order (and extra cost). Honey Nut Salmon is intentionally not selectable until confirmed as a protein.

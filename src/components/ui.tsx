@@ -1,5 +1,6 @@
 import { createContext, useContext, useRef, type ReactNode } from 'react'
 import { BIZ, NEED, ORDER_NOTE, POLICIES } from '../config/content'
+import { FEATURES } from '../config/features'
 
 /** A visible open question for the client. Keep until Marsaun answers. */
 export function Need({ children = NEED, title }: { children?: ReactNode; title?: string }) {
@@ -10,7 +11,7 @@ export function Need({ children = NEED, title }: { children?: ReactNode; title?:
   )
 }
 
-type OrderCtx = { open: (what?: string) => void }
+type OrderCtx = { open: (what?: string, meals?: number) => void }
 const Ctx = createContext<OrderCtx>({ open: () => {} })
 export const useOrder = () => useContext(Ctx)
 
@@ -18,7 +19,15 @@ export const useOrder = () => useContext(Ctx)
 export function OrderProvider({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDialogElement>(null)
   const what = useRef<HTMLSpanElement>(null)
-  const open = (w?: string) => {
+  const open = (w?: string, meals?: number) => {
+    // With the Tray Builder on the page, every Order button takes you to it (and pre-selects the package).
+    const target = FEATURES.trayBuilder ? document.getElementById('build') : null
+    if (target) {
+      window.dispatchEvent(new CustomEvent('tray:select', { detail: { meals } }))
+      const calm = matchMedia('(prefers-reduced-motion: reduce)').matches
+      target.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' })
+      return
+    }
     if (what.current) what.current.textContent = w ?? ''
     ref.current?.showModal()
   }
@@ -45,10 +54,10 @@ export function OrderProvider({ children }: { children: ReactNode }) {
   )
 }
 
-export function OrderButton({ children = 'Order now', className = 'btn p', what }: { children?: ReactNode; className?: string; what?: string }) {
+export function OrderButton({ children = 'Order now', className = 'btn p', what, meals }: { children?: ReactNode; className?: string; what?: string; meals?: number }) {
   const { open } = useOrder()
   return (
-    <button type="button" className={className} onClick={() => open(what)}>
+    <button type="button" className={className} onClick={() => open(what, meals)}>
       {children}
     </button>
   )
