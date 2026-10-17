@@ -103,6 +103,7 @@ function Panel({ s, set, cap, total, idp, pay }: { s: State; set: (p: Partial<St
               <button type="button" className="btn p tb-checkout" disabled={missing.length > 0 || pay.busy} aria-describedby={missing.length ? `${idp}-need` : undefined} onClick={pay.go}>{pay.busy ? 'Starting checkout…' : 'Checkout'}</button>
               {missing.length > 0 && !pay.busy && <p className="tb-need-hint" id={`${idp}-need`}>{missing.length === 1 ? `${missing[0][0].toUpperCase()}${missing[0].slice(1)} to continue` : `To continue: ${missing.join(' and ')}`}</p>}
               {pay.error && <p className="tb-err" role="alert">{pay.error}</p>}
+              <p className="tb-next">On the next page: enter your email and phone, choose <b>Card</b>, then tap Pay.</p>
             </>
           ) : (
             <>
@@ -140,6 +141,12 @@ export default function TrayBuilder() {
     window.addEventListener('tray:select', on)
     return () => window.removeEventListener('tray:select', on)
   })
+  // Coming back from Stripe with the Back button restores this page frozen on "Starting checkout…" (bfcache): unfreeze it
+  useEffect(() => {
+    const on = (e: PageTransitionEvent) => { if (e.persisted) { setBusy(false); setError('') } }
+    window.addEventListener('pageshow', on)
+    return () => window.removeEventListener('pageshow', on)
+  }, [])
   useEffect(() => {
     const el = sec.current
     if (!el || !('IntersectionObserver' in window)) return

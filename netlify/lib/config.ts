@@ -31,3 +31,11 @@ export const int = (v: string | undefined, d: number) => {
   const n = Number(v)
   return Number.isFinite(n) && n > 0 ? Math.floor(n) : d
 }
+
+const METHODS = new Set(['card', 'link', 'cashapp', 'klarna', 'affirm', 'us_bank_account', 'amazon_pay'])
+/** CHECKOUT_PAYMENT_METHODS="card,link" (comma list). Default and any invalid value: card only. */
+export function paymentMethodTypes(env: Env): ('card' | 'link' | 'cashapp' | 'klarna' | 'affirm' | 'us_bank_account' | 'amazon_pay')[] {
+  const list = (env.CHECKOUT_PAYMENT_METHODS ?? '').split(',').map((x) => x.trim()).filter(Boolean)
+  const ok = list.length > 0 && list.every((x) => METHODS.has(x))
+  return (ok ? list : ['card']) as ReturnType<typeof paymentMethodTypes>
+}

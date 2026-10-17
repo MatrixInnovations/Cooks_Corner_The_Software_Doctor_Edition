@@ -12,7 +12,12 @@ const sauceNames = (ids: string[]) => ids.map((id) => SAUCES.find((s) => s.id ==
  * Builds the Stripe Checkout Session params from a validated request. Every amount comes from the server-side catalog.
  * One-time packages use payment mode; monthly plans use subscription mode.
  */
-export function buildSessionParams(req: CheckoutRequest, siteUrl: string, now: Date = new Date()): Stripe.Checkout.SessionCreateParams {
+export function buildSessionParams(
+  req: CheckoutRequest,
+  siteUrl: string,
+  now: Date = new Date(),
+  paymentMethodTypes: Stripe.Checkout.SessionCreateParams.AllowedPaymentMethodType[] = ['card'],
+): Stripe.Checkout.SessionCreateParams {
   const sub = req.mode === 'subscription'
   const unit = sub ? planFor(req.meals)!.priceCents : packageFor(req.meals)!.priceCents
   const delivery = req.fulfillment === 'delivery'
@@ -56,6 +61,10 @@ export function buildSessionParams(req: CheckoutRequest, siteUrl: string, now: D
     metadata,
     success_url: `${siteUrl}/?checkout=success&session_id={CHECKOUT_SESSION_ID}#build`,
     cancel_url: `${siteUrl}/?checkout=cancelled#build`,
+    // Card only (Apple Pay / Google Pay still ride on card). With Stripe's dynamic list no method is pre-selected and a click on
+    // "Pay" with nothing chosen only flashes a small "payment method required" note, which looked like Pay did nothing (pickup has
+    // no address block to anchor the eye). A single method renders the card form already open.
+    allowed_payment_method_types: paymentMethodTypes,
     phone_number_collection: { enabled: true },
     billing_address_collection: 'auto',
     custom_text: {

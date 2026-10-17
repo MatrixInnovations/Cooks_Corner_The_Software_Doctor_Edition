@@ -1,5 +1,5 @@
 import { parseCheckoutRequest } from './cart'
-import { checkoutConfig, int } from './config'
+import { checkoutConfig, int, paymentMethodTypes } from './config'
 import { clientIp, fail, json, readBody } from './http'
 import { rateLimit, type CounterStore } from './ratelimit'
 import { buildSessionParams } from './session'
@@ -48,7 +48,7 @@ export async function handleCreateCheckout(req: Request, deps: CheckoutDeps): Pr
   const options = idem && /^[A-Za-z0-9_-]{8,64}$/.test(idem) ? { idempotencyKey: idem } : undefined
   try {
     const stripe = deps.stripe(cfg.secretKey)
-    const session = await stripe.checkout.sessions.create(buildSessionParams(parsed.value, cfg.siteUrl, deps.now?.()), options)
+    const session = await stripe.checkout.sessions.create(buildSessionParams(parsed.value, cfg.siteUrl, deps.now?.(), paymentMethodTypes(deps.env)), options)
     if (!session.url) return fail(502, 'no_session_url', 'Could not start checkout.', undefined, cors)
     return json(200, { id: session.id, url: session.url }, cors)
   } catch (e) {

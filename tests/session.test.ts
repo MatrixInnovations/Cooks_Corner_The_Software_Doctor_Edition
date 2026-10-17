@@ -37,6 +37,17 @@ describe('buildSessionParams', () => {
     expect(sessionTotalCents(p)).toBe(cents)
     expect(p.shipping_address_collection).toBeUndefined()
   })
+  it.each([8, 10, 12, 16])('pickup %i meals: one line item, no delivery fee, no address, phone + card only, parses with empty or "None" allergy', (meals) => {
+    for (const allergyNote of ['', 'None', 'peanuts']) {
+      const p = build({ meals, fulfillment: 'pickup', allergyNote, proteins: ['Grilled Ribeye'], vegetables: [], starches: [], sauces: [] })
+      expect(p.line_items).toHaveLength(1)
+      expect(p.shipping_address_collection).toBeUndefined()
+      expect(p.phone_number_collection).toEqual({ enabled: true })
+      expect(p.allowed_payment_method_types).toEqual(['card'])
+      expect(p.metadata).toMatchObject({ fulfillment: 'pickup', allergy_note: allergyNote })
+      expect(p.metadata?.catalog_total_cents).toBe(String(sessionTotalCents(p)))
+    }
+  })
   it('delivery adds a $15 line item and collects a US shipping address', () => {
     const p = build({ fulfillment: 'delivery' })
     expect(sessionTotalCents(p)).toBe(15000 + 1500)

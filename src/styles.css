@@ -619,6 +619,7 @@ a{color:inherit}
 .tb-accept:has(input:focus-visible){border-color:var(--charcoal)}
 @media (max-width:900px){.tb-accept{min-height:56px;padding:12px}.tb .tb-accept input[type=checkbox]{width:28px;height:28px;min-width:28px}.tb .tb-accept input[type=checkbox]:checked{background-size:21px 21px}}
 .tb-need-hint{margin-top:10px;font-size:14px;line-height:1.35;font-weight:700;color:#8f2410;text-align:center}
+.tb-next{margin-top:10px;font-size:13px;line-height:1.4;color:#4a4136;text-align:center}.tb-next b{color:#17140f}
 .tb-accept a{color:var(--charcoal);text-underline-offset:3px}
 .tb-checkout:disabled{background:#8d4a3a;cursor:not-allowed}
 .tb-err{margin-top:10px;font-size:14px;font-weight:600;color:#9b2a10;text-align:center}

@@ -22,6 +22,25 @@ describe('create-checkout-session handler (Stripe mocked)', () => {
     expect(opts).toEqual({ idempotencyKey: 'abcdef123456' })
     expect(r.headers.get('access-control-allow-origin')).toBe(SITE)
   })
+  it.each([8, 10, 12, 16])('pickup %i meals (minimal tray, empty or "None" allergy note) creates a card-only session with no delivery fee', async (meals) => {
+    for (const allergyNote of ['', 'None']) {
+      const { s, d } = deps()
+      const r = await handleCreateCheckout(post({ ...goodCart(), meals, fulfillment: 'pickup', proteins: ['Grilled Ribeye'], vegetables: [], starches: [], sauces: [], allergyNote }), d)
+      expect(r.status).toBe(200)
+      const [params] = s.create.mock.calls[0] as any[]
+      expect(params.line_items).toHaveLength(1)
+      expect(params.shipping_address_collection).toBeUndefined()
+      expect(params.allowed_payment_method_types).toEqual(['card'])
+    }
+  })
+  it('CHECKOUT_PAYMENT_METHODS can widen the list; junk falls back to card', async () => {
+    const a = deps({ env: { ...ENV, CHECKOUT_PAYMENT_METHODS: 'card, link' } })
+    await handleCreateCheckout(post(goodCart()), a.d)
+    expect((a.s.create.mock.calls[0] as any[])[0].allowed_payment_method_types).toEqual(['card', 'link'])
+    const b = deps({ env: { ...ENV, CHECKOUT_PAYMENT_METHODS: 'card,bitcoin' } })
+    await handleCreateCheckout(post(goodCart()), b.d)
+    expect((b.s.create.mock.calls[0] as any[])[0].allowed_payment_method_types).toEqual(['card'])
+  })
   it('ignores a malformed idempotency key', async () => {
     const { s, d } = deps()
     await handleCreateCheckout(post(goodCart(), { 'idempotency-key': 'bad key!' }), d)
