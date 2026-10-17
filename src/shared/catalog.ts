@@ -12,11 +12,11 @@ export const ONE_TIME_PACKAGES = [
   { meals: 16, priceCents: 19000, maxProteins: 6 },
 ] as const
 
-/** Monthly subscriptions. 12 meals / $575: period not confirmed yet, so it is flagged and disabled. */
+/** Monthly subscriptions: 8/$400, 10/$500, 12/$575, 16/$768 per month (12-meal plan confirmed monthly by Andrew/Marsaun, Oct 17). */
 export const SUBSCRIPTION_PLANS = [
   { meals: 8, priceCents: 40000, enabled: true, confirmed: true },
   { meals: 10, priceCents: 50000, enabled: true, confirmed: true },
-  { meals: 12, priceCents: 57500, enabled: false, confirmed: false },
+  { meals: 12, priceCents: 57500, enabled: true, confirmed: true },
   { meals: 16, priceCents: 76800, enabled: true, confirmed: true },
 ] as const
 

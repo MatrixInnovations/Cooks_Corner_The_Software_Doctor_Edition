@@ -7,8 +7,8 @@ describe('catalog pricing', () => {
   it('one-time prices match the confirmed menu', () => {
     expect(ONE_TIME_PACKAGES.map((p) => [p.meals, p.priceCents / 100, p.maxProteins])).toEqual([[8, 116, 3], [10, 150, 3], [12, 155, 4], [16, 190, 6]])
   })
-  it('monthly plans: 12 meals is flagged unconfirmed and disabled', () => {
-    expect(SUBSCRIPTION_PLANS.map((p) => [p.meals, p.priceCents / 100, p.enabled])).toEqual([[8, 400, true], [10, 500, true], [12, 575, false], [16, 768, true]])
+  it('monthly plans: 8/10/12/16 are all enabled and confirmed', () => {
+    expect(SUBSCRIPTION_PLANS.map((p) => [p.meals, p.priceCents / 100, p.enabled])).toEqual([[8, 400, true], [10, 500, true], [12, 575, true], [16, 768, true]])
   })
   it('adds the $15 delivery fee only for delivery', () => {
     expect(DELIVERY_FEE_CENTS).toBe(1500)

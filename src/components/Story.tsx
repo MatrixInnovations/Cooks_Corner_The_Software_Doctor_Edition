@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
-import { BIZ, ORDER_NOTE, PACKAGES, PICKUP_HOURS_SHORT, POLICIES, STEPS, TURNAROUND } from '../config/content'
+import { BIZ, NO_SAME_DAY, ORDER_CUTOFF, ORDER_NOTE, PACKAGES, PICKUP_HOURS_SHORT, POLICIES, STEPS, TURNAROUND } from '../config/content'
 import { PHOTOS, type PhotoKey } from '../config/photos'
 import { Need, OrderButton, Photo } from './ui'
 import { steamState } from '../three/steamState'
@@ -264,6 +264,7 @@ export default function Story() {
             <h2 className="disp">{STEPS[5].cap}</h2>
             <p className="sub">{BIZ.address}. {TURNAROUND}</p>
             <p className="need-row">Tuesday through Saturday, 11 AM to 7 PM unless advised otherwise. No Sundays.</p>
+            <p className="need-row">{ORDER_CUTOFF}. {NO_SAME_DAY}</p>
           </div>
           <div className="copy cap c7" ref={reg('c7')}>
             <div className="eyebrow">07 · Done</div>

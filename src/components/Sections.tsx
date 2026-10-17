@@ -1,4 +1,4 @@
-import { BIZ, CATERING_HOW, DELIVERY_FEE, ORDERING, PICKUP_HOURS, SAUCES, MENU, ORDER_NOTE, PACKAGES, POLICIES, SUBSCRIPTIONS, TURNAROUND } from '../config/content'
+import { BIZ, CATERING_HOW, DELIVERY_FEE, ORDERING, PICKUP_HOURS, SAUCES, MENU, NO_SAME_DAY, ORDER_CUTOFF, ORDER_NOTE, PACKAGES, POLICIES, SUBSCRIPTIONS, SUBSCRIPTION_DELIVERY, TURNAROUND } from '../config/content'
 import { PHOTOS, LOGO } from '../config/photos'
 import { Need, OrderButton, Photo, ResponsivePhoto } from './ui'
 import Jingle from './Jingle'
@@ -75,6 +75,7 @@ export function Delivery() {
             <p className="big">{BIZ.address}</p>
             <p className="big">{PICKUP_HOURS}</p>
             <p className="big">{ORDERING}</p>
+            <p className="big">{ORDER_CUTOFF}. {NO_SAME_DAY}</p>
           </div>
           <div className="panel">
             <h3 className="disp">Delivery</h3>
@@ -104,11 +105,11 @@ export function Subscriptions() {
               <hr />
               <div className="pm">
                 per month
-                {k.confirm && <Need>Confirm monthly</Need>}
               </div>
             </li>
           ))}
         </ul>
+        <p className="sub-delivery">{SUBSCRIPTION_DELIVERY}</p>
         <ul className="need-list on-dark">
           <li>What the subscription menu includes; protein maximums <Need /></li>
           <li>How billing works, and how to pause or cancel <Need /></li>

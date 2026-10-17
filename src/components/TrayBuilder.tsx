@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { BIZ, ORDER_NOTE, PICKUP_HOURS_SHORT, POLICIES } from '../config/content'
+import { BIZ, NO_SAME_DAY, ORDER_CUTOFF, ORDER_NOTE, PICKUP_HOURS_SHORT, POLICIES } from '../config/content'
 import {
   DELIVERY_FEE_CENTS, MAX_ALLERGY_NOTE, MENU_ITEMS, ONE_TIME_PACKAGES, SAUCES, dollars, packageFor, totalCents,
   type Fulfillment,
@@ -88,8 +88,8 @@ function Panel({ s, set, cap, total, idp, pay }: { s: State; set: (p: Partial<St
               <p className="tn m">Same days and hours as pickup. We’ll collect your address at checkout.</p>
             </>
           )}
-          <div className="tb-ob">Order cutoff <Need>Need from Marsaun</Need></div>
-          <p className="tn m">Ready 48 hours after your order is placed.</p>
+          <div className="tb-ob">{ORDER_CUTOFF}</div>
+          <p className="tn m">{NO_SAME_DAY} Ready 48 hours after your order is placed.</p>
           <div className="tb-tot">
             <span className="k">Subtotal<small>{s.fulfillment === 'pickup' ? 'Pickup · no fee' : `Includes ${dollars(DELIVERY_FEE_CENTS)} delivery`}</small></span>
             <span className="t" aria-live="polite">{dollars(total)}</span>

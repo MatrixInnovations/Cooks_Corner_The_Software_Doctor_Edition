@@ -20,12 +20,12 @@ describe('parseCheckoutRequest', () => {
     const r = parseCheckoutRequest(rest); expect(r.ok && r.value.mode).toBe('payment')
     expect(parseCheckoutRequest({ ...goodCart(), mode: 'setup' }).ok).toBe(false)
   })
-  it('refuses the unconfirmed 12-meal subscription but allows 8/10/16', () => {
+  it('allows every monthly plan: 8/10/12/16', () => {
     const sub = (meals: number) => parseCheckoutRequest({ ...goodCart(), mode: 'subscription', meals })
-    expect(sub(12).ok).toBe(false)
-    expect(sub(8).ok && sub(10).ok && sub(16).ok).toBe(true)
+    expect([8, 10, 12, 16].map((m) => sub(m).ok)).toEqual([true, true, true, true])
+    expect(parseCheckoutRequest({ ...goodCart(), mode: 'subscription', meals: 14 }).ok).toBe(false)
   })
-  it('refuses delivery on subscriptions (recurring fee not confirmed)', () => {
+  it('refuses delivery on the subscription checkout path (delivery is $15 each time, billed separately)', () => {
     expect(parseCheckoutRequest({ ...goodCart(), mode: 'subscription', fulfillment: 'delivery' }).ok).toBe(false)
   })
 })
@@ -66,6 +66,11 @@ describe('buildSessionParams', () => {
     expect(p.line_items![0].price_data).toMatchObject({ unit_amount: 76800, recurring: { interval: 'month' } })
     expect(p.subscription_data?.metadata?.meals).toBe('16')
     expect(p.payment_intent_data).toBeUndefined()
+  })
+  it('12-meal monthly plan: $575 recurring monthly, no delivery line', () => {
+    const p = build({ mode: 'subscription', meals: 12 })
+    expect(p.line_items![0].price_data).toMatchObject({ unit_amount: 57500, recurring: { interval: 'month' } })
+    expect(p.line_items).toHaveLength(1)
   })
   it('stores the tray, allergy note and policy acceptance in metadata (sauce names, not ids)', () => {
     const m = build().metadata!

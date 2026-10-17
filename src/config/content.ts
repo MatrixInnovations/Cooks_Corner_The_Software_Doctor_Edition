@@ -21,7 +21,7 @@ export const SAUCES = [
 ] as const
 export const PICKUP_HOURS = 'Tuesday through Saturday, 11 AM to 7 PM unless advised otherwise. No Sundays.'
 export const PICKUP_HOURS_SHORT = 'Tue\u2013Sat, 11 AM\u20137 PM'
-export const ORDERING = 'Order any day, any time: check out on the site or send us a DM on Instagram.'
+export const ORDERING = 'Order by checking out on the site or sending us a DM on Instagram.'
 export const CATERING_HOW = 'Catering is special and custom. Request it by phone and/or DM.'
 
 export const NEED = 'Need from Marsaun'
@@ -40,13 +40,13 @@ export const STEPS = [
 export const PACKAGES = ONE_TIME_PACKAGES.map((p) => ({ meals: p.meals, price: p.priceCents / 100, proteins: `Up to ${p.maxProteins} proteins` }))
 
 /**
- * Subscriptions are MONTHLY (Andrew's correction): price is per month. 8 = $400, 10 = $500, 16 = $768 are confirmed.
- * 12 = $575: period not yet confirmed (likely monthly), so it carries a small NEED tag "confirm monthly".
+ * Subscriptions are MONTHLY (confirmed): 8 = $400, 10 = $500, 12 = $575, 16 = $768 per month.
+ * Delivery is $15 each time it is needed, billed separately (also for subscribers).
  */
 export const SUBSCRIPTIONS = [
   { meals: 8, price: 400, confirm: false },
   { meals: 10, price: 500, confirm: false },
-  { meals: 12, price: 575, confirm: true },
+  { meals: 12, price: 575, confirm: false },
   { meals: 16, price: 768, confirm: false },
 ] as const
 
@@ -78,7 +78,10 @@ export const MENU = MENU_ITEMS
 
 export const ORDER_NOTE = 'List allergies prior to ordering*'
 export const TURNAROUND = 'Pickup or delivery happens 48 hours after your order is placed.'
+export const ORDER_CUTOFF = 'Order cutoff: Sunday at 9:00 AM'
+export const NO_SAME_DAY = 'No same-day orders or pickup.'
 export const DELIVERY_FEE = '$15'
+export const SUBSCRIPTION_DELIVERY = 'Delivery is $15 each time, billed separately.'
 
 /** Policy text is verbatim from Andrew. Do not edit wording without his approval. */
 export const POLICIES = {
@@ -86,6 +89,7 @@ export const POLICIES = {
     id: 'order-changes-and-refunds',
     title: 'ORDER CHANGES AND REFUNDS',
     paragraphs: [
+      'Order cutoff: Sunday at 9:00 AM. No same-day orders or pickup. Pickup or delivery happens 48 hours after your order is placed.',
       'Please request cancellations or changes at least 48 hours before meal preparation begins. Orders canceled by that deadline are eligible for a full refund.',
       "Once preparation has started, orders generally can't be canceled or refunded because ingredients and labor have already been committed.",
       "If an order is incorrect, missing an item, or has a quality issue, contact Cook's Corner within 24 hours of pickup or delivery and include a photo when possible. We'll review the issue and offer a replacement, store credit, or refund for the affected item.",

@@ -19,8 +19,8 @@ export function parseCheckoutRequest(body: unknown): { ok: true; value: Checkout
     const plan = planFor(tray.value.meals)
     if (!plan) errors.push('Unknown subscription plan.')
     else if (!plan.enabled || !plan.confirmed) errors.push(`The ${plan.meals}-meal subscription is not available yet.`)
-    // Delivery on a subscription: the recurring delivery fee has not been confirmed by Marsaun, so it is refused rather than guessed.
-    if (tray.value.fulfillment === 'delivery') errors.push('Delivery is not available on subscriptions yet. Choose pickup.')
+    // Delivery for subscribers is $15 each time, billed separately (not part of the monthly plan), so this subscription checkout path is pickup only.
+    if (tray.value.fulfillment === 'delivery') errors.push('Delivery is $15 each time, billed separately. Choose pickup for subscription checkout, or contact us to arrange delivery.')
   }
   if (errors.length || !tray.ok) return { ok: false, errors }
   return { ok: true, value: { ...tray.value, mode: mode as CheckoutMode, acceptedPolicies: true } }

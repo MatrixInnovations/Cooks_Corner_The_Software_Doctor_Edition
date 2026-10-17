@@ -32,7 +32,7 @@ Each slot is a 16:9 image with the dish on the right and space on the left for t
 One 100vh of scroll per step, seven steps plus a short hold. Values are smoothed with a critically damped lerp (0.08), no bounce, transform and opacity only. `prefers-reduced-motion` shows each step's final state with a 200 ms opacity fade and skips three.js. The ticket prints in six stepped increments. Test hooks: `?s=2.5` pins the story position, `?nosteam` skips three.js.
 
 ## Still open (kept visible on the page as "Need from Marsaun" tags)
-$575 / 12-meal subscription period (shows a "Confirm monthly" tag), subscription menu contents and billing/pause/cancel, delivery address method, catering group sizes/example menus/travel distance, photos.
+subscription menu contents and billing/pause/cancel, delivery address method, catering group sizes/example menus/travel distance, photos.
 
 ## Confirmed by Andrew (now on the page)
 Business name Cook's Corner; planned domain cookscornerllc.com (placeholder, not live; the EIN is internal and is NOT on the site); pickup or delivery 48 hours after the order; delivery fee $15 within 25 miles; "List allergies prior to ordering*" note; policies section (verbatim text in `src/config/content.ts`, `POLICIES`).
@@ -47,7 +47,7 @@ Business name Cook's Corner; planned domain cookscornerllc.com (placeholder, not
 - Footer legal line: Cook's Corner LLC.
 
 ## v9 confirmed facts
-Instagram _cooks_corner_ (linked); sauces Spank Sauce + Spice Man; pickup Tue-Sat 11-7, no Sundays, delivery same schedule ($15); order any day/time via site or Instagram DM; catering is custom, by phone and/or DM; protein maximums 3/3/4/6; subscriptions are monthly ($400/$500/$768; $575 for 12 meals awaits period confirmation); 48-hour turnaround confirmed; Reheating & Storage policy card added.
+Instagram _cooks_corner_ (linked); sauces Spank Sauce + Spice Man; pickup Tue-Sat 11-7, no Sundays, delivery same schedule ($15); order via site or Instagram DM (the "any day, any time" wording was removed Oct 17 after the Sunday 9:00 AM cutoff and no same-day rule); catering is custom, by phone and/or DM; protein maximums 3/3/4/6; subscriptions are monthly ($400/$500/$768; $575 for 12 meals, confirmed monthly Oct 17; delivery is $15 each time, billed separately, including for subscribers); 48-hour turnaround confirmed; Reheating & Storage policy card added.
 
 ## Tray Builder (`#build`)
 
@@ -56,7 +56,7 @@ Order now / Choose this package scroll to the builder (`src/components/TrayBuild
 - Desktop: sticky tray picture + ticket column (shrinks on short screens). Mobile: slim button-red bar that opens a full-screen ticket sheet.
 - The tray picture is a **composite**: transparent layers (`public/photos/tray/*.webp`, built by `tools/tray-layers.py`) cut from the real tray photo. There are no per-item photos yet, so any protein/side shows a generic stand-in. Need: a photo of each item.
 - Checkout is not live. `src/config/features.ts` → `liveCheckout: false` shows "Checkout coming soon, order by DM @_cooks_corner_ for now".
-- Still tagged NEED FROM MARSAUN: order cutoff, side picks per package, sauces per order (and extra cost). Honey Nut Salmon is intentionally not selectable until confirmed as a protein.
+- Order cutoff is Sunday at 9:00 AM, and there are no same-day orders or pickup (Andrew, Oct 17; which week it applies to is still to confirm with Marsaun). Still tagged NEED FROM MARSAUN: side picks per package, sauces per order (and extra cost). Honey Nut Salmon is intentionally not selectable until confirmed as a protein.
 
 ## Server side: Stripe Checkout (Phase 1, branch `server/stripe-v1`)
 

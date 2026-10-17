@@ -636,3 +636,4 @@ a{color:inherit}
 .or-x:hover{background:#2a221a}
 .or-x:focus-visible{outline:3px solid var(--btn);outline-offset:3px}
 @media (max-width:600px){.or-in{flex-direction:column;gap:14px}.or-x{width:100%}}
+.sub-delivery{max-width:760px;margin:0 auto 18px;text-align:center;font-weight:600;color:var(--bone,#f3ece0)}

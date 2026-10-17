@@ -27,5 +27,5 @@ Hint under buttons: "Scroll to fill your tray"  (replaces "Drag the tray to spin
 
 ## Notes for the build
 - No "high protein", nutrition or "clean ingredients" claims.
-- Keep tags visible: sauce names, pickup days/hours, order cutoff, ordering method, delivery days/fee, 16-meal protein max, subscription terms, Instagram spelling.
+- Keep tags visible: sauce names, pickup days/hours, ordering method, delivery days/fee, 16-meal protein max, subscription terms, Instagram spelling.
 - Repo is public: do not commit Marsaun's prices, photos or phone/address copy until the repo is private. Commit this captions file and the prices-free parts of site-copy.md only.
