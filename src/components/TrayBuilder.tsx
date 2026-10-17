@@ -122,6 +122,11 @@ export default function TrayBuilder() {
   const [accepted, setAccepted] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  const [returned] = useState<'success' | 'cancelled' | ''>(() => {
+    if (typeof window === 'undefined') return ''
+    const c = new URLSearchParams(window.location.search).get('checkout')
+    return c === 'success' || c === 'cancelled' ? c : ''
+  })
   const sheet = useRef<HTMLDialogElement>(null)
   const sec = useRef<HTMLElement>(null)
   const idp = useId().replace(/:/g, '')
@@ -199,6 +204,17 @@ export default function TrayBuilder() {
             <div><dt>Delivery</dt><dd>{dollars(DELIVERY_FEE_CENTS)} fee</dd></div>
           </dl>
         </div>
+
+        {returned === 'success' && (
+          <div className="tb-return ok" role="status">
+            <b>Thank you! Your order is in.</b> Check your email for the Stripe receipt. We&rsquo;ll reach out about pickup or delivery, and your meals are ready 48 hours after you ordered.
+          </div>
+        )}
+        {returned === 'cancelled' && (
+          <div className="tb-return" role="status">
+            <b>No charge was made.</b> Your checkout was cancelled. Build your tray again whenever you&rsquo;re ready.
+          </div>
+        )}
 
         <div className="tb-grid">
           <div className="tb-steps">

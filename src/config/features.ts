@@ -3,5 +3,5 @@ export const FEATURES = {
   /** Tray Builder section on the homepage (Order buttons scroll to it). */
   trayBuilder: true,
   /** When true the builder's Checkout button posts the cart to /.netlify/functions/create-checkout-session. Off for now. */
-  liveCheckout: false,
+  liveCheckout: true,
 }

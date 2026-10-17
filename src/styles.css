@@ -615,3 +615,7 @@ a{color:inherit}
 .tb-accept a{color:var(--charcoal);text-underline-offset:3px}
 .tb-checkout:disabled{background:#8d4a3a;cursor:not-allowed}
 .tb-err{margin-top:10px;font-size:14px;font-weight:600;color:#9b2a10;text-align:center}
+
+.tb-return{margin:0 0 24px;padding:16px 20px;border:2px solid var(--saffron);border-radius:8px;background:rgba(244,236,221,.06);color:var(--bone);font-size:16px;line-height:1.4}
+.tb-return.ok{border-color:var(--chili)}
+.tb-return b{display:block;font-weight:700;margin-bottom:2px}
