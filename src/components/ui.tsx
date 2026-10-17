@@ -1,5 +1,5 @@
 import { createContext, useContext, useRef, type ReactNode } from 'react'
-import { BIZ, NEED } from '../config/content'
+import { BIZ, NEED, ORDER_NOTE, POLICIES } from '../config/content'
 
 /** A visible open question for the client. Keep until Marsaun answers. */
 export function Need({ children = NEED, title }: { children?: ReactNode; title?: string }) {
@@ -33,6 +33,10 @@ export function OrderProvider({ children }: { children: ReactNode }) {
           </p>
           <p>
             To order today, call <a href={BIZ.phoneHref}>{BIZ.phone}</a> or email <a href={`mailto:${BIZ.email}`}>{BIZ.email}</a>.
+          </p>
+          <p className="od-note"><a href={`#${POLICIES.allergy.id}`} onClick={() => ref.current?.close()}>{ORDER_NOTE}</a></p>
+          <p>
+            <a className="od-policy" href="#policies" onClick={() => ref.current?.close()}>Order changes, refunds and food allergy notice</a>
           </p>
           <p className="od-need">
             <Need>Need from Marsaun: ordering flow</Need>

@@ -1,4 +1,4 @@
-import { BIZ, MENU, PACKAGES, SUBSCRIPTIONS } from '../config/content'
+import { BIZ, DELIVERY_FEE, MENU, ORDER_NOTE, PACKAGES, POLICIES, SUBSCRIPTIONS, TURNAROUND } from '../config/content'
 import { PHOTOS, LOGO } from '../config/photos'
 import { Need, OrderButton, Photo } from './ui'
 
@@ -32,6 +32,7 @@ export function Packages() {
             </li>
           ))}
         </ul>
+        <p className="order-note"><a href={`#${POLICIES.allergy.id}`}>{ORDER_NOTE}</a></p>
         <p className="note">“Protein maximum” is the most different proteins you can choose within one package. <Need>Proposed wording, Marsaun to confirm</Need></p>
       </div>
     </section>
@@ -61,22 +62,21 @@ export function Delivery() {
   return (
     <section id="delivery" className="sec bone2" data-theme="light" aria-labelledby="dl-t">
       <div className="wrap">
-        <Head eyebrow="Pickup & delivery" title={<span id="dl-t">Grab it, or we’ll bring it.</span>} sub="Your meals are already cooked, so your time is yours." />
+        <Head eyebrow="Pickup & delivery" title={<span id="dl-t">Grab it, or we’ll bring it.</span>} sub={TURNAROUND} />
         <div className="two">
           <div className="panel">
             <h3 className="disp">Pickup</h3>
             <p className="big">{BIZ.address}</p>
             <ul className="need-list">
               <li>Pickup days and hours <Need /></li>
-              <li>Order cutoff before pickup <Need /></li>
               <li>How to place an order <Need>Ordering flow</Need></li>
             </ul>
           </div>
           <div className="panel">
             <h3 className="disp">Delivery</h3>
-            <p className="big">Delivery within 25 miles of our pickup point. Minimum purchase $10.</p>
+            <p className="big">Delivery within 25 miles of our pickup point. Delivery fee: {DELIVERY_FEE}.</p>
             <ul className="need-list">
-              <li>Delivery days, times and any delivery fee <Need /></li>
+              <li>Delivery days and times <Need /></li>
               <li>How customers give their address <Need /></li>
             </ul>
             <a className="btn p" href={`mailto:${BIZ.email}?subject=Delivery`}>Ask about delivery</a>
@@ -125,6 +125,25 @@ export function Catering() {
   )
 }
 
+export function Policies() {
+  const parts = [POLICIES.refunds, POLICIES.allergy]
+  return (
+    <section id="policies" className="sec bone2 policies" data-theme="light" aria-labelledby="po-t">
+      <div className="wrap">
+        <Head eyebrow="Policies" title={<span id="po-t">Orders, refunds and allergies</span>} />
+        <div className="policy-grid">
+          {parts.map((p) => (
+            <article className="policy" id={p.id} key={p.id} aria-labelledby={`${p.id}-h`}>
+              <h3 id={`${p.id}-h`} className="disp">{p.title}</h3>
+              {p.paragraphs.map((t, i) => <p key={i}>{t}</p>)}
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export function Footer() {
   return (
     <footer id="contact" className="foot" data-theme="dark" aria-labelledby="ft-t">
@@ -132,7 +151,7 @@ export function Footer() {
         <div className="foot-brand">
           <span className="tile big"><img src={LOGO.src} alt="" width={120} height={120} loading="lazy" /></span>
           <div>
-            <h2 id="ft-t" className="disp">{BIZ.name} {BIZ.sub}</h2>
+            <h2 id="ft-t" className="disp">{BIZ.name}</h2>
             <p>{BIZ.tagline}</p>
             <p className="eyebrow">Meal Preps • Catering • Private Events</p>
           </div>
@@ -142,11 +161,13 @@ export function Footer() {
           <p>Phone: <a href={BIZ.phoneHref}>{BIZ.phone}</a></p>
           <p>Email: <a href={`mailto:${BIZ.email}`}>{BIZ.email}</a></p>
           <p>Instagram: {BIZ.instagram} <Need>Confirm exact handle</Need></p>
+          <p>Web: {BIZ.domain} <span className="soon">(coming soon)</span></p>
+          <p><a href="#policies">Policies: order changes, refunds and food allergy notice</a></p>
           <p>Hours <Need /></p>
         </address>
       </div>
       <div className="wrap legal">
-        <span>© {new Date().getFullYear()} Cook’s Corner Meal Prep.</span>
+        <span>© {new Date().getFullYear()} Cook’s Corner.</span>
         <span>Preview build. Not live. Photos are AI placeholders until Marsaun’s own.</span>
       </div>
     </footer>

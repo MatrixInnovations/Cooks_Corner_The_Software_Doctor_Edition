@@ -11,7 +11,7 @@
   --saffron: #f2b632;        /* small labels, thin rules, step numbers only */
   --herb: #7a9a4a;           /* tiny "Fresh" tags only (not used yet) */
   --ink-on-bone: #17140f;
-  --need-on-bone: #8a5d00;   /* dark saffron text for NEED tags on bone (contrast) */
+  --need-on-bone: #6f4a00;   /* dark saffron text for NEED tags on bone (contrast) */
 
   --font-display: 'Anton', 'Impact', 'Arial Narrow', sans-serif;
   --font-body: 'Barlow', system-ui, sans-serif;

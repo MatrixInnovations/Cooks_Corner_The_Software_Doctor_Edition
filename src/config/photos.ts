@@ -51,5 +51,5 @@ export type PhotoKey = keyof typeof PHOTOS
  */
 export const LOGO = {
   src: `${import.meta.env.BASE_URL}brand/logo-original.jpg`,
-  alt: "Cook's Corner Meal Prep logo",
+  alt: "Cook's Corner logo",
 }

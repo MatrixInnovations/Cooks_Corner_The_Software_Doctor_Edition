@@ -71,6 +71,7 @@ a{color:inherit}
 .copy h1 em{font-style:normal;color:var(--chili)}
 .copy h2{text-wrap:balance;font-size:calc(92*var(--u));line-height:1.02;margin-top:calc(20*var(--u));color:var(--bone)}
 .copy .sub{font-size:max(14px,calc(19*var(--u)));line-height:1.5;color:var(--bone);opacity:.92;margin-top:calc(26*var(--u));max-width:calc(520*var(--u))}
+.copy.c6 .sub{max-width:calc(330*var(--u))}
 .btns{display:flex;gap:calc(14*var(--u));margin-top:calc(30*var(--u))}
 .hint{font:500 max(11px,calc(13*var(--u)))/1 var(--font-body);letter-spacing:.06em;color:var(--bone-2);opacity:.8;margin-top:calc(24*var(--u))}
 .need-row{margin-top:calc(22*var(--u));font-size:max(13px,calc(16*var(--u)));color:var(--bone)}
@@ -197,6 +198,7 @@ a{color:inherit}
   .layer .fit{-webkit-mask-image:none;mask-image:none}
   .copy,.copy.cap{position:relative;left:auto;right:auto;top:auto;width:auto;margin:6px 20px 0;grid-row:2;grid-column:1;align-self:start}
   .copy.c2,.copy.c3,.copy.c4,.copy.c5,.copy.c6{align-self:center}
+  .copy.c6 .sub{max-width:none}
   /* per-plate framing on mobile: each plate's subject is centered and ~85-90% of the width, with room on both sides */
   .l-pickup .fit{transform:translateX(15.3%) scale(1.05)!important}
   .l-empty .fit{transform:translateX(17.9%) scale(.85)!important}
@@ -241,3 +243,20 @@ a{color:inherit}
 @media (max-width:520px){
   .menu-grid{grid-template-columns:1fr}
 }
+
+/* ---------- policies, order note, small notes ---------- */
+#policies,#order-changes-and-refunds,#food-allergy-notice,#menu,#packages,#delivery,#contact{scroll-margin-top:92px}
+.order-note{text-align:center;margin-top:18px;font-size:16px;font-weight:600}
+.order-note a{color:var(--charcoal);text-decoration:underline;text-decoration-color:#b8851a;text-decoration-thickness:2px;text-underline-offset:4px}
+.order-note a:hover{text-decoration-color:var(--charcoal)}
+.policy-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.policy{background:var(--charcoal);color:var(--bone);border:1px solid rgba(242,182,50,.6);border-radius:var(--r-card);padding:clamp(24px,3vw,40px)}
+.policy h3{font-size:clamp(28px,2.6vw,36px);line-height:1.1;letter-spacing:.02em;padding-bottom:16px;margin-bottom:18px;border-bottom:1px solid var(--saffron)}
+.policy p{font-size:17px;line-height:1.65;margin-top:14px;max-width:62ch}
+.policy p:first-of-type{margin-top:0}
+.ticket .t-note{display:block;margin-top:12px;text-align:center;font-size:max(13px,calc(14*var(--u)));font-weight:600;color:var(--charcoal);text-decoration:underline;text-decoration-color:#b8851a;text-underline-offset:3px}
+.foot-contact a{text-decoration-color:var(--saffron);text-underline-offset:3px}
+.foot-contact .soon{opacity:.75}
+.od-note,.od-policy{font-weight:600}
+.od-note a,.od-policy{color:var(--bone);text-decoration-color:var(--saffron);text-underline-offset:3px}
+@media (max-width:1000px){.policy-grid{grid-template-columns:1fr}}

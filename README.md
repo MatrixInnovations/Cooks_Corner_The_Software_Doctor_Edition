@@ -1,4 +1,4 @@
-# Cook's Corner Meal Prep: homepage (preview build)
+# Cook's Corner: homepage (preview build)
 
 React + Vite + TypeScript, with a lazy-loaded three.js (@react-three/fiber) steam layer. Palette **Charred & Citrus** (see `design/DESIGN.md`).
 This is an unlisted preview: `noindex, nofollow` meta, `X-Robots-Tag` header and `robots.txt` Disallow. Checkout is a placeholder (no Stripe, no keys).
@@ -32,4 +32,7 @@ Each slot is a 16:9 image with the dish on the right and space on the left for t
 One 100vh of scroll per step, seven steps plus a short hold. Values are smoothed with a critically damped lerp (0.08), no bounce, transform and opacity only. `prefers-reduced-motion` shows each step's final state with a 200 ms opacity fade and skips three.js. The ticket prints in six stepped increments. Test hooks: `?s=2.5` pins the story position, `?nosteam` skips three.js.
 
 ## Still open (kept visible on the page as "Need from Marsaun" tags)
-Sauce names and pairings, pickup days and hours, order cutoff, ordering flow, delivery days/times/fee, 16-meal protein maximum, subscription period/terms/billing, catering details, Instagram handle spelling, business hours.
+Sauce names and pairings, pickup days and hours, ordering flow, delivery days/times, 16-meal protein maximum, subscription period/terms/billing, catering details, Instagram handle spelling, business hours.
+
+## Confirmed by Andrew (now on the page)
+Business name Cook's Corner; planned domain cookscornerllc.com (placeholder, not live; the EIN is internal and is NOT on the site); pickup or delivery 48 hours after the order; delivery fee $15 within 25 miles; "List allergies prior to ordering*" note; policies section (verbatim text in `src/config/content.ts`, `POLICIES`).
