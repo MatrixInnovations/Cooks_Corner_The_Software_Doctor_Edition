@@ -53,3 +53,16 @@ export const LOGO = {
   src: `${import.meta.env.BASE_URL}brand/logo-original.jpg`,
   alt: "Cook's Corner logo",
 }
+
+/**
+ * Founder portrait for "Meet the chef". The file is a client photo of a person, so it is NOT committed to the public repo
+ * (public/people/ is git-ignored). Run `python3 tools/prepare-portrait.py <source.png>` to create
+ * public/people/marsaun-portrait.{jpg,webp}, then set `ready: true`.
+ */
+export const PORTRAIT = {
+  ready: false,
+  file: 'marsaun-portrait',
+  alt: "Portrait of Marsaun Cook, founder of Cook's Corner",
+  /** keep the face fully in frame: bias the crop toward the top of the image */
+  objectPosition: '50% 22%',
+}

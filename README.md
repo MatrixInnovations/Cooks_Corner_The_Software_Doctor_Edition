@@ -36,3 +36,12 @@ Sauce names and pairings, pickup days and hours, ordering flow, delivery days/ti
 
 ## Confirmed by Andrew (now on the page)
 Business name Cook's Corner; planned domain cookscornerllc.com (placeholder, not live; the EIN is internal and is NOT on the site); pickup or delivery 48 hours after the order; delivery fee $15 within 25 miles; "List allergies prior to ordering*" note; policies section (verbatim text in `src/config/content.ts`, `POLICIES`).
+
+
+## v5 additions
+- Subscriptions are weekly (8/10/12 meals a week at $400/$500/$575, "per week"); the 16-meal plan keeps a NEED tag.
+- "Meet the chef": pinned portrait + four scroll stops (`CHEF_STOPS` in `src/config/content.ts`). Preview-only confirm tag; remove after Marsaun OKs it.
+- Portrait is a client photo of a person and is NOT in the repo (`public/people/` is git-ignored). Run `python3 tools/prepare-portrait.py <file>` and set `PORTRAIT.ready = true` in `src/config/photos.ts`. Until then a placeholder with a NEED tag shows.
+- "What customers say": Google quotes + anonymous text-message quotes (`REVIEWS`), 5.0 / 19 Google reviews line, preview-only confirm tag. Review screenshots stay in client-assets and are not deployed.
+- Optional jingle (`JINGLE.src` in content.ts): disabled with a NEED tag until an audio file exists; never autoplays.
+- Footer legal line: Cook's Corner LLC.

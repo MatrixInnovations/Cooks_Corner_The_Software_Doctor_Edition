@@ -1,6 +1,7 @@
 import { BIZ, DELIVERY_FEE, MENU, ORDER_NOTE, PACKAGES, POLICIES, SUBSCRIPTIONS, TURNAROUND } from '../config/content'
 import { PHOTOS, LOGO } from '../config/photos'
 import { Need, OrderButton, Photo } from './ui'
+import Jingle from './Jingle'
 
 const Head = ({ eyebrow, title, sub, light }: { eyebrow: string; title: React.ReactNode; sub?: React.ReactNode; light?: boolean }) => (
   <div className={'sec-head' + (light ? ' on-dark' : '')}>
@@ -91,20 +92,29 @@ export function Subscriptions() {
   return (
     <section id="subscriptions" className="sec dark" data-theme="dark" aria-labelledby="sb-t">
       <div className="wrap">
-        <Head light eyebrow="Subscriptions" title={<span id="sb-t">Monthly meal subscriptions</span>} sub="Monthly subscriptions are available and offer lower pricing per week than the one-time packages." />
+        <Head light eyebrow="Subscriptions" title={<span id="sb-t">Weekly meal subscriptions</span>} sub="Subscriptions are weekly. Pick how many meals you want each week." />
         <ul className="cards sub-cards">
           {SUBSCRIPTIONS.map((k) => (
             <li className="card" key={k.meals}>
-              <h3 className="m">{k.meals} meals</h3>
-              <div className="price disp">${k.price}</div>
-              <hr />
-              <div className="pm">Billing period <Need /></div>
+              <h3 className="m">{k.meals} meals a week</h3>
+              {k.price ? (
+                <>
+                  <div className="price disp">${k.price}</div>
+                  <hr />
+                  <div className="pm">per week</div>
+                </>
+              ) : (
+                <>
+                  <div className="price disp" aria-hidden="true">?</div>
+                  <hr />
+                  <div className="pm"><Need>16-meal subscription</Need></div>
+                </>
+              )}
             </li>
           ))}
         </ul>
         <ul className="need-list on-dark">
-          <li>Is the price per week or per month? Meals per week? <Need>Subscription terms</Need></li>
-          <li>What the subscription menu includes; a 16-meal plan; protein maximums <Need /></li>
+          <li>What the subscription menu includes; protein maximums <Need /></li>
           <li>How billing works, and how to pause or cancel <Need /></li>
         </ul>
         <a className="btn g" href={`mailto:${BIZ.email}?subject=Subscriptions`}>Ask about subscriptions</a>
@@ -154,6 +164,7 @@ export function Footer() {
             <h2 id="ft-t" className="disp">{BIZ.name}</h2>
             <p>{BIZ.tagline}</p>
             <p className="eyebrow">Meal Preps • Catering • Private Events</p>
+            <Jingle />
           </div>
         </div>
         <address className="foot-contact">
@@ -167,7 +178,7 @@ export function Footer() {
         </address>
       </div>
       <div className="wrap legal">
-        <span>© {new Date().getFullYear()} Cook’s Corner.</span>
+        <span>© {new Date().getFullYear()} Cook’s Corner LLC.</span>
         <span>Preview build. Not live. Photos are AI placeholders until Marsaun’s own.</span>
       </div>
     </footer>

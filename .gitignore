@@ -4,3 +4,5 @@ dist
 .netlify
 shots
 *.log
+public/people/
+public/audio/*.private

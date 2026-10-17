@@ -30,10 +30,53 @@ export const PACKAGES = [
   { meals: 16, price: 190, proteins: null }, // 16-meal protein max: NEED FROM MARSAUN
 ] as const
 
+/** Subscriptions are weekly (confirmed by Andrew): price is per week. 16-meal plan: NEED FROM MARSAUN. */
 export const SUBSCRIPTIONS = [
   { meals: 8, price: 400 },
   { meals: 10, price: 500 },
   { meals: 12, price: 575 },
+  { meals: 16, price: null },
+] as const
+
+/** Optional jingle. Set `src` to an audio file in /public/audio once Marsaun has one. No autoplay, ever. */
+export const JINGLE = {
+  src: null as string | null,
+  label: "Cook's Corner jingle",
+}
+
+/**
+ * Story for "Meet the chef". Text is verbatim from Andrew (apostrophes typeset as \u2019).
+ * PREVIEW ONLY: the "confirm with Marsaun" tag stays until he OKs publishing his background.
+ */
+export const CHEF_STOPS = [
+  {
+    n: '01',
+    label: 'The founder',
+    ticket: 'Founder, Cook\u2019s Corner LLC',
+    text: 'I\u2019m Marsaun Cook, founder of Cook\u2019s Corner LLC.',
+    marks: [] as string[],
+  },
+  {
+    n: '02',
+    label: 'The foundation',
+    ticket: 'Johnson & Wales University: Culinary Arts and Food Service Management',
+    text: 'My path to meal prep grew from my love of food and the culinary foundation I built at Johnson & Wales University, where I earned degrees in Culinary Arts and Food Service Management.',
+    marks: ['Johnson & Wales University', 'Culinary Arts and Food Service Management'],
+  },
+  {
+    n: '03',
+    label: 'The service',
+    ticket: 'Years serving the community in law enforcement, then the kitchen',
+    text: 'After years of serving my community in law enforcement, I brought that same commitment and work ethic into the kitchen, creating flavorful, thoughtfully prepared meals that make the week easier for busy people.',
+    marks: ['law enforcement', 'kitchen'],
+  },
+  {
+    n: '04',
+    label: 'The kitchen today',
+    ticket: 'Charlotte meal prep: care, consistency, good food',
+    text: 'What began with my passion for cooking has grown into a Charlotte meal-prep business built on care, consistency, and good food.',
+    marks: ['Charlotte meal-prep'],
+  },
 ] as const
 
 export const MENU = {
@@ -70,3 +113,34 @@ export const POLICIES = {
     ],
   },
 } as const
+
+/**
+ * "What customers say". Quotes are verbatim from Andrew's Google review + text-message screenshots (only spacing before
+ * punctuation fixed, apostrophes typeset as \u2019). The screenshots themselves are client assets and are NOT deployed.
+ * Text-message quotes stay anonymous. Ashley B.'s Google review is truncated in the screenshot, so it is left out.
+ * PREVIEW ONLY: the confirm tag stays until Marsaun OKs publishing customer quotes.
+ */
+export const REVIEW_SUMMARY = { score: '5.0', count: 19, line: '5.0 \u2605 \u00b7 19 Google reviews' }
+export const REVIEWS = [
+  {
+    who: 'Jai T.',
+    via: 'via Google',
+    stars: true,
+    text: 'Cook\u2019s has completely elevated my weekly routine with their meal prep options. If you\u2019re busy during the week but refuse to compromise on fresh, home-cooked flavor and quality nutrition, this is hands-down the best spot in town.',
+  },
+  {
+    who: 'Nahjee A.',
+    via: 'via Google',
+    stars: true,
+    text: 'Some of the best tasting meals by far. Whatever your style of prep you need they cater too. Thanks again!!!',
+  },
+  { who: 'Henry B.', via: 'via Google', stars: true, text: 'Fresh food, good portions and I love the options I have to choose from' },
+  {
+    who: 'Jajuan',
+    via: 'via Google',
+    stars: true,
+    text: 'One of the best meal preps I\u2019ve had thus far! Well presented and the taste was on point!!!',
+  },
+  { who: 'A customer', via: 'via text message', stars: false, text: 'Hey, really good, ima order again for next week!' },
+  { who: 'A customer', via: 'via text message', stars: false, text: 'They\u2019re great, thanks for asking. I plan to place another order this Friday.' },
+] as const
