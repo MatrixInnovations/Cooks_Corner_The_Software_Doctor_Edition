@@ -32,14 +32,11 @@ export function OrderProvider({ children }: { children: ReactNode }) {
             Checkout isn’t switched on yet. <span ref={what} className="od-what" />
           </p>
           <p>
-            To order today, call <a href={BIZ.phoneHref}>{BIZ.phone}</a> or email <a href={`mailto:${BIZ.email}`}>{BIZ.email}</a>.
+            To order today, call <a href={BIZ.phoneHref}>{BIZ.phone}</a>, send a DM to <a href={BIZ.instagramUrl} rel="noopener">{BIZ.instagram}</a> on Instagram, or email <a href={`mailto:${BIZ.email}`}>{BIZ.email}</a>. You can order any day, any time.
           </p>
           <p className="od-note"><a href={`#${POLICIES.allergy.id}`} onClick={() => ref.current?.close()}>{ORDER_NOTE}</a></p>
           <p>
-            <a className="od-policy" href="#policies" onClick={() => ref.current?.close()}>Order changes, refunds and food allergy notice</a>
-          </p>
-          <p className="od-need">
-            <Need>Need from Marsaun: ordering flow</Need>
+            <a className="od-policy" href="#policies" onClick={() => ref.current?.close()}>Order changes, refunds, food allergy notice, reheating and storage</a>
           </p>
           <button className="btn p" autoFocus>Close</button>
         </form>
@@ -73,6 +70,31 @@ export function Photo({ file, alt, className, priority, style }: { file: string;
         decoding="async"
         loading={priority ? 'eager' : 'lazy'}
         {...(priority ? { fetchPriority: 'high' as const } : {})}
+        draggable={false}
+      />
+    </picture>
+  )
+}
+
+/** Responsive photo with real srcset (`<file>-<w>.webp|jpg`). Used for the real client photos. */
+export function ResponsivePhoto({ file, alt, widths, dims, sizes, className, style }: { file: string; alt: string; widths: number[]; dims: [number, number]; sizes: string; className?: string; style?: React.CSSProperties }) {
+  const base = `${import.meta.env.BASE_URL}photos/${file}`
+  const set = (ext: string) => widths.map((w) => `${base}-${w}.${ext} ${w}w`).join(', ')
+  const mid = widths[Math.min(1, widths.length - 1)]
+  return (
+    <picture>
+      <source srcSet={set('webp')} sizes={sizes} type="image/webp" />
+      <img
+        className={className}
+        style={style}
+        src={`${base}-${mid}.jpg`}
+        srcSet={set('jpg')}
+        sizes={sizes}
+        alt={alt}
+        width={dims[0]}
+        height={dims[1]}
+        decoding="async"
+        loading="lazy"
         draggable={false}
       />
     </picture>

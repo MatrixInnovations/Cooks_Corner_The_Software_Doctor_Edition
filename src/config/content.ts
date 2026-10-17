@@ -8,8 +8,19 @@ export const BIZ = {
   phone: '704.350.5827',
   phoneHref: 'tel:+17043505827',
   email: 'TheCooksCornerChefs@yahoo.com',
-  instagram: '@_cooks_corner_',
+  instagram: '@_cooks_corner_', // confirmed by Andrew
+  instagramUrl: 'https://instagram.com/_cooks_corner_',
 }
+
+/** Confirmed by Andrew. */
+export const SAUCES = [
+  { name: 'Spank Sauce', desc: 'Greek yogurt base, preferably for salmon' },
+  { name: 'Spice Man', desc: 'sweet Thai chili base' },
+] as const
+export const PICKUP_HOURS = 'Tuesday through Saturday, 11 AM to 7 PM unless advised otherwise. No Sundays.'
+export const PICKUP_HOURS_SHORT = 'Tue\u2013Sat, 11 AM\u20137 PM'
+export const ORDERING = 'Order any day, any time: check out on the site or send us a DM on Instagram.'
+export const CATERING_HOW = 'Catering is special and custom. Request it by phone and/or DM.'
 
 export const NEED = 'Need from Marsaun'
 
@@ -27,15 +38,18 @@ export const PACKAGES = [
   { meals: 8, price: 116, proteins: 'Up to 3 proteins' },
   { meals: 10, price: 150, proteins: 'Up to 3 proteins' },
   { meals: 12, price: 155, proteins: 'Up to 4 proteins' },
-  { meals: 16, price: 190, proteins: null }, // 16-meal protein max: NEED FROM MARSAUN
+  { meals: 16, price: 190, proteins: 'Up to 6 proteins' },
 ] as const
 
-/** Subscriptions are weekly (confirmed by Andrew): price is per week. 16-meal plan: NEED FROM MARSAUN. */
+/**
+ * Subscriptions are MONTHLY (Andrew's correction): price is per month. 8 = $400, 10 = $500, 16 = $768 are confirmed.
+ * 12 = $575: period not yet confirmed (likely monthly), so it carries a small NEED tag "confirm monthly".
+ */
 export const SUBSCRIPTIONS = [
-  { meals: 8, price: 400 },
-  { meals: 10, price: 500 },
-  { meals: 12, price: 575 },
-  { meals: 16, price: null },
+  { meals: 8, price: 400, confirm: false },
+  { meals: 10, price: 500, confirm: false },
+  { meals: 12, price: 575, confirm: true },
+  { meals: 16, price: 768, confirm: false },
 ] as const
 
 /** Optional jingle. Set `src` to an audio file in /public/audio once Marsaun has one. No autoplay, ever. */
@@ -45,39 +59,20 @@ export const JINGLE = {
 }
 
 /**
- * Story for "Meet the chef". Text is verbatim from Andrew (apostrophes typeset as \u2019).
- * PREVIEW ONLY: the "confirm with Marsaun" tag stays until he OKs publishing his background.
+ * "Meet the chef" (The Chef's Pass). Story is verbatim from Andrew (apostrophes typeset as \u2019); do not paraphrase.
+ * PREVIEW ONLY: the "Confirm OK to publish" tags after the education and law-enforcement sentences stay until Marsaun OKs it.
+ * Years cooking, signature dish and why he started cooking are NEED FROM MARSAUN: never invent them.
  */
-export const CHEF_STOPS = [
-  {
-    n: '01',
-    label: 'The founder',
-    ticket: 'Founder, Cook\u2019s Corner LLC',
-    text: 'I\u2019m Marsaun Cook, founder of Cook\u2019s Corner LLC.',
-    marks: [] as string[],
-  },
-  {
-    n: '02',
-    label: 'The foundation',
-    ticket: 'Johnson & Wales University: Culinary Arts and Food Service Management',
-    text: 'My path to meal prep grew from my love of food and the culinary foundation I built at Johnson & Wales University, where I earned degrees in Culinary Arts and Food Service Management.',
-    marks: ['Johnson & Wales University', 'Culinary Arts and Food Service Management'],
-  },
-  {
-    n: '03',
-    label: 'The service',
-    ticket: 'Years serving the community in law enforcement, then the kitchen',
-    text: 'After years of serving my community in law enforcement, I brought that same commitment and work ethic into the kitchen, creating flavorful, thoughtfully prepared meals that make the week easier for busy people.',
-    marks: ['law enforcement', 'kitchen'],
-  },
-  {
-    n: '04',
-    label: 'The kitchen today',
-    ticket: 'Charlotte meal prep: care, consistency, good food',
-    text: 'What began with my passion for cooking has grown into a Charlotte meal-prep business built on care, consistency, and good food.',
-    marks: ['Charlotte meal-prep'],
-  },
+export const CHEF_STORY = [
+  { text: 'I\u2019m Marsaun Cook, founder of Cook\u2019s Corner LLC. My path to meal prep grew from my love of food and the culinary foundation I built at Johnson & Wales University, where I earned degrees in Culinary Arts and Food Service Management.', confirm: true },
+  { text: 'After years of serving my community in law enforcement, I brought that same commitment and work ethic into the kitchen, creating flavorful, thoughtfully prepared meals that make the week easier for busy people.', confirm: true },
+  { text: 'What began with my passion for cooking has grown into a Charlotte meal-prep business built on care, consistency, and good food.', confirm: false },
 ] as const
+
+/** Ticket copy (approved by Andrew). Ticket 02 items come only from the known client menu. */
+export const CHEF_TICKET_01 = { name: 'Marsaun Cook', role: 'Founder, Cook\u2019s Corner LLC', line: 'A Charlotte meal-prep business built on his passion for cooking.' }
+export const CHEF_TICKET_03 = { head: ['Care.', 'Consistency.', 'Good food.'], why: 'It started with a love of food, and a goal to make the week easier for busy people.' }
+export const CHEF_MENU_ITEMS = ['Ribeye', 'Chicken', 'Turkey', 'Shrimp', 'Salmon', 'Scallops', 'Grilled asparagus', 'Sweet potato'] as const
 
 export const MENU = {
   Protein: ['Grilled Ribeye', 'Grilled Chicken Breast', 'Grilled Chicken Thigh', 'Ground Turkey', 'Turkey Meatballs'],
@@ -110,6 +105,15 @@ export const POLICIES = {
       "Please tell us about any food allergies before placing your order. We'll review the ingredients used in your meals and can tell you which allergens are included.",
       "Our kitchen handles milk, eggs, fish, crustacean shellfish, tree nuts, peanuts, wheat, soy, and sesame. Because ingredients and equipment may be shared, cross-contact can occur, and we can't guarantee that any meal is completely free of an allergen.",
       "If you have a severe or life-threatening allergy, contact us before ordering. If we can't confidently prepare your order with the precautions you need, we may be unable to accept it. Please check the ingredient and allergen information on each order, since recipes and supplier ingredients can change.",
+    ],
+  },
+  reheating: {
+    id: 'reheating-and-storage',
+    title: 'REHEATING & STORAGE',
+    paragraphs: [
+      "Keep refrigerated: Refrigerate your meals as soon as possible and keep them at 40\u00b0F or below. For best quality, enjoy refrigerated meals within 3\u20134 days. Freeze meals you won't eat within that time.",
+      "Reheat safely: Remove the seal or lid and transfer the meal to a microwave-safe dish if the container isn't labeled microwave-safe. Cover loosely, heat until steaming hot throughout, and stir or rotate partway through. Check the center with a food thermometer: leftovers should reach 165\u00b0F. Heating time varies by microwave and portion size.",
+      "Handle with care: Don't leave meals at room temperature for more than 2 hours (or 1 hour when it's above 90\u00b0F). Reheat only the portion you plan to eat.",
     ],
   },
 } as const

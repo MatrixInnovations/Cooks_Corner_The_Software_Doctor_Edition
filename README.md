@@ -32,16 +32,19 @@ Each slot is a 16:9 image with the dish on the right and space on the left for t
 One 100vh of scroll per step, seven steps plus a short hold. Values are smoothed with a critically damped lerp (0.08), no bounce, transform and opacity only. `prefers-reduced-motion` shows each step's final state with a 200 ms opacity fade and skips three.js. The ticket prints in six stepped increments. Test hooks: `?s=2.5` pins the story position, `?nosteam` skips three.js.
 
 ## Still open (kept visible on the page as "Need from Marsaun" tags)
-Sauce names and pairings, pickup days and hours, ordering flow, delivery days/times, 16-meal protein maximum, subscription period/terms/billing, catering details, Instagram handle spelling, business hours.
+$575 / 12-meal subscription period (shows a "Confirm monthly" tag), subscription menu contents and billing/pause/cancel, delivery address method, catering group sizes/example menus/travel distance, photos, years cooking, signature dish.
 
 ## Confirmed by Andrew (now on the page)
 Business name Cook's Corner; planned domain cookscornerllc.com (placeholder, not live; the EIN is internal and is NOT on the site); pickup or delivery 48 hours after the order; delivery fee $15 within 25 miles; "List allergies prior to ordering*" note; policies section (verbatim text in `src/config/content.ts`, `POLICIES`).
 
 
 ## v5 additions
-- Subscriptions are weekly (8/10/12 meals a week at $400/$500/$575, "per week"); the 16-meal plan keeps a NEED tag.
+- Subscriptions are MONTHLY: 8 meals $400, 10 meals $500, 16 meals $768 per month; 12 meals $575 shows a "Confirm monthly" tag.
 - "Meet the chef": pinned portrait + four scroll stops (`CHEF_STOPS` in `src/config/content.ts`). Preview-only confirm tag; remove after Marsaun OKs it.
 - Portrait is a client photo of a person and is NOT in the repo (`public/people/` is git-ignored). Run `python3 tools/prepare-portrait.py <file>` and set `PORTRAIT.ready = true` in `src/config/photos.ts`. Until then a placeholder with a NEED tag shows.
 - "What customers say": Google quotes + anonymous text-message quotes (`REVIEWS`), 5.0 / 19 Google reviews line, preview-only confirm tag. Review screenshots stay in client-assets and are not deployed.
 - Optional jingle (`JINGLE.src` in content.ts): disabled with a NEED tag until an audio file exists; never autoplays.
 - Footer legal line: Cook's Corner LLC.
+
+## v9 confirmed facts
+Instagram _cooks_corner_ (linked); sauces Spank Sauce + Spice Man; pickup Tue-Sat 11-7, no Sundays, delivery same schedule ($15); order any day/time via site or Instagram DM; catering is custom, by phone and/or DM; protein maximums 3/3/4/6; subscriptions are monthly ($400/$500/$768; $575 for 12 meals awaits period confirmation); 48-hour turnaround confirmed; Reheating & Storage policy card added.

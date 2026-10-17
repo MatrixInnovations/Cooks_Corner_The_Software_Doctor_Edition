@@ -10,9 +10,25 @@ export type PhotoSlot = {
   alt: string
   /** nudge the image inside the plate box, in percent of the plate box, plus scale */
   fit?: { x?: number; y?: number; scale?: number }
+  /** responsive widths: files are `<file>-<w>.webp|jpg`; `dims` is the intrinsic size of the largest */
+  widths?: number[]
+  dims?: [number, number]
+  /** object-position when shown in a cropped banner: desktop / mobile */
+  position?: { d: string; m: string }
 }
 
 export const PHOTOS = {
+  /**
+   * REAL photo (Andrew-approved, Marsaun's own trays, no faces): main food image in the Packages banner.
+   * Source: client-assets/real-meal-prep-trays-01.jpg. Only cropped (top 28% removed) + a light contrast touch; food not edited.
+   */
+  trays: {
+    file: 'real-trays',
+    alt: 'Rows of freshly prepped black meal-prep trays on a kitchen counter: grilled chicken, ribeye and shrimp with broccoli, green beans, roasted sweet potato, rice and mashed potatoes.',
+    widths: [800, 1280, 1920],
+    dims: [1920, 1843],
+    position: { d: '50% 43%', m: '50% 78%' },
+  },
   /** Step 1 landing + steps 2-4. Approved hero plate. */
   hero: {
     file: 'hero-tray',
@@ -61,8 +77,7 @@ export const LOGO = {
  */
 export const PORTRAIT = {
   ready: true,
+  /** public/people/<file>-d (2:3, desktop) and -m (4:5, mobile) .webp|jpg: Sundae's calmer-grade crops from handoff-chef-pass/portrait */
   file: 'marsaun-portrait',
-  alt: "Portrait of Marsaun Cook, founder of Cook's Corner",
-  /** keep the face fully in frame: bias the crop toward the top of the image */
-  objectPosition: '50% 50%',
+  alt: "Portrait of Marsaun Cook, founder of Cook's Corner, in his chef whites",
 }

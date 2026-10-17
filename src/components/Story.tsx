@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
-import { BIZ, ORDER_NOTE, PACKAGES, POLICIES, STEPS, TURNAROUND } from '../config/content'
+import { BIZ, ORDER_NOTE, PACKAGES, PICKUP_HOURS_SHORT, POLICIES, STEPS, TURNAROUND } from '../config/content'
 import { PHOTOS, type PhotoKey } from '../config/photos'
 import { Need, OrderButton, Photo } from './ui'
 import { steamState } from '../three/steamState'
@@ -230,7 +230,7 @@ export default function Story() {
             <div className="eyebrow">04 · Sauce</div>
             <h2 className="disp">{STEPS[3].cap}</h2>
             <p className="sub">Housemade sauces come with your proteins unless you decline them.</p>
-            <p className="need-row">Sauce names and pairings <Need /></p>
+            <p className="need-row">Spank Sauce (Greek yogurt base, preferably for salmon) and Spice Man (sweet Thai chili base).</p>
           </div>
           <div className="copy cap c5" ref={reg('c5')}>
             <div className="eyebrow">05 · Packages</div>
@@ -247,7 +247,7 @@ export default function Story() {
             <div className="eyebrow">06 · Pickup</div>
             <h2 className="disp">{STEPS[5].cap}</h2>
             <p className="sub">{BIZ.address}. {TURNAROUND}</p>
-            <p className="need-row">Pickup days and hours <Need /></p>
+            <p className="need-row">Tuesday through Saturday, 11 AM to 7 PM unless advised otherwise. No Sundays.</p>
           </div>
           <div className="copy cap c7" ref={reg('c7')}>
             <div className="eyebrow">07 · Done</div>
@@ -261,7 +261,7 @@ export default function Story() {
                   <div className="t-line">{BIZ.name}</div>
                   <div className="t-row">{BIZ.address}</div>
                   <div className="t-row">Ready 48 hours after you order</div>
-                  <div className="t-row">Pickup hours <Need /></div>
+                  <div className="t-row">Pickup {PICKUP_HOURS_SHORT}</div>
                   <OrderButton className="btn p t-btn">Order now</OrderButton>
                   <a className="t-note" href={`#${POLICIES.allergy.id}`}>{ORDER_NOTE}</a>
                 </div>

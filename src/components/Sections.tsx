@@ -1,6 +1,6 @@
-import { BIZ, DELIVERY_FEE, MENU, ORDER_NOTE, PACKAGES, POLICIES, SUBSCRIPTIONS, TURNAROUND } from '../config/content'
+import { BIZ, CATERING_HOW, DELIVERY_FEE, ORDERING, PICKUP_HOURS, SAUCES, MENU, ORDER_NOTE, PACKAGES, POLICIES, SUBSCRIPTIONS, TURNAROUND } from '../config/content'
 import { PHOTOS, LOGO } from '../config/photos'
-import { Need, OrderButton, Photo } from './ui'
+import { Need, OrderButton, Photo, ResponsivePhoto } from './ui'
 import Jingle from './Jingle'
 
 const Head = ({ eyebrow, title, sub, light }: { eyebrow: string; title: React.ReactNode; sub?: React.ReactNode; light?: boolean }) => (
@@ -12,13 +12,13 @@ const Head = ({ eyebrow, title, sub, light }: { eyebrow: string; title: React.Re
 )
 
 export function Packages() {
-  const p = PHOTOS.packages
+  const p = PHOTOS.trays
   return (
     <section id="packages" className="sec bone" data-theme="light" aria-labelledby="pk-t">
       <div className="wrap">
         <Head eyebrow="05 · Meal packages" title={<span id="pk-t">Pick how many meals<br className="m" /> your week needs.</span>} sub="Each package is built from the menu below." />
-        <div className="stack-banner">
-          <Photo file={p.file} alt={p.alt} />
+        <div className="stack-banner real" style={{ '--op-d': p.position.d, '--op-m': p.position.m } as React.CSSProperties}>
+          <ResponsivePhoto file={p.file} alt={p.alt} widths={p.widths} dims={p.dims} sizes="(max-width: 1440px) 100vw, 1440px" />
         </div>
         <ul className="cards">
           {PACKAGES.map((k) => (
@@ -27,7 +27,7 @@ export function Packages() {
               <div className="price disp">${k.price}</div>
               <hr />
               <div className="pm">
-                {k.proteins ?? (<>Protein maximum:<Need /></>)}
+                {k.proteins}
               </div>
               <OrderButton what={`You picked the ${k.meals}-meal package.`}>Choose this package</OrderButton>
             </li>
@@ -53,7 +53,12 @@ export function Menu() {
             </div>
           ))}
         </div>
-        <p className="menu-note">Housemade sauces come with your proteins unless you decline them. <Need>Sauce names</Need></p>
+        <p className="menu-note">Housemade sauces come with your proteins unless you decline them.</p>
+        <ul className="sauces">
+          {SAUCES.map((x) => (
+            <li key={x.name}><b className="disp">{x.name}</b><span>{x.desc}</span></li>
+          ))}
+        </ul>
       </div>
     </section>
   )
@@ -68,16 +73,14 @@ export function Delivery() {
           <div className="panel">
             <h3 className="disp">Pickup</h3>
             <p className="big">{BIZ.address}</p>
-            <ul className="need-list">
-              <li>Pickup days and hours <Need /></li>
-              <li>How to place an order <Need>Ordering flow</Need></li>
-            </ul>
+            <p className="big">{PICKUP_HOURS}</p>
+            <p className="big">{ORDERING}</p>
           </div>
           <div className="panel">
             <h3 className="disp">Delivery</h3>
             <p className="big">Delivery within 25 miles of our pickup point. Delivery fee: {DELIVERY_FEE}.</p>
+            <p className="big">Delivery follows the same schedule as pickup.</p>
             <ul className="need-list">
-              <li>Delivery days and times <Need /></li>
               <li>How customers give their address <Need /></li>
             </ul>
             <a className="btn p" href={`mailto:${BIZ.email}?subject=Delivery`}>Ask about delivery</a>
@@ -92,24 +95,17 @@ export function Subscriptions() {
   return (
     <section id="subscriptions" className="sec dark" data-theme="dark" aria-labelledby="sb-t">
       <div className="wrap">
-        <Head light eyebrow="Subscriptions" title={<span id="sb-t">Weekly meal subscriptions</span>} sub="Subscriptions are weekly. Pick how many meals you want each week." />
+        <Head light eyebrow="Subscriptions" title={<span id="sb-t">Monthly meal subscriptions</span>} sub="Monthly subscriptions are available. Pick how many meals fit your month." />
         <ul className="cards sub-cards">
           {SUBSCRIPTIONS.map((k) => (
             <li className="card" key={k.meals}>
-              <h3 className="m">{k.meals} meals a week</h3>
-              {k.price ? (
-                <>
-                  <div className="price disp">${k.price}</div>
-                  <hr />
-                  <div className="pm">per week</div>
-                </>
-              ) : (
-                <>
-                  <div className="price disp" aria-hidden="true">?</div>
-                  <hr />
-                  <div className="pm"><Need>16-meal subscription</Need></div>
-                </>
-              )}
+              <h3 className="m">{k.meals} meals</h3>
+              <div className="price disp">${k.price}</div>
+              <hr />
+              <div className="pm">
+                per month
+                {k.confirm && <Need>Confirm monthly</Need>}
+              </div>
             </li>
           ))}
         </ul>
@@ -128,24 +124,29 @@ export function Catering() {
     <section id="catering" className="sec bone" data-theme="light" aria-labelledby="ct-t">
       <div className="wrap narrow">
         <Head eyebrow="Meal preps • Catering • Private events" title={<span id="ct-t">Catering and private events</span>} sub="Cook’s Corner also does catering and private events." />
-        <p className="need-row center">What’s offered, group sizes, example menus, travel distance and how to ask for a quote <Need>Catering details</Need></p>
-        <div className="center"><a className="btn p" href={`mailto:${BIZ.email}?subject=Catering`}>Ask about catering</a></div>
+        <p className="need-row center">{CATERING_HOW}</p>
+        <p className="need-row center">Call <a href={BIZ.phoneHref}>{BIZ.phone}</a> or DM <a href={BIZ.instagramUrl} rel="noopener">{BIZ.instagram}</a> on Instagram.</p>
+        <p className="need-row center">Group sizes, example menus and travel distance <Need>Catering details</Need></p>
+        <div className="center"><a className="btn p" href={BIZ.phoneHref}>Call to ask about catering</a></div>
       </div>
     </section>
   )
 }
 
 export function Policies() {
-  const parts = [POLICIES.refunds, POLICIES.allergy]
+  const parts = [POLICIES.refunds, POLICIES.allergy, POLICIES.reheating]
   return (
     <section id="policies" className="sec bone2 policies" data-theme="light" aria-labelledby="po-t">
       <div className="wrap">
-        <Head eyebrow="Policies" title={<span id="po-t">Orders, refunds and allergies</span>} />
+        <Head eyebrow="Policies" title={<span id="po-t">Orders, refunds, allergies and storage</span>} />
         <div className="policy-grid">
           {parts.map((p) => (
             <article className="policy" id={p.id} key={p.id} aria-labelledby={`${p.id}-h`}>
               <h3 id={`${p.id}-h`} className="disp">{p.title}</h3>
-              {p.paragraphs.map((t, i) => <p key={i}>{t}</p>)}
+              {p.paragraphs.map((t, i) => {
+                const lead = p.id === POLICIES.reheating.id ? t.indexOf(': ') : -1
+                return <p key={i}>{lead > 0 ? <><strong>{t.slice(0, lead + 1)}</strong>{t.slice(lead + 1)}</> : t}</p>
+              })}
             </article>
           ))}
         </div>
@@ -171,10 +172,10 @@ export function Footer() {
           <p>{BIZ.address}</p>
           <p>Phone: <a href={BIZ.phoneHref}>{BIZ.phone}</a></p>
           <p>Email: <a href={`mailto:${BIZ.email}`}>{BIZ.email}</a></p>
-          <p>Instagram: {BIZ.instagram} <Need>Confirm exact handle</Need></p>
+          <p>Instagram: <a href={BIZ.instagramUrl} rel="noopener">{BIZ.instagram}</a></p>
           <p>Web: {BIZ.domain} <span className="soon">(coming soon)</span></p>
-          <p><a href="#policies">Policies: order changes, refunds and food allergy notice</a></p>
-          <p>Hours <Need /></p>
+          <p><a href="#policies">Policies: order changes, refunds, food allergy notice, reheating and storage</a></p>
+          <p>Pickup: {PICKUP_HOURS}</p>
         </address>
       </div>
       <div className="wrap legal">

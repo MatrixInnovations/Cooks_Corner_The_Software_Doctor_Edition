@@ -1,143 +1,201 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
-import { CHEF_STOPS } from '../config/content'
+import { useEffect, useId, useRef, useState } from 'react'
+import { BIZ, CHEF_MENU_ITEMS, CHEF_STORY, CHEF_TICKET_01, CHEF_TICKET_03 } from '../config/content'
 import { PORTRAIT } from '../config/photos'
-import { Need } from './ui'
+import { Need, OrderButton } from './ui'
 
-/** wrap key phrases in <span class="hl"> without changing a single character of the sentence */
-function Marked({ text, marks }: { text: string; marks: readonly string[] }) {
-  if (!marks.length) return <>{text}</>
-  const esc = marks.map((m) => m.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')
+/** Round "CC / Charlotte" stamp (SVG, saffron on charcoal). */
+function Seal() {
+  const id = useId().replace(/:/g, '')
   return (
-    <>
-      {text.split(new RegExp(`(${esc})`)).map((part, i) =>
-        marks.includes(part) ? <span className="hl" key={i}>{part}</span> : <Fragment key={i}>{part}</Fragment>,
-      )}
-    </>
+    <svg className="cp-seal" viewBox="0 0 132 132" aria-hidden="true" focusable="false">
+      <defs><path id={id} d="M66 66 m-46 0 a46 46 0 1 1 92 0 a46 46 0 1 1 -92 0" /></defs>
+      <circle cx="66" cy="66" r="63" fill="#17140f" stroke="#f2b632" strokeWidth="2" />
+      <circle cx="66" cy="66" r="56" fill="none" stroke="#f2b632" strokeWidth="1" strokeDasharray="2 3" />
+      <text fontFamily="Barlow Condensed" fontWeight="700" fontSize="13" letterSpacing="3.1" fill="#f2b632"><textPath href={`#${id}`}>{'COOK\u2019S CORNER · MEAL PREP · '}</textPath></text>
+      <text x="66" y="78" textAnchor="middle" fontFamily="Anton" fontSize="38" fill="#f4ecdd" letterSpacing="1">CC</text>
+      <text x="66" y="94" textAnchor="middle" fontFamily="Barlow Condensed" fontWeight="700" fontSize="9" letterSpacing="2.4" fill="#f2b632">CHARLOTTE</text>
+    </svg>
   )
 }
 
+const TICKETS = 3
+const pad = (n: number) => String(n).padStart(2, '0')
+
 /**
- * "Meet the chef": the portrait stays pinned (sticky) while four stops scroll past.
- * The stop nearest the reading line becomes active: its sentence goes to full strength, its key phrases get a saffron
- * underline, the ticket under the portrait switches to that stop's label, and the rail fills.
- * Every sentence stays in the DOM, in order, at all times (verbatim text, nothing hidden). Motion is opacity/transform only.
- * Rail nodes are real buttons: Tab to one, Enter/Space jumps to that stop.
+ * "Meet the chef" = The Chef's Pass (Sundae's approved layout).
+ * Interaction: three notched tickets hang from a rail. Desktop: all three visible, they slide down 24px and fade in
+ * (500ms, staggered 0/120/240ms, once, transform + opacity only) when the rail is 35% in view.
+ * Mobile: the strip is a swipeable scroll-snap carousel (prev/next buttons, keyboard arrows on the focusable track,
+ * counter follows the scroll); each ticket animates in on its own at 30% visible.
+ * Reduced motion: final state at once, no animation. Without JS tickets are simply visible.
+ * PREVIEW ONLY: dashed "Confirm OK to publish" and NEED tags stay until Marsaun answers. Never invent facts here.
  */
 export default function Chef() {
-  const [active, setActive] = useState(0)
-  const [js, setJs] = useState(false)
-  const list = useRef<HTMLOListElement>(null)
-  const fill = useRef<HTMLSpanElement>(null)
-  const stops = useRef<(HTMLLIElement | null)[]>([])
+  const sec = useRef<HTMLElement>(null)
+  const tix = useRef<HTMLDivElement>(null)
+  const [ready, setReady] = useState(false)
+  const [mobile, setMobile] = useState(false)
+  const [i, setI] = useState(0)
 
   useEffect(() => {
-    setJs(true)
+    const mq = window.matchMedia('(max-width: 820px)')
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const sync = () => setMobile(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    if (reduce || !('IntersectionObserver' in window)) return () => mq.removeEventListener('change', sync)
+    setReady(true)
+    const el = tix.current
+    const cards = Array.from(el?.querySelectorAll<HTMLElement>('.cp-ticket') ?? [])
+    const io = new IntersectionObserver(
+      (es) => es.forEach((e) => {
+        if (!e.isIntersecting) return
+        if (e.target === el) el?.classList.add('in')
+        else (e.target as HTMLElement).classList.add('in')
+        io.unobserve(e.target)
+      }),
+      { threshold: mq.matches ? 0.3 : 0.35 },
+    )
+    // desktop: the whole strip triggers once; mobile: each ticket triggers by itself
+    if (mq.matches) cards.forEach((c) => io.observe(c))
+    else if (el) io.observe(el)
+    return () => { io.disconnect(); mq.removeEventListener('change', sync) }
+  }, [mobile])
+
+  useEffect(() => {
+    const el = tix.current
+    if (!el || !mobile) return
     let raf = 0
     const run = () => {
       raf = 0
-      const ol = list.current
-      if (!ol) return
-      const vh = window.innerHeight
-      const line = vh * (window.innerWidth <= 820 ? 0.64 : 0.5)
-      let best = 0
-      let d = Infinity
-      stops.current.forEach((el, i) => {
-        if (!el) return
-        const r = el.getBoundingClientRect()
-        const dist = Math.abs(r.top + r.height / 2 - line)
-        if (dist < d) { d = dist; best = i }
-      })
-      setActive(best)
-      const first = stops.current[0]?.getBoundingClientRect()
-      const last = stops.current[stops.current.length - 1]?.getBoundingClientRect()
-      if (first && last && fill.current) {
-        const a = first.top + first.height / 2
-        const b = last.top + last.height / 2
-        const p = Math.min(1, Math.max(0, (line - a) / (b - a)))
-        fill.current.style.transform = `scaleY(${p})`
-      }
+      const first = el.children[0] as HTMLElement
+      const step = (el.children[1] as HTMLElement).offsetLeft - first.offsetLeft
+      let k = Math.round(el.scrollLeft / step)
+      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 4) k = TICKETS - 1
+      setI(Math.max(0, Math.min(TICKETS - 1, k)))
     }
     const on = () => { if (!raf) raf = requestAnimationFrame(run) }
-    run()
-    window.addEventListener('scroll', on, { passive: true })
-    window.addEventListener('resize', on)
-    return () => {
-      window.removeEventListener('scroll', on)
-      window.removeEventListener('resize', on)
-      if (raf) cancelAnimationFrame(raf)
-    }
-  }, [])
+    el.addEventListener('scroll', on, { passive: true })
+    return () => { el.removeEventListener('scroll', on); if (raf) cancelAnimationFrame(raf) }
+  }, [mobile])
 
-  const go = (i: number) => {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const el = stops.current[i]
+  const go = (k: number) => {
+    const el = tix.current
     if (!el) return
-    const r = el.getBoundingClientRect()
-    const line = window.innerHeight * (window.innerWidth <= 820 ? 0.64 : 0.5)
-    window.scrollBy({ top: r.top + r.height / 2 - line, behavior: reduce ? 'auto' : 'smooth' })
+    const t = Math.max(0, Math.min(TICKETS - 1, k))
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const c = el.children[t] as HTMLElement
+    el.scrollTo({ left: c.offsetLeft - (el.children[0] as HTMLElement).offsetLeft, behavior: reduce ? 'auto' : 'smooth' })
   }
 
+  const done = (e: React.AnimationEvent<HTMLElement>) => e.currentTarget.classList.add('done')
+  const base = `${import.meta.env.BASE_URL}people/${PORTRAIT.file}`
+
   return (
-    <section id="chef" className={'sec dark chef' + (js ? ' live' : '')} data-theme="dark" aria-labelledby="chef-t">
-      <div className="wrap chef-grid">
-        <div className="chef-pin">
-          <figure className="portrait">
-            {PORTRAIT.ready ? (
-              <picture>
-                <source srcSet={`${import.meta.env.BASE_URL}people/${PORTRAIT.file}.webp`} type="image/webp" />
-                <img
-                  src={`${import.meta.env.BASE_URL}people/${PORTRAIT.file}.jpg`}
-                  alt={PORTRAIT.alt}
-                  width={800}
-                  height={1000}
-                  loading="lazy"
-                  style={{ objectPosition: PORTRAIT.objectPosition }}
-                />
-              </picture>
-            ) : (
-              <div className="portrait-ph" role="img" aria-label="Portrait of Marsaun Cook goes here">
-                <span className="disp" aria-hidden="true">MC</span>
-                <Need>Portrait photo</Need>
-              </div>
-            )}
-          </figure>
-          <div className="chef-ticket" aria-hidden="true">
-            <div className="ct-top">
-              <span>Chef’s ticket</span>
-              <span>{CHEF_STOPS[active].n} / 0{CHEF_STOPS.length}</span>
+    <section id="chef" ref={sec} className={'sec dark chef' + (ready ? ' js-ready' : '')} data-theme="dark" aria-labelledby="chef-t">
+      <div className="wrap">
+        <div className="chef-top">
+          <div className="chef-copy">
+            <div className="eyebrow chef-eyebrow">Meet the chef<i /></div>
+            <h2 id="chef-t" className="disp">Meet<br /><em>Marsaun Cook.</em></h2>
+            <p className="chef-sub">The cook behind every tray.</p>
+            <div className="chef-story">
+              <h3>Marsaun’s story, in his words:</h3>
+              {/* PREVIEW ONLY: the confirm tags stay until Marsaun OKs publishing his background. Story text is verbatim. */}
+              <p>
+                {CHEF_STORY.map((s, k) => (
+                  <span key={k}>
+                    {s.text}{' '}
+                    {s.confirm && <><Need title="CONFIRM WITH MARSAUN: OK to publish background">Confirm OK to publish</Need>{' '}</>}
+                  </span>
+                ))}
+              </p>
             </div>
-            <div className="ct-body">
-              {CHEF_STOPS.map((s, i) => (
-                <p key={s.n} className={i === active ? 'on' : ''}>{s.ticket}</p>
-              ))}
+            <dl className="chef-strip">
+              <div><dt>Years cooking</dt><dd><Need /></dd></div>
+              <div><dt>Pickup</dt><dd className="v">Cooked fresh for pickup on Old Statesville Rd.</dd></div>
+              <div><dt>Signature dish</dt><dd><Need /></dd></div>
+            </dl>
+            <div className="chef-btns">
+              <OrderButton className="btn p">Order now</OrderButton>
+              <a className="btn g" href="#menu">See the menu</a>
+            </div>
+          </div>
+
+          <div className="chef-pwrap">
+            <figure className="chef-portrait">
+              {PORTRAIT.ready && (
+                <picture>
+                  <source media="(max-width: 820px)" srcSet={`${base}-m.webp`} type="image/webp" />
+                  <source media="(max-width: 820px)" srcSet={`${base}-m.jpg`} type="image/jpeg" />
+                  <source srcSet={`${base}-d.webp`} type="image/webp" />
+                  <img src={`${base}-d.jpg`} alt={PORTRAIT.alt} width={800} height={1200} decoding="async" />
+                </picture>
+              )}
+              <figcaption className="cp-pill"><b>Marsaun Cook</b><span>Founder · Cook’s Corner</span></figcaption>
+            </figure>
+            <Seal />
+          </div>
+        </div>
+
+        <div className="cp-pass">
+          <div className="cp-passlabel">
+            <span className="eyebrow">The chef’s pass</span>
+            <span className="cp-n">
+              <span aria-live="polite">{pad(i + 1)} / {pad(TICKETS)}</span>
+              <span className="cp-ctl">
+                <button type="button" onClick={() => go(i - 1)} disabled={i === 0} aria-label="Previous ticket"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
+                <button type="button" onClick={() => go(i + 1)} disabled={i === TICKETS - 1} aria-label="Next ticket"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
+              </span>
+            </span>
+          </div>
+          <div className="cp-rail" aria-hidden="true" />
+          <div
+            className="cp-tix"
+            ref={tix}
+            {...(mobile ? { tabIndex: 0, role: 'group', 'aria-roledescription': 'carousel', 'aria-label': 'The chef’s pass, three tickets. Swipe or use the arrow keys.' } : {})}
+          >
+            <div className="cp-tk" style={{ '--i': 0 } as React.CSSProperties}>
+              <div className="cp-clip" aria-hidden="true" />
+              <article className="cp-ticket" onAnimationEnd={done} aria-label="Ticket 1 of 3">
+                <div className="cp-th"><span>Ticket 01 · Who’s cooking</span></div>
+                <div className="cp-tb">
+                  <h3>{CHEF_TICKET_01.name}</h3>
+                  <p>{CHEF_TICKET_01.role}</p>
+                  <div className="cp-perf" />
+                  <p className="cp-flush">{CHEF_TICKET_01.line}</p>
+                </div>
+              </article>
+            </div>
+            <div className="cp-tk" style={{ '--i': 1 } as React.CSSProperties}>
+              <div className="cp-clip" aria-hidden="true" />
+              <article className="cp-ticket" onAnimationEnd={done} aria-label="Ticket 2 of 3">
+                <div className="cp-th"><span>Ticket 02 · What he cooks</span></div>
+                <div className="cp-tb">
+                  <h3 className="cp-s">Curated meal prep</h3>
+                  <ul>{CHEF_MENU_ITEMS.map((m) => <li key={m}>{m}</li>)}</ul>
+                  <div className="cp-perf" />
+                  <p className="cp-flush">Housemade sauces. Catering and private events.</p>
+                </div>
+              </article>
+            </div>
+            <div className="cp-tk" style={{ '--i': 2 } as React.CSSProperties}>
+              <div className="cp-clip" aria-hidden="true" />
+              <article className="cp-ticket" onAnimationEnd={done} aria-label="Ticket 3 of 3">
+                <div className="cp-th"><span>Ticket 03 · Why he cooks</span></div>
+                <div className="cp-tb">
+                  <h3 className="cp-s">{CHEF_TICKET_03.head[0]} {CHEF_TICKET_03.head[1]}<br />{CHEF_TICKET_03.head[2]}</h3>
+                  <div className="cp-perf" />
+                  <p className="cp-flush">{CHEF_TICKET_03.why}</p>
+                </div>
+              </article>
             </div>
           </div>
         </div>
 
-        <div className="chef-main">
-          <div className="chef-head">
-            <div className="eyebrow">Meet the chef</div>
-            <h2 id="chef-t" className="disp">Marsaun Cook</h2>
-            {/* PREVIEW ONLY: remove this tag once Marsaun has OK'd publishing his background (law enforcement, education). */}
-            <p><Need>CONFIRM WITH MARSAUN: OK to publish background</Need></p>
-          </div>
-          <ol className="stops" ref={list}>
-            <span className="rail" aria-hidden="true"><span className="rail-fill" ref={fill} /></span>
-            {CHEF_STOPS.map((s, i) => (
-              <li
-                key={s.n}
-                className={'stop' + (i === active ? ' on' : '')}
-                ref={(el) => { stops.current[i] = el }}
-                aria-current={i === active ? 'step' : undefined}
-              >
-                <button type="button" className="node" onClick={() => go(i)} aria-label={`Stop ${i + 1} of ${CHEF_STOPS.length}: ${s.label}`}>
-                  <span aria-hidden="true">{s.n}</span>
-                </button>
-                <span className="s-label">{s.label}</span>
-                <p><Marked text={s.text} marks={s.marks} /></p>
-              </li>
-            ))}
-          </ol>
+        <div className="chef-foot">
+          <span>{BIZ.name} · {BIZ.address}</span>
+          <span>Meal preps · Catering · Private events</span>
         </div>
       </div>
     </section>
