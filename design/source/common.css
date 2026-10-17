@@ -1,0 +1,20 @@
+:root{--char:#17140f;--edge:#0f0d0a;--panel:#221d17;--bone:#f4ecdd;--bone2:#ebe1cf;--chili:#e2461f;--btn:#c9381a;--saf:#f2b632;--herb:#7a9a4a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;font-family:'Barlow',sans-serif;color:var(--bone);-webkit-font-smoothing:antialiased}
+.fr{position:relative;width:1440px;height:900px;overflow:hidden}
+.disp{font-family:'Anton',sans-serif;font-weight:400}
+header{position:absolute;top:0;left:0;right:0;height:92px;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 56px}
+.brand{display:flex;align-items:center;gap:14px}
+.tile{width:56px;height:56px;background:var(--bone);border-radius:8px;border:1px solid var(--saf);display:flex;align-items:center;justify-content:center}
+.tile img{width:46px;height:46px;object-fit:contain;display:block}
+.bt b{display:block;font:400 26px/1 'Anton';letter-spacing:.02em}
+.bt span{display:block;font:700 11px/1 'Barlow';letter-spacing:.3em;margin-top:5px;color:var(--saf)}
+nav{display:flex;gap:38px;align-items:center}
+nav a{font:600 16px/1 'Barlow';letter-spacing:.04em;color:inherit}
+.right{display:flex;align-items:center;gap:38px}
+.btn{display:inline-flex;align-items:center;justify-content:center;font:700 16px/1 'Barlow';letter-spacing:.08em;text-transform:uppercase;border-radius:8px;padding:17px 30px 16px;border:1.5px solid transparent;white-space:nowrap;text-decoration:none}
+.btn.p{background:var(--btn);color:#fff}
+.btn.sm{padding:13px 22px 12px;font-size:14px}
+.btn.g{border-color:var(--saf);color:var(--bone);background:transparent}
+.eyebrow{font:700 14px/1 'Barlow';letter-spacing:.3em;text-transform:uppercase;color:var(--saf)}
+.tag{display:inline-block;font:700 11px/1 'Barlow';letter-spacing:.1em;text-transform:uppercase;border:1.5px dashed var(--saf);border-radius:4px;padding:5px 8px 4px;color:var(--saf);background:rgba(242,182,50,.12)}

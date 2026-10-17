@@ -1,0 +1,24 @@
+/* Single source for the Charred & Citrus palette, type and shape. Change here, everything follows. */
+:root {
+  --charcoal: #17140f;       /* page ground */
+  --edge: #0f0d0a;           /* hero edge, footer */
+  --panel: #221d17;          /* lifted panels and cards */
+  --bone: #f4ecdd;           /* text on dark, light sections */
+  --bone-2: #ebe1cf;         /* alt light section */
+  --chili: #e2461f;          /* prices + the one accent word. Never small text */
+  --btn: #c9381a;            /* buttons, white text */
+  --btn-hover: #b32f14;
+  --saffron: #f2b632;        /* small labels, thin rules, step numbers only */
+  --herb: #7a9a4a;           /* tiny "Fresh" tags only (not used yet) */
+  --ink-on-bone: #17140f;
+  --need-on-bone: #8a5d00;   /* dark saffron text for NEED tags on bone (contrast) */
+
+  --font-display: 'Anton', 'Impact', 'Arial Narrow', sans-serif;
+  --font-body: 'Barlow', system-ui, sans-serif;
+  --font-label: 'Barlow Condensed', 'Barlow', sans-serif;
+
+  --r-btn: 8px;
+  --r-card: 12px;
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-io: cubic-bezier(0.45, 0.05, 0.25, 1);
+}
