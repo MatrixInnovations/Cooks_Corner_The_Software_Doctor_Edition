@@ -22,8 +22,8 @@ const bodyOf = (f: any, i = 0) => JSON.parse(f.mock.calls[i][1].body)
 describe('buildKitchenTicket', () => {
   it('pickup: type at top, subject, items, NONE allergy, stripe link, ET time', () => {
     const t = buildKitchenTicket(order())
-    expect(t.subject).toBe('New order: 8 meals, PICKUP, $116 (Pat Buyer)')
-    expect(t.text.split('\n')[0]).toBe('*** PICKUP ***')
+    expect(t.subject).toBe('New order: Pat Buyer, Pickup day to be scheduled')
+    expect(t.text.split('\n')[0]).toBe('You have a new order, Marsaun.'); expect(t.text.split('\n')[2]).toBe('*** PICKUP ***'); expect(t.text).toContain('Hit reply to email the customer directly, or open the payment in Stripe.')
     expect(t.text).toContain('Order 1234567890')
     expect(t.text).toContain('Sat, Oct 17, 3:12 PM ET')
     expect(t.text).toContain('Proteins: Turkey Meatballs, Grilled Shrimp')
@@ -41,8 +41,8 @@ describe('buildKitchenTicket', () => {
   })
   it('delivery: address shown, allergy highlighted, test sessions link to the test dashboard', () => {
     const t = buildKitchenTicket(order({ id: 'cs_test_zzzzzzzzzz1234', amount_total: 13150 }, { fulfillment: 'delivery', meals: '8', allergy_note: 'peanuts' }))
-    expect(t.subject).toBe('New order: 8 meals, DELIVERY, $131.50 (Pat Buyer)')
-    expect(t.text.split('\n')[0]).toBe('*** DELIVERY ***')
+    expect(t.subject).toBe('New order: Pat Buyer, Delivery day to be scheduled')
+    expect(t.text.split('\n')[2]).toBe('*** DELIVERY ***')
     expect(t.text).toContain('1 Main St'); expect(t.text).toContain('Charlotte, NC 28269')
     expect(t.text).toContain('*** ALLERGY NOTE: PEANUTS ***')
     expect(t.html).toContain('ALLERGY NOTE: peanuts')
@@ -51,7 +51,7 @@ describe('buildKitchenTicket', () => {
   })
   it('delivery without an address says so; missing customer fields are handled', () => {
     const t = buildKitchenTicket(order({ collected_information: null, customer_details: null }, { fulfillment: 'delivery' }))
-    expect(t.text).toContain('ADDRESS MISSING'); expect(t.text).toContain('Phone: not given'); expect(t.subject).toBe('New order: 8 meals, DELIVERY, $116')
+    expect(t.text).toContain('ADDRESS MISSING'); expect(t.text).toContain('Phone: not given'); expect(t.subject).toBe('New order: customer, Delivery day to be scheduled')
     expect(t.replyTo).toBeNull()
   })
   it('escapes customer-controlled fields in HTML and strips newlines from text/subject', () => {

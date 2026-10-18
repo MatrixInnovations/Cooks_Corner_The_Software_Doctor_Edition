@@ -185,8 +185,8 @@ describe('kitchen ticket and confirmation email show the day', () => {
   const o = (over: Record<string, unknown> = {}) => ({ ...orderFromSession(session('cs_t000000001', MON, { assigned_day: '2026-10-21' }) as any, new Date('2026-10-19T14:00:00Z')), assignedDay: '2026-10-21', dayMoved: false, ...over })
   it('puts the assigned day near the top, in the subject and in the HTML', () => {
     const t = buildKitchenTicket(o() as any)
-    expect(t.subject).toBe('New order: 10 meals, PICKUP for Wed, Oct 21, $150 (Pat Buyer)')
-    expect(t.text.split('\n')[2]).toBe('*** PICKUP DAY: WEDNESDAY, OCT 21, 11 AM TO 7 PM ***')
+    expect(t.subject).toBe('New order: Pat Buyer, Pickup Wed, Oct 21')
+    expect(t.text.split('\n')[4]).toBe('*** PICKUP DAY: WEDNESDAY, OCT 21, 11 AM TO 7 PM ***')
     expect(t.html).toContain('PICKUP DAY: Wednesday, Oct 21, 11 AM to 7 PM')
   })
   it('flags a day that moved and an order with no day', () => {
@@ -195,7 +195,13 @@ describe('kitchen ticket and confirmation email show the day', () => {
     expect(moved.html).toContain('#fee2e2')
     const none = buildKitchenTicket(o({ assignedDay: null }) as any)
     expect(none.text).toContain('NO DAY AVAILABLE')
-    expect(none.subject).not.toContain(' for ')
+    expect(none.subject).toBe('New order: Pat Buyer, Pickup day to be scheduled')
+    expect(moved.text).toContain('Heads up: the day was moved (Wed, Oct 21 filled up')
+    expect(moved.text).toContain('You have a new order, Marsaun.')
+    expect(moved.text).toContain('Hit reply to email the customer directly')
+    const late = buildKitchenTicket(o({ receivedAt: '2026-10-18T14:00:00Z' }) as any)
+    expect(late.text).toContain('after the Sunday 9 AM cutoff')
+    expect(buildKitchenTicket(o() as any).text).not.toContain('Heads up')
   })
   it('delivery orders say DELIVER DAY', () => {
     expect(buildKitchenTicket(o({ fulfillment: 'delivery' }) as any).text).toContain('DELIVER DAY: WEDNESDAY')

@@ -1,5 +1,5 @@
 import { dollars } from '../../src/shared/catalog'
-import { formatDay, isDay } from '../../src/shared/schedule'
+import { effectiveOrderTime, formatDay, isDay } from '../../src/shared/schedule'
 import type { OrderRecord } from './orders'
 import type { Env } from './types'
 
@@ -49,6 +49,16 @@ export function dayLine(o: OrderRecord): { label: string; text: string; flag: bo
   return { label: `${verb} DAY`, text: `${day}${moved}, 11 AM to 7 PM`, flag: Boolean(moved) }
 }
 
+/** A plain sentence when the day is later than the customer saw: the day filled up, or the order came in after the Sunday 9 AM cutoff. */
+export function dayMoveNote(o: OrderRecord): string | null {
+  if (!isDay(o.assignedDay)) return null
+  const parts: string[] = []
+  if (o.dayMoved && isDay(o.estimatedDay)) parts.push(`${formatDay(o.estimatedDay)} filled up before this order was paid`)
+  const t = new Date(o.receivedAt)
+  if (!Number.isNaN(t.getTime()) && effectiveOrderTime(t).rolledOver) parts.push('the order came in after the Sunday 9 AM cutoff, so it counts as a Monday order')
+  return parts.length ? `Heads up: the day was moved (${parts.join('; ')}). Please tell the customer if they were expecting a different day.` : null
+}
+
 const addressLines = (a: OrderRecord['deliveryAddress']): string[] => {
   if (!a) return []
   const cityLine = [oneLine(a.city, 80), [oneLine(a.state, 20), oneLine(a.postal_code, 20)].filter(Boolean).join(' ')].filter(Boolean).join(', ')
@@ -75,8 +85,12 @@ export function buildKitchenTicket(order: OrderRecord): Ticket {
   const addr = addressLines(order.deliveryAddress)
   const link = stripeLink(order)
   const day = dayLine(order)
-  const dayShort = isDay(order.assignedDay) ? ` for ${formatDay(order.assignedDay)}` : ''
-  const subject = oneLine(`New order: ${t.meals} meals, ${method}${dayShort}, ${amount}${name ? ` (${name})` : ''}`, 150)
+  const methodWord = order.fulfillment === 'delivery' ? 'Delivery' : 'Pickup'
+  const subjectDay = isDay(order.assignedDay) ? formatDay(order.assignedDay) : 'day to be scheduled'
+  const subject = oneLine(`New order: ${name || 'customer'}, ${methodWord} ${subjectDay}`, 150)
+  const moveNote = dayMoveNote(order)
+  const opening = 'You have a new order, Marsaun.'
+  const footer = 'Hit reply to email the customer directly, or open the payment in Stripe.'
 
   const rows: Array<[string, string]> = [
     ['Package', pkg],
@@ -94,9 +108,12 @@ export function buildKitchenTicket(order: OrderRecord): Ticket {
   const total = `${amount} paid`
 
   const text = [
+    opening,
+    '',
     `*** ${method} ***`,
     `Order ${ref}   ${when}`,
     `*** ${day.label}: ${day.text.toUpperCase()} ***`,
+    ...(moveNote ? [moveNote] : []),
     '',
     ...rows.map(([k, v]) => `${k}: ${v}`),
     '',
@@ -107,6 +124,8 @@ export function buildKitchenTicket(order: OrderRecord): Ticket {
     '',
     `Amount: ${total}`,
     link ? `Stripe: ${link}` : 'Stripe: payment link not available',
+    '',
+    footer,
   ].join('\n')
 
   const e = escapeHtml
@@ -116,9 +135,11 @@ export function buildKitchenTicket(order: OrderRecord): Ticket {
   const banner = order.fulfillment === 'delivery' ? '#b45309' : '#166534'
   const html = [
     '<!doctype html><html><body style="margin:0;padding:16px;font-family:Arial,Helvetica,sans-serif;color:#111;background:#fff;"><div style="max-width:560px;">',
+    `<p style="margin:0 0 12px;font-size:17px;">${e(opening)}</p>`,
     `<div style="background:${banner};color:#fff;font-size:28px;font-weight:bold;padding:12px 16px;letter-spacing:1px;">${method}</div>`,
     `<p style="margin:12px 0;font-size:15px;color:#333;">Order <b>${e(ref)}</b> &middot; ${e(when)}</p>`,
     `<div style="margin:12px 0;padding:10px 14px;background:${day.flag ? '#fee2e2' : '#e0f2fe'};border:2px solid ${day.flag ? '#dc2626' : '#0369a1'};font-size:20px;font-weight:bold;">${e(day.label)}: ${e(day.text)}</div>`,
+    moveNote ? `<p style="margin:0 0 12px;padding:8px 12px;background:#fee2e2;border:1px solid #dc2626;font-size:15px;">${e(moveNote)}</p>` : '',
     table(rows),
     allergy
       ? `<div style="margin:16px 0;padding:12px 14px;background:#fef08a;border:3px solid #dc2626;font-size:20px;font-weight:bold;color:#7f1d1d;">ALLERGY NOTE: ${e(allergy)}</div>`
@@ -129,6 +150,7 @@ export function buildKitchenTicket(order: OrderRecord): Ticket {
       : '<p style="font-size:16px;margin:12px 0 4px;"><b>Pickup:</b> customer comes to the kitchen (no delivery address)</p>',
     `<p style="font-size:18px;margin:12px 0;"><b>Amount:</b> ${e(total)}</p>`,
     link ? `<p style="font-size:14px;"><a href="${e(link)}">Open payment in Stripe</a></p>` : '',
+    `<p style="font-size:14px;color:#555;">${e(footer)}</p>`,
     '</div></body></html>',
   ].join('')
 
