@@ -80,7 +80,7 @@ function Panel({ s, set, cap, total, idp, pay, photo = true }: { photo?: boolean
       {SHOW_REVIEW_TAGS && <p className="tb-comp"><Need>Need from Marsaun: a photo of each item (preview is a composite)</Need></p>}
 
       <div className="tb-ticket">
-        <div className="tb-th"><span>Your pickup ticket</span><span>{s.meals} meals</span></div>
+        <div className="tb-th"><span>{s.fulfillment === 'delivery' ? 'Your delivery ticket' : 'Your pickup ticket'}</span><span>{s.meals} meals</span></div>
         <div className="tb-tb">
           <div className="tb-row"><span className="k">Package</span><span className="v">{s.meals} meals</span><span className="pr">{dollars(packageFor(s.meals)!.priceCents)}</span></div>
           <div className="tb-row"><span className="k">Proteins</span><span className="v">{s.proteins.length ? s.proteins.join(', ') : <span className="m">Not chosen yet</span>}<small>{s.proteins.length} of {cap} chosen</small></span></div>
@@ -172,10 +172,22 @@ export default function TrayBuilder() {
   }, [])
   useEffect(() => {
     const el = sec.current
-    if (!el || !('IntersectionObserver' in window)) return
-    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0 })
-    io.observe(el)
-    return () => io.disconnect()
+    if (!el) return
+    // The slim bar is only useful while the builder fills the screen behind it. Hide it as soon as the builder's bottom edge
+    // comes up into the viewport (plus a small lead), so it never sits on top of the start of the Menu section below.
+    const LEAD = 24
+    let raf = 0
+    const measure = () => {
+      raf = 0
+      const r = el.getBoundingClientRect()
+      const vh = window.innerHeight
+      setInView(r.top < vh && r.bottom > vh + LEAD)
+    }
+    const queue = () => { if (!raf) raf = requestAnimationFrame(measure) }
+    measure()
+    window.addEventListener('scroll', queue, { passive: true })
+    window.addEventListener('resize', queue)
+    return () => { window.removeEventListener('scroll', queue); window.removeEventListener('resize', queue); if (raf) cancelAnimationFrame(raf) }
   }, [])
 
   function pickMeals(m: number) {

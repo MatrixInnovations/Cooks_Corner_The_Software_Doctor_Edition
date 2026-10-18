@@ -17,7 +17,7 @@ export const BIZ = {
 /** Confirmed by Andrew. */
 export const SAUCES = [
   { name: 'Spank Sauce', desc: 'Greek yogurt base, preferably for salmon' },
-  { name: 'Spice Man', desc: 'sweet Thai chili base' },
+  { name: 'Spice Man', desc: 'Sweet Thai chili base' },
 ] as const
 /** Monday is on the schedule because Andrew said Monday has 5 slots left for new orders (the other 5 are Marsaun's monthly subscribers). PENDING Andrew/Marsaun OK; keep in sync with OPEN_WEEKDAYS in src/shared/schedule.ts. */
 export const PICKUP_HOURS = 'Monday through Saturday, 11 AM to 7 PM unless advised otherwise. No Sundays.'
@@ -92,7 +92,7 @@ export const POLICIES = {
     id: 'order-changes-and-refunds',
     title: 'ORDER CHANGES AND REFUNDS',
     paragraphs: [
-      'Order cutoff: Sunday at 9:00 AM. No same-day orders or pickup. Orders placed after Sunday at 9:00 AM roll over to Monday. Pickup or delivery is at least 48 hours after your order is placed, on the next open day. We take up to 10 orders a day, and when a day is full your order moves to the next open day.',
+      'Order cutoff: Sunday at 9:00 AM. No same-day orders or pickup. Orders placed after Sunday at 9:00 AM are treated as placed Monday. Pickup or delivery is at least 48 hours after your order is placed, on the next open day. We take up to 10 orders a day, and when a day is full your order moves to the next open day.',
       'Please request cancellations or changes at least 48 hours before meal preparation begins. Orders canceled by that deadline are eligible for a full refund.',
       "Once preparation has started, orders generally can't be canceled or refunded because ingredients and labor have already been committed.",
       "If an order is incorrect, missing an item, or has a quality issue, contact Cook's Corner within 24 hours of pickup or delivery and include a photo when possible. We'll review the issue and offer a replacement, store credit, or refund for the affected item.",
