@@ -16,8 +16,8 @@ export const BIZ = {
 
 /** Confirmed by Andrew. */
 export const SAUCES = [
-  { name: 'Spank Sauce', desc: 'Greek yogurt base, preferably for salmon' },
-  { name: 'Spice Man', desc: 'Sweet Thai chili base' },
+  { name: 'Spank Sauce', desc: 'Greek Yogurt base, preferably for Salmon' },
+  { name: 'Spice Man', desc: 'Sweet Thai Chili base' },
 ] as const
 /** Monday is on the schedule because Andrew said Monday has 5 slots left for new orders (the other 5 are Marsaun's monthly subscribers). PENDING Andrew/Marsaun OK; keep in sync with OPEN_WEEKDAYS in src/shared/schedule.ts. */
 export const PICKUP_HOURS = 'Monday through Saturday, 11 AM to 7 PM unless advised otherwise. No Sundays.'
@@ -29,9 +29,9 @@ export const NEED = 'Need from Marsaun'
 
 export const STEPS = [
   { n: 1, label: 'Empty tray', cap: "We cook when you can't." },
-  { n: 2, label: 'Protein', cap: 'Start with the protein.' },
-  { n: 3, label: 'Sides', cap: 'Add your sides.' },
-  { n: 4, label: 'Sauce', cap: 'Finish with the sauce.' },
+  { n: 2, label: 'Protein', cap: 'Start with the Protein.' },
+  { n: 3, label: 'Sides', cap: 'Add your Sides.' },
+  { n: 4, label: 'Sauce', cap: 'Finish with the Sauce.' },
   { n: 5, label: 'Packages', cap: 'Pick how many meals your week needs.' },
   { n: 6, label: 'Pickup', cap: 'Grab it at the storefront.' },
   { n: 7, label: 'Done', cap: 'Your week is handled.' },
@@ -73,7 +73,7 @@ export const CHEF_TICKET_01 = { name: 'Marsaun Cook', role: 'Founder, Cook\u2019
 export const CHEF_TICKET_03 = { head: ['Care.', 'Consistency.', 'Good food.'], why: 'It started with a love of food, and a goal to make the week easier for busy people.' }
 /** Fact strip answers from Andrew (he said "going on 20 years"; shown as "Almost 20 years"). */
 export const CHEF_FACTS = { years: 'Almost 20 years', signature: 'Honey Nut Salmon' }
-export const CHEF_MENU_ITEMS = ['Ribeye', 'Chicken', 'Turkey', 'Shrimp', 'Salmon', 'Scallops', 'Grilled asparagus', 'Sweet potato'] as const
+export const CHEF_MENU_ITEMS = ['Ribeye', 'Chicken', 'Turkey', 'Shrimp', 'Salmon', 'Scallops', 'Grilled Asparagus', 'Sweet Potato'] as const
 
 export const MENU = MENU_ITEMS
 

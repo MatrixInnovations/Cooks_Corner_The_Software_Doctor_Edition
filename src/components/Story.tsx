@@ -235,18 +235,18 @@ export default function Story() {
           <div className="copy cap c2" ref={reg('c2')}>
             <div className="eyebrow">02 · Protein</div>
             <h2 className="disp">{STEPS[1].cap}</h2>
-            <p className="sub">Pick a protein or a seafood: grilled ribeye, chicken breast or thigh, ground turkey, turkey meatballs, salmon, shrimp, scallops or cod.</p>
+            <p className="sub">Pick a protein or a seafood: Grilled Ribeye, Chicken Breast or Thigh, Ground Turkey, Turkey Meatballs, Salmon, Shrimp, Scallops or Cod.</p>
           </div>
           <div className="copy cap c3" ref={reg('c3')}>
             <div className="eyebrow">03 · Sides</div>
             <h2 className="disp">{STEPS[2].cap}</h2>
-            <p className="sub">One vegetable and one starch in every meal, from grilled asparagus to garlic parmesan mash.</p>
+            <p className="sub">One vegetable and one starch in every meal, from Grilled Asparagus to Garlic Parmesan Mash.</p>
           </div>
           <div className="copy cap c4" ref={reg('c4')}>
             <div className="eyebrow">04 · Sauce</div>
             <h2 className="disp">{STEPS[3].cap}</h2>
             <p className="sub">Housemade sauces come with your proteins unless you decline them.</p>
-            <p className="need-row">Spank Sauce (Greek yogurt base, preferably for salmon) and Spice Man (sweet Thai chili base).</p>
+            <p className="need-row">Spank Sauce (Greek Yogurt base, preferably for Salmon) and Spice Man (Sweet Thai Chili base).</p>
           </div>
           <div className="copy cap c5" ref={reg('c5')}>
             <div className="eyebrow">05 · Packages</div>

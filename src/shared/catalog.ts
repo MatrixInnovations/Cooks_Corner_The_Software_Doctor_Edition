@@ -30,8 +30,8 @@ export const MENU_ITEMS = {
 /** Honey Nut Salmon is Marsaun's signature dish but is NOT orderable as a protein until Andrew confirms it. */
 export const PROTEINS: readonly string[] = [...MENU_ITEMS.Protein, ...MENU_ITEMS.Seafood]
 export const SAUCES = [
-  { id: 'spank-sauce', name: 'Spank Sauce', desc: 'Greek yogurt base, preferably for salmon' },
-  { id: 'spice-man', name: 'Spice Man', desc: 'Sweet Thai chili base' },
+  { id: 'spank-sauce', name: 'Spank Sauce', desc: 'Greek Yogurt base, preferably for Salmon' },
+  { id: 'spice-man', name: 'Spice Man', desc: 'Sweet Thai Chili base' },
 ] as const
 
 export const MAX_ALLERGY_NOTE = 500

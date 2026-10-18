@@ -263,7 +263,7 @@ export default function TrayBuilder() {
             </div>
 
             <div className="tb-step" role="group" aria-labelledby={`${idp}-h02`}>
-              <div className="tb-sh"><span className="n">02</span><span id={`${idp}-h02`} className="h2 disp">Choose proteins</span><span className="cnt"><b>{pad2(s.proteins.length)} of {cap}</b>Proteins</span></div>
+              <div className="tb-sh"><span className="n">02</span><span id={`${idp}-h02`} className="h2 disp">Choose Proteins</span><span className="cnt"><b>{pad2(s.proteins.length)} of {cap}</b>Proteins</span></div>
               <div className="gl">Protein</div>
               <div className="tb-chips">{MENU_ITEMS.Protein.map((n) => chip('proteins', n))}</div>
               <div className="gl">Seafood</div>
@@ -272,7 +272,7 @@ export default function TrayBuilder() {
             </div>
 
             <div className="tb-step" role="group" aria-labelledby={`${idp}-h03`}>
-              <div className="tb-sh"><span className="n">03</span><span id={`${idp}-h03`} className="h2 disp">Choose sides</span><span className="up">{sides ? `${sides} chosen` : 'Pick any'}</span></div>
+              <div className="tb-sh"><span className="n">03</span><span id={`${idp}-h03`} className="h2 disp">Choose Sides</span><span className="up">{sides ? `${sides} chosen` : 'Pick any'}</span></div>
               <div className="gl">Vegetable</div>
               <div className="tb-chips">{MENU_ITEMS.Vegetables.map((n) => chip('vegetables', n))}</div>
               <div className="gl mt">Starch</div>
@@ -281,7 +281,7 @@ export default function TrayBuilder() {
             </div>
 
             <div className="tb-step" role="group" aria-labelledby={`${idp}-h04`}>
-              <div className="tb-sh"><span className="n">04</span><span id={`${idp}-h04`} className="h2 disp">Pick sauces</span><span className="up">{s.sauces.length ? `${s.sauces.length} chosen` : 'Pick any'}</span></div>
+              <div className="tb-sh"><span className="n">04</span><span id={`${idp}-h04`} className="h2 disp">Pick Sauces</span><span className="up">{s.sauces.length ? `${s.sauces.length} chosen` : 'Pick any'}</span></div>
               <div className="tb-sauce">
                 {SAUCES.map((x) => {
                   const on = s.sauces.includes(x.id)

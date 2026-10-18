@@ -43,3 +43,12 @@ describe('validateTray', () => {
     expect(validateTray({ ...base, proteins: 'Grilled Ribeye' }).ok).toBe(false)
   })
 })
+
+describe('item names are Title Case (display + ticket label)', () => {
+  const small = new Set(['or', 'and', 'with', 'of', 'the', 'for', 'to', 'a'])
+  const ok = (s: string) => s.split(/[ /]+/).every((w, i) => (i > 0 && small.has(w)) || /^[A-Z]/.test(w))
+  it('menu items and sauce names start every word with a capital', async () => {
+    const { MENU_ITEMS, SAUCES } = await import('../src/shared/catalog')
+    for (const n of [...Object.values(MENU_ITEMS).flat(), ...SAUCES.map((s) => s.name)]) expect(ok(n), n).toBe(true)
+  })
+})
