@@ -23,9 +23,9 @@ export default function Header() {
       raf = 0
       const y = (ref.current?.offsetHeight ?? 64) + 1
       let theme = 'story'
-      document.querySelectorAll<HTMLElement>('[data-theme]').forEach((el) => {
+      document.querySelectorAll<HTMLElement>('[data-theme],[data-header-theme]').forEach((el) => {
         const r = el.getBoundingClientRect()
-        if (r.top <= y && r.bottom > y) theme = el.dataset.theme!
+        if (r.top <= y && r.bottom > y) theme = el.dataset.headerTheme ?? el.dataset.theme!
       })
       if (ref.current && ref.current.dataset.theme !== theme) ref.current.dataset.theme = theme
     }

@@ -81,7 +81,7 @@ export const ORDER_NOTE = 'List allergies prior to ordering*'
 export const TURNAROUND = 'Pickup or delivery is at least 48 hours after your order is placed, on the next open day.'
 export const ORDER_CUTOFF = 'Order cutoff: Sunday at 9:00 AM'
 export const NO_SAME_DAY = 'No same-day orders or pickup.'
-export const ORDER_ROLLOVER = 'Orders placed after Sunday at 9:00 AM roll over to Monday.'
+export const ORDER_ROLLOVER = 'Orders placed after Sunday at 9:00 AM are treated as placed Monday. We\u2019ll confirm your exact pickup or delivery day after you pay; the day shown is the earliest.'
 export const DAILY_LIMIT = 'We take up to 10 orders a day. When a day is full, your order moves to the next open day.'
 export const DELIVERY_FEE = '$15'
 export const SUBSCRIPTION_DELIVERY = 'Delivery is $15 each time, billed separately.'
@@ -124,7 +124,7 @@ export const POLICIES = {
  * "What customers say". Quotes are verbatim from Andrew's Google review + text-message screenshots (only spacing before
  * punctuation fixed, apostrophes typeset as \u2019). The screenshots themselves are client assets and are NOT deployed.
  * Text-message quotes stay anonymous. Ashley B.'s Google review is truncated in the screenshot, so it is left out.
- * PREVIEW ONLY: the confirm tag stays until Marsaun OKs publishing customer quotes.
+ * The "confirm with Marsaun" tag is behind SHOW_REVIEW_TAGS (off in production).
  */
 export const REVIEW_SUMMARY = { score: '5.0', count: 19, line: '5.0 \u2605 \u00b7 19 Google reviews' }
 export const REVIEWS = [

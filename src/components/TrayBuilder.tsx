@@ -5,7 +5,7 @@ import {
   DELIVERY_FEE_CENTS, MAX_ALLERGY_NOTE, MENU_ITEMS, ONE_TIME_PACKAGES, SAUCES, dollars, packageFor, totalCents,
   type Fulfillment,
 } from '../shared/catalog'
-import { FEATURES } from '../config/features'
+import { FEATURES, SHOW_REVIEW_TAGS } from '../config/features'
 import { startCheckout } from '../lib/checkout'
 import { Need } from './ui'
 
@@ -40,7 +40,23 @@ const more = (a: string[]) => (a.length > 1 ? `${a[0]} +${a.length - 1}` : a[0])
 
 type Pay = { accepted: boolean; setAccepted: (v: boolean) => void; busy: boolean; error: string; go: () => void }
 
-function Panel({ s, set, cap, total, idp, pay }: { s: State; set: (p: Partial<State>) => void; cap: number; total: number; idp: string; pay: Pay }) {
+/** Policy / allergy links inside the phone ticket sheet: close the sheet first, then scroll to the target. */
+function goAnchor(e: React.MouseEvent<HTMLAnchorElement>) {
+  const sheet = e.currentTarget.closest('dialog')
+  if (!sheet) return
+  const id = (e.currentTarget.getAttribute('href') ?? '').replace(/^#/, '')
+  e.preventDefault()
+  sheet.close()
+  requestAnimationFrame(() => {
+    const target = document.getElementById(id)
+    if (!target) return
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches
+    target.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' })
+    history.replaceState(null, '', `#${id}`)
+  })
+}
+
+function Panel({ s, set, cap, total, idp, pay, photo = true }: { photo?: boolean; s: State; set: (p: Partial<State>) => void; cap: number; total: number; idp: string; pay: Pay }) {
   const filled = [true, s.proteins.length > 0, s.vegetables.length + s.starches.length > 0, s.sauces.length > 0]
   const sauceNames = s.sauces.map((id) => SAUCES.find((x) => x.id === id)?.name ?? id)
   const sides = [...s.vegetables, ...s.starches]
@@ -50,8 +66,8 @@ function Panel({ s, set, cap, total, idp, pay }: { s: State; set: (p: Partial<St
   const desc = `Tray preview: ${s.proteins.length ? s.proteins.join(', ') : 'no proteins yet'}${s.vegetables.length ? ', vegetable' : ''}${s.starches.length ? ', starch' : ''}.`
   return (
     <>
-      <div className="tb-tray" role="img" aria-label={desc}>
-        <TrayStack s={s} />
+      <div className={'tb-tray' + (photo ? '' : ' txt')} role="img" aria-label={desc}>
+        {photo && <TrayStack s={s} />}
         <div className="tb-tl" aria-hidden="true">Your tray so far <span className="tb-seg">{filled.map((f, i) => <i key={i} className={f ? 'f' : ''} />)}</span></div>
         {s.proteins.length > 0 && <><span className="tb-ln l1" aria-hidden="true" /><span className="tb-pin p1" aria-hidden="true">{s.proteins[0]}</span></>}
         {s.proteins.length > 0 ? (
@@ -61,7 +77,7 @@ function Panel({ s, set, cap, total, idp, pay }: { s: State; set: (p: Partial<St
         <span className={'tb-pin p4' + (s.starches.length ? '' : ' g')} aria-hidden="true">{s.starches.length ? more(s.starches) : 'Starch · step 3'}</span>
         <span className={'tb-pin p5' + (s.sauces.length ? '' : ' g')} aria-hidden="true">{s.sauces.length ? more(sauceNames) : 'Sauce · step 4'}</span>
       </div>
-      <p className="tb-comp"><Need>Need from Marsaun: a photo of each item (preview is a composite)</Need></p>
+      {SHOW_REVIEW_TAGS && <p className="tb-comp"><Need>Need from Marsaun: a photo of each item (preview is a composite)</Need></p>}
 
       <div className="tb-ticket">
         <div className="tb-th"><span>Your pickup ticket</span><span>{s.meals} meals</span></div>
@@ -105,7 +121,7 @@ function Panel({ s, set, cap, total, idp, pay }: { s: State; set: (p: Partial<St
             <>
               <label className={'tb-accept' + (pay.accepted ? ' on' : '')}>
                 <input type="checkbox" checked={pay.accepted} onChange={(e) => pay.setAccepted(e.target.checked)} />
-                <span>I accept the <a href="#policies">order changes and refunds policy and food allergy notice</a>.</span>
+                <span>I accept the <a href="#policies" onClick={goAnchor}>order changes and refunds policy and food allergy notice</a>.</span>
               </label>
               <button type="button" className="btn p tb-checkout" disabled={missing.length > 0 || pay.busy} aria-describedby={missing.length ? `${idp}-need` : undefined} onClick={pay.go}>{pay.busy ? 'Starting checkout…' : 'Checkout'}</button>
               {missing.length > 0 && !pay.busy && <p className="tb-need-hint" id={`${idp}-need`}>{missing.length === 1 ? `${missing[0][0].toUpperCase()}${missing[0].slice(1)} to continue` : `To continue: ${missing.join(' and ')}`}</p>}
@@ -118,7 +134,7 @@ function Panel({ s, set, cap, total, idp, pay }: { s: State; set: (p: Partial<St
               <p className="tb-dm">Order by DM <a href={BIZ.instagramUrl} target="_blank" rel="noopener">{BIZ.instagram}</a> for now.</p>
             </>
           )}
-          <p className="fine"><a href={`#${POLICIES.allergy.id}`}>{ORDER_NOTE}</a></p>
+          <p className="fine"><a href={`#${POLICIES.allergy.id}`} onClick={goAnchor}>{ORDER_NOTE}</a></p>
         </div>
       </div>
     </>
@@ -249,7 +265,7 @@ export default function TrayBuilder() {
               <div className="tb-chips">{MENU_ITEMS.Vegetables.map((n) => chip('vegetables', n))}</div>
               <div className="gl mt">Starch</div>
               <div className="tb-chips">{MENU_ITEMS.Starch.map((n) => chip('starches', n))}</div>
-              <p className="tb-note"><span>One vegetable and one starch in every meal.</span><Need>Need from Marsaun: how many side picks per package</Need></p>
+              <p className="tb-note"><span>One vegetable and one starch in every meal.</span>{SHOW_REVIEW_TAGS && <Need>Need from Marsaun: how many side picks per package</Need>}</p>
             </div>
 
             <div className="tb-step" role="group" aria-labelledby={`${idp}-h04`}>
@@ -267,7 +283,7 @@ export default function TrayBuilder() {
                   )
                 })}
               </div>
-              <p className="tb-note"><span>Housemade sauces.</span><Need>Need from Marsaun: sauces per order and any extra cost</Need></p>
+              <p className="tb-note"><span>Housemade sauces.</span>{SHOW_REVIEW_TAGS && <Need>Need from Marsaun: sauces per order and any extra cost</Need>}</p>
             </div>
 
             <div className="tb-step tb-allergy">
@@ -295,13 +311,12 @@ export default function TrayBuilder() {
 
       {/* mobile: slim button-red bar that opens the ticket sheet */}
       <div className={'tb-bar' + (inView ? ' show' : '')}>
-        <TrayStack s={s} className="thumb" />
         <div className="m"><b>{s.meals} meals · {dollars(total)}</b><span>{s.proteins.length} of {cap} proteins</span></div>
         <button type="button" className="vt" onClick={() => sheet.current?.showModal()}>View ticket</button>
       </div>
       <dialog ref={sheet} className="tb-sheet" aria-label="Your ticket" onClick={(e) => e.target === sheet.current && sheet.current?.close()}>
         <div className="tb-grab"><span>Your ticket</span><button type="button" onClick={() => sheet.current?.close()}>Close</button></div>
-        <Panel s={s} set={set} cap={cap} total={total} idp={`${idp}m`} pay={pay} />
+        <Panel s={s} set={set} cap={cap} total={total} idp={`${idp}m`} pay={pay} photo={false} />
       </dialog>
     </section>
   )

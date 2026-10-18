@@ -1,9 +1,11 @@
 import { createContext, useContext, useRef, type ReactNode } from 'react'
 import { BIZ, NEED, NO_SAME_DAY, ORDER_CUTOFF, ORDER_NOTE, ORDER_ROLLOVER, POLICIES } from '../config/content'
-import { FEATURES } from '../config/features'
+import { FEATURES, SHOW_REVIEW_TAGS } from '../config/features'
 
 /** A visible open question for the client. Keep until Marsaun answers. */
+/** Gated by SHOW_REVIEW_TAGS (off in production). Call sites also gate on the flag so their text never ships in the default build. */
 export function Need({ children = NEED, title }: { children?: ReactNode; title?: string }) {
+  if (!SHOW_REVIEW_TAGS) return null
   return (
     <span className="need" title={title ?? 'Only Marsaun can confirm this'}>
       {children}

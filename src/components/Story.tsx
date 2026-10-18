@@ -272,7 +272,7 @@ export default function Story() {
             <div className="ticket-wrap">
               <div className="slot" aria-hidden="true" />
               <div className="ticket-clip">
-                <div className="ticket" ref={reg('ticket')}>
+                <div className="ticket" data-header-theme="light" ref={reg('ticket')}>
                   <div className="t-label">Pickup ticket</div>
                   <div className="t-big disp" aria-hidden="true">{STEPS[6].cap}</div>
                   <div className="t-line">{BIZ.name}</div>

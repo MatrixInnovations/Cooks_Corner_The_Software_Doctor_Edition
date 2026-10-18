@@ -1,4 +1,5 @@
 import { BIZ, CATERING_HOW, DELIVERY_FEE, ORDERING, PICKUP_HOURS, SAUCES, MENU, NO_SAME_DAY, ORDER_CUTOFF, ORDER_NOTE, ORDER_ROLLOVER, PACKAGES, POLICIES, SUBSCRIPTIONS, SUBSCRIPTION_DELIVERY, TURNAROUND } from '../config/content'
+import { SHOW_REVIEW_TAGS } from '../config/features'
 import { PHOTOS, LOGO } from '../config/photos'
 import { Need, OrderButton, Photo, ResponsivePhoto } from './ui'
 import Jingle from './Jingle'
@@ -34,7 +35,7 @@ export function Packages() {
           ))}
         </ul>
         <p className="order-note"><a href={`#${POLICIES.allergy.id}`}>{ORDER_NOTE}</a></p>
-        <p className="note">“Protein maximum” is the most different proteins you can choose within one package. <Need>Proposed wording, Marsaun to confirm</Need></p>
+        <p className="note">“Protein maximum” is the most different proteins you can choose within one package. {SHOW_REVIEW_TAGS && <Need>Proposed wording, Marsaun to confirm</Need>}</p>
       </div>
     </section>
   )
@@ -81,9 +82,11 @@ export function Delivery() {
             <h3 className="disp">Delivery</h3>
             <p className="big">Delivery within 25 miles of our pickup point. Delivery fee: {DELIVERY_FEE}.</p>
             <p className="big">Delivery follows the same schedule as pickup.</p>
-            <ul className="need-list">
-              <li>How customers give their address <Need /></li>
-            </ul>
+            {SHOW_REVIEW_TAGS && (
+              <ul className="need-list">
+                <li>How customers give their address <Need /></li>
+              </ul>
+            )}
             <a className="btn p" href={`mailto:${BIZ.email}?subject=Delivery`}>Ask about delivery</a>
           </div>
         </div>
@@ -110,10 +113,12 @@ export function Subscriptions() {
           ))}
         </ul>
         <p className="sub-delivery">{SUBSCRIPTION_DELIVERY}</p>
-        <ul className="need-list on-dark">
-          <li>What the subscription menu includes; protein maximums <Need /></li>
-          <li>How billing works, and how to pause or cancel <Need /></li>
-        </ul>
+        {SHOW_REVIEW_TAGS && (
+          <ul className="need-list on-dark">
+            <li>What the subscription menu includes; protein maximums <Need /></li>
+            <li>How billing works, and how to pause or cancel <Need /></li>
+          </ul>
+        )}
         <a className="btn g" href={`mailto:${BIZ.email}?subject=Subscriptions`}>Ask about subscriptions</a>
       </div>
     </section>
@@ -127,7 +132,7 @@ export function Catering() {
         <Head eyebrow="Meal preps • Catering • Private events" title={<span id="ct-t">Catering and private events</span>} sub="Cook’s Corner also does catering and private events." />
         <p className="need-row center">{CATERING_HOW}</p>
         <p className="need-row center">Call <a href={BIZ.phoneHref}>{BIZ.phone}</a> or DM <a href={BIZ.instagramUrl} rel="noopener">{BIZ.instagram}</a> on Instagram.</p>
-        <p className="need-row center">Group sizes, example menus and travel distance <Need>Catering details</Need></p>
+        {SHOW_REVIEW_TAGS && <p className="need-row center">Group sizes, example menus and travel distance <Need>Catering details</Need></p>}
         <div className="center"><a className="btn p" href={BIZ.phoneHref}>Call to ask about catering</a></div>
       </div>
     </section>

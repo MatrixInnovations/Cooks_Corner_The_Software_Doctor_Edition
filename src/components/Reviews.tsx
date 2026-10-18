@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { REVIEWS, REVIEW_SUMMARY } from '../config/content'
+import { SHOW_REVIEW_TAGS } from '../config/features'
 import { Need } from './ui'
 
 /**
@@ -52,7 +53,7 @@ export default function Reviews() {
             <span aria-hidden="true">{REVIEW_SUMMARY.line}</span>
           </p>
           {/* PREVIEW ONLY: remove once Marsaun has OK'd publishing these customer quotes. */}
-          <p><Need>CONFIRM WITH MARSAUN: OK to publish customer quotes</Need></p>
+          {SHOW_REVIEW_TAGS && <p><Need>CONFIRM WITH MARSAUN: OK to publish customer quotes</Need></p>}
         </div>
 
         <div className="rv" role="region" aria-roledescription="carousel" aria-label="Customer quotes">
