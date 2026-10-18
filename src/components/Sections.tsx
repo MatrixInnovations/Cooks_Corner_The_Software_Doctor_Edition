@@ -174,14 +174,13 @@ export function Footer() {
           <p>Phone: <a href={BIZ.phoneHref}>{BIZ.phone}</a></p>
           <p>Email: <a href={`mailto:${BIZ.email}`}>{BIZ.email}</a></p>
           <p>Instagram: <a href={BIZ.instagramUrl} rel="noopener">{BIZ.instagram}</a></p>
-          <p>Web: {BIZ.domain} <span className="soon">(coming soon)</span></p>
+          <p>Web: <a href={`https://${BIZ.domain}`}>{BIZ.domain}</a></p>
           <p><a href="#policies">Policies: order changes, refunds, food allergy notice, reheating and storage</a></p>
           <p>Pickup: {PICKUP_HOURS}</p>
         </address>
       </div>
       <div className="wrap legal">
         <span>© {new Date().getFullYear()} Cook’s Corner LLC.</span>
-        <span>Preview build. Not live. Photos are AI placeholders until Marsaun’s own.</span>
       </div>
       <div className="wrap credit">
         <p>Designed and Developed by Andrew Lowery, <a href="https://thesoftwaredoctor.com" target="_blank" rel="noopener">The Software Doctor<span className="sr"> (opens in a new tab)</span></a></p>
