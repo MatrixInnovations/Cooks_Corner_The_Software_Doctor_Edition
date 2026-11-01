@@ -4,7 +4,7 @@ Source: site-copy.md. Open items stay as visible [NEED FROM MARSAUN] tags until 
 ## Hero
 Eyebrow: MEAL PREPS • CATERING • PRIVATE EVENTS
 Headline: We cook when you can't. (accent on "you can't.")
-Subline: Curated meal prep, freshly prepared and ready for pickup at our location on Old Statesville Rd., or delivered within 25 miles of the pickup point.
+Subline: Curated meal prep, freshly prepared and ready for pickup at 3500 Latrobe Dr, Charlotte, NC, or delivered within 25 miles of the pickup point.
 Buttons: "Order now" (primary), "See the menu" (secondary)
 Hint under buttons: "Scroll to fill your tray"  (replaces "Drag the tray to spin it" unless dragging ships)
 

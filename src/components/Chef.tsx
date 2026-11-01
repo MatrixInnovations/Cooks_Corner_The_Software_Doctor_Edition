@@ -106,7 +106,7 @@ export default function Chef() {
             </div>
             <dl className="chef-strip">
               <div><dt>Years cooking</dt><dd className="v">{CHEF_FACTS.years}</dd></div>
-              <div><dt>Pickup</dt><dd className="v">Cooked fresh for pickup on Old Statesville Rd.</dd></div>
+              <div><dt>Pickup</dt><dd className="v">Cooked fresh for pickup at {BIZ.address}.</dd></div>
               <div><dt>Signature dish</dt><dd className="v">{CHEF_FACTS.signature}</dd></div>
             </dl>
             <div className="chef-btns">

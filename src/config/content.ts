@@ -6,7 +6,7 @@ export const BIZ = {
   sub: 'Meal Prep', // small descriptor under the name in the header only; the business name is "Cook's Corner"
   domain: 'cookscornerllc.com', // placeholder, not live yet
   tagline: "We cook when you can't.",
-  address: '8432 Old Statesville Rd., Suite 100',
+  address: '3500 Latrobe Dr, Charlotte, NC', // pickup; no suite
   phone: '704.350.5827',
   phoneHref: 'tel:+17043505827',
   email: 'TheCooksCornerChefs@yahoo.com',

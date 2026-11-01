@@ -6,8 +6,8 @@ const head = html.slice(html.indexOf('<head>'), html.indexOf('</head>'))
 
 describe('link preview and head metadata', () => {
   it('has no street address in the head (the business address will change)', () => {
-    expect(head).not.toMatch(/statesville|\bRd\.?\b|\bSuite\b|\bStreet\b|streetAddress/i)
-    expect(head).not.toMatch(/\d{3,5}\s+[A-Z][a-z]+/) // no "8432 Old ..." style street numbers
+    expect(head).not.toMatch(/statesville|latrobe|\bRd\.?\b|\bDr\b|\bSuite\b|\bStreet\b|streetAddress/i)
+    expect(head).not.toMatch(/\d{3,5}\s+[A-Z][a-z]+/) // no "3500 Latrobe" style street numbers
   })
   it('sets og/twitter title, description and image, with no prices', () => {
     for (const k of ['og:title', 'og:description', 'og:image', 'og:image:alt']) expect(head).toContain(`property="${k}"`)
