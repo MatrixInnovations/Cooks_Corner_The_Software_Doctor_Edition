@@ -224,7 +224,7 @@ export default function Story() {
               We cook<br className="d" /> when<br />
               <em>you can't.</em>
             </h1>
-            <p className="sub">Curated meal prep, freshly prepared and ready for pickup at our location on Old Statesville Rd., or delivered within 25 miles of the pickup point.</p>
+            <p className="sub">Curated meal prep, freshly prepared and ready for pickup at {BIZ.address}, or delivered within 25 miles of the pickup point.</p>
             <div className="btns">
               <OrderButton>Order now</OrderButton>
               <a className="btn g" href="#menu">See the menu</a>
