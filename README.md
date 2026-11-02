@@ -41,7 +41,7 @@ Business name Cook's Corner; planned domain cookscornerllc.com (placeholder, not
 ## v5 additions
 - Subscriptions are MONTHLY: 8 meals $400, 10 meals $500, 16 meals $768 per month; 12 meals $575 shows a "Confirm monthly" tag.
 - "Meet the chef": pinned portrait + four scroll stops (`CHEF_STOPS` in `src/config/content.ts`). Preview-only confirm tag; remove after Marsaun OKs it.
-- Portrait is a client photo of a person and is NOT in the repo (`public/people/` is git-ignored). Run `python3 tools/prepare-portrait.py <file>` and set `PORTRAIT.ready = true` in `src/config/photos.ts`. Until then a placeholder with a NEED tag shows.
+- Meet the chef portrait is committed at `public/people/marsaun-portrait-d` and `marsaun-portrait-m` (`.jpg` and `.webp`). `PORTRAIT.ready` is true in `src/config/photos.ts`. Rebuild with `python3 tools/prepare-portrait.py <file> --d x,y,w,h --m x,y,w,h`. Other files in `public/people/` stay git-ignored.
 - "What customers say": Google quotes + anonymous text-message quotes (`REVIEWS`), 5.0 / 19 Google reviews line, preview-only confirm tag. Review screenshots stay in client-assets and are not deployed.
 - Jingle: Marsaun's 42s file in `public/audio/` (mp3 + m4a), play/pause button in the footer; never autoplays, pauses when the tab is hidden, resets at the end.
 - Footer legal line: Cook's Corner LLC.
