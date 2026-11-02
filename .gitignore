@@ -4,7 +4,13 @@ dist
 .netlify
 shots
 *.log
-public/people/
+# Local people photos stay out of git. The Meet the Chef portrait is the exception:
+# Chef.tsx requests these four files, and they 404 on the live site if they are not published.
+public/people/*
+!public/people/marsaun-portrait-d.jpg
+!public/people/marsaun-portrait-d.webp
+!public/people/marsaun-portrait-m.jpg
+!public/people/marsaun-portrait-m.webp
 public/audio/*.private
 
 .env

@@ -71,13 +71,15 @@ export const LOGO = {
 }
 
 /**
- * Founder portrait for "Meet the chef". The file is a client photo of a person, so it is NOT committed to the public repo
- * (public/people/ is git-ignored). Run `python3 tools/prepare-portrait.py <source.png>` to create
- * public/people/marsaun-portrait.{jpg,webp}, then set `ready: true`.
+ * Founder portrait for "Meet the chef".
+ * Chef.tsx loads public/people/<file>-d (2:3, desktop) and <file>-m (4:5, mobile), webp with a jpg fallback.
+ * Those four files are committed so a publish from this repo can serve them. ready stays true.
+ * Other files dropped in public/people/ stay git-ignored.
+ * Rebuild with `python3 tools/prepare-portrait.py <source.png> --d x,y,w,h --m x,y,w,h`.
  */
 export const PORTRAIT = {
   ready: true,
-  /** public/people/<file>-d (2:3, desktop) and -m (4:5, mobile) .webp|jpg: Sundae's calmer-grade crops from handoff-chef-pass/portrait */
+  /** public/people/<file>-d (2:3, desktop) and -m (4:5, mobile) .webp|jpg */
   file: 'marsaun-portrait',
   alt: "Portrait of Marsaun Cook, founder of Cook's Corner, in his chef whites",
 }
