@@ -3,9 +3,25 @@ import { SHOW_REVIEW_TAGS } from '../config/features'
 import { PHOTOS, LOGO } from '../config/photos'
 import { Need, OrderButton, Photo, ResponsivePhoto } from './ui'
 import Jingle from './Jingle'
+import CountUp from '../motion/CountUp'
+
+/** Decorative ribbon of dish and sauce names that already appear in the menu. */
+function DishTicker() {
+  const names = [...Object.values(MENU).flat(), ...SAUCES.map((s) => s.name)]
+  const row = [...names, ...names]
+  return (
+    <div className="ticker" aria-hidden="true">
+      <div className="ticker-track">
+        {row.map((name, i) => (
+          <span key={i}>{name}<i /></span>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 const Head = ({ eyebrow, title, sub, light }: { eyebrow: string; title: React.ReactNode; sub?: React.ReactNode; light?: boolean }) => (
-  <div className={'sec-head' + (light ? ' on-dark' : '')}>
+  <div className={'sec-head reveal' + (light ? ' on-dark' : '')}>
     <div className="eyebrow rules">{eyebrow}</div>
     <h2 className="disp">{title}</h2>
     {sub && <p className="sec-sub">{sub}</p>}
@@ -18,14 +34,14 @@ export function Packages() {
     <section id="packages" className="sec bone" data-theme="light" aria-labelledby="pk-t">
       <div className="wrap">
         <Head eyebrow="05 · Meal packages" title={<span id="pk-t">Pick how many meals<br className="m" /> your week needs.</span>} sub="Each package is built from the menu below." />
-        <div className="stack-banner real" style={{ '--op-d': p.position.d, '--op-m': p.position.m } as React.CSSProperties}>
+        <div className="stack-banner real reveal clip-reveal" style={{ '--op-d': p.position.d, '--op-m': p.position.m } as React.CSSProperties}>
           <ResponsivePhoto file={p.file} alt={p.alt} widths={p.widths} dims={p.dims} sizes="(max-width: 1440px) 100vw, 1440px" />
         </div>
         <ul className="cards">
-          {PACKAGES.map((k) => (
-            <li className="card" key={k.meals} data-n={k.meals}>
-              <h3 className="m">{k.meals} meals</h3>
-              <div className="price disp">${k.price}</div>
+          {PACKAGES.map((k, i) => (
+            <li className="card reveal tilt" key={k.meals} data-n={k.meals} style={{ '--i': i } as React.CSSProperties}>
+              <h3 className="m"><CountUp text={`${k.meals} meals`} /></h3>
+              <div className="price disp"><CountUp text={`$${k.price}`} /></div>
               <hr />
               <div className="pm">
                 {k.proteins}
@@ -46,9 +62,10 @@ export function Menu() {
     <section id="menu" className="sec dark" data-theme="dark" aria-labelledby="mn-t">
       <div className="wrap">
         <Head light eyebrow="Menu" title={<span id="mn-t">Build your meals</span>} sub="Pick a protein or seafood, a vegetable and a starch. Mix and match to make each meal yours." />
+        <DishTicker />
         <div className="menu-grid">
-          {Object.entries(MENU).map(([group, items]) => (
-            <div className="menu-col" key={group}>
+          {Object.entries(MENU).map(([group, items], i) => (
+            <div className="menu-col reveal tilt" key={group} style={{ '--i': i } as React.CSSProperties}>
               <h3>{group}</h3>
               <ul>{items.map((i) => <li key={i}>{i}</li>)}</ul>
             </div>
@@ -56,8 +73,8 @@ export function Menu() {
         </div>
         <p className="menu-note">Housemade sauces come with your proteins unless you decline them.</p>
         <ul className="sauces">
-          {SAUCES.map((x) => (
-            <li key={x.name}><b className="disp">{x.name}</b><span>{x.desc}</span></li>
+          {SAUCES.map((x, i) => (
+            <li className="reveal tilt" key={x.name} style={{ '--i': i } as React.CSSProperties}><b className="disp">{x.name}</b><span>{x.desc}</span></li>
           ))}
         </ul>
       </div>
@@ -71,14 +88,14 @@ export function Delivery() {
       <div className="wrap">
         <Head eyebrow="Pickup & delivery" title={<span id="dl-t">Grab it, or we’ll bring it.</span>} sub={TURNAROUND} />
         <div className="two">
-          <div className="panel">
+          <div className="panel reveal tilt">
             <h3 className="disp">Pickup</h3>
             <p className="big">{BIZ.address}</p>
             <p className="big">{PICKUP_HOURS}</p>
             <p className="big">{ORDERING}</p>
             <p className="big">{ORDER_CUTOFF}. {NO_SAME_DAY} {ORDER_ROLLOVER}</p>
           </div>
-          <div className="panel">
+          <div className="panel reveal tilt" style={{ '--i': 1 } as React.CSSProperties}>
             <h3 className="disp">Delivery</h3>
             <p className="big">Delivery within 25 miles of our pickup point. Delivery fee: {DELIVERY_FEE}.</p>
             <p className="big">Delivery follows the same schedule as pickup.</p>
@@ -101,10 +118,10 @@ export function Subscriptions() {
       <div className="wrap">
         <Head light eyebrow="Subscriptions" title={<span id="sb-t">Monthly meal subscriptions</span>} sub="Monthly subscriptions are available. Pick how many meals fit your month." />
         <ul className="cards sub-cards">
-          {SUBSCRIPTIONS.map((k) => (
-            <li className="card" key={k.meals}>
-              <h3 className="m">{k.meals} meals</h3>
-              <div className="price disp">${k.price}</div>
+          {SUBSCRIPTIONS.map((k, i) => (
+            <li className="card reveal tilt" key={k.meals} style={{ '--i': i } as React.CSSProperties}>
+              <h3 className="m"><CountUp text={`${k.meals} meals`} /></h3>
+              <div className="price disp"><CountUp text={`$${k.price}`} /></div>
               <hr />
               <div className="pm">
                 per month
@@ -130,8 +147,8 @@ export function Catering() {
     <section id="catering" className="sec bone" data-theme="light" aria-labelledby="ct-t">
       <div className="wrap narrow">
         <Head eyebrow="Meal preps • Catering • Private events" title={<span id="ct-t">Catering and private events</span>} sub="Cook’s Corner also does catering and private events." />
-        <p className="need-row center">{CATERING_HOW}</p>
-        <p className="need-row center">Call <a href={BIZ.phoneHref}>{BIZ.phone}</a> or DM <a href={BIZ.instagramUrl} rel="noopener">{BIZ.instagram}</a> on Instagram.</p>
+        <p className="need-row center reveal">{CATERING_HOW}</p>
+        <p className="need-row center reveal" style={{ '--i': 1 } as React.CSSProperties}>Call <a href={BIZ.phoneHref}>{BIZ.phone}</a> or DM <a href={BIZ.instagramUrl} rel="noopener">{BIZ.instagram}</a> on Instagram.</p>
         {SHOW_REVIEW_TAGS && <p className="need-row center">Group sizes, example menus and travel distance <Need>Catering details</Need></p>}
         <div className="center"><a className="btn p" href={BIZ.phoneHref}>Call to ask about catering</a></div>
       </div>
@@ -146,8 +163,8 @@ export function Policies() {
       <div className="wrap">
         <Head eyebrow="Policies" title={<span id="po-t">Orders, refunds, allergies and storage</span>} />
         <div className="policy-grid">
-          {parts.map((p) => (
-            <article className="policy" id={p.id} key={p.id} aria-labelledby={`${p.id}-h`}>
+          {parts.map((p, i) => (
+            <article className="policy reveal tilt" id={p.id} key={p.id} aria-labelledby={`${p.id}-h`} style={{ '--i': i } as React.CSSProperties}>
               <h3 id={`${p.id}-h`} className="disp">{p.title}</h3>
               {p.paragraphs.map((t, i) => {
                 const lead = p.id === POLICIES.reheating.id ? t.indexOf(': ') : -1
@@ -165,7 +182,7 @@ export function Footer() {
   return (
     <footer id="contact" className="foot" data-theme="dark" aria-labelledby="ft-t">
       <div className="wrap foot-grid">
-        <div className="foot-brand">
+        <div className="foot-brand reveal">
           <span className="tile big"><img src={LOGO.src} alt="" width={120} height={120} loading="lazy" /></span>
           <div>
             <h2 id="ft-t" className="disp">{BIZ.name}</h2>
@@ -174,7 +191,7 @@ export function Footer() {
             <Jingle />
           </div>
         </div>
-        <address className="foot-contact">
+        <address className="foot-contact reveal" style={{ '--i': 1 } as React.CSSProperties}>
           <p>{BIZ.address}</p>
           <p>Phone: <a href={BIZ.phoneHref}>{BIZ.phone}</a></p>
           <p>Email: <a href={`mailto:${BIZ.email}`}>{BIZ.email}</a></p>

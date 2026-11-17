@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { BIZ, NO_SAME_DAY, ORDER_CUTOFF, ORDER_NOTE, ORDER_ROLLOVER, PACKAGES, PICKUP_HOURS, PICKUP_HOURS_SHORT, POLICIES, STEPS, TURNAROUND } from '../config/content'
 import { PHOTOS, type PhotoKey } from '../config/photos'
 import { Need, OrderButton, Photo } from './ui'
+import HeroTitle from '../motion/HeroTitle'
 import { steamState } from '../three/steamState'
 
 const Steam = lazy(() => import('../three/Steam'))
@@ -220,10 +221,7 @@ export default function Story() {
           {/* step 1: the approved hero copy */}
           <div className="copy c1" ref={reg('c1')}>
             <div className="eyebrow">Meal Preps • Catering • Private Events</div>
-            <h1 className="disp">
-              We cook<br className="d" /> when<br />
-              <em>you can't.</em>
-            </h1>
+            <HeroTitle />
             <p className="sub">Curated meal prep, freshly prepared and ready for pickup at {BIZ.address}, or delivered within 25 miles of the pickup point.</p>
             <div className="btns">
               <OrderButton>Order now</OrderButton>
@@ -286,6 +284,7 @@ export default function Story() {
             </div>
           </div>
 
+          <div className="story-scrub" aria-hidden="true"><i /></div>
           <div className={'dots' + (over ? ' off' : '')} role="group" aria-label="Story steps" aria-hidden={over || undefined}>
             <b aria-live="polite">{String(idx + 1).padStart(2, '0')} / 07</b>
             {STEPS.map((st, i) => (

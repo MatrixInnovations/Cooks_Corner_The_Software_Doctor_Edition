@@ -1,5 +1,7 @@
+import { useLayoutEffect } from 'react'
 import Header from './components/Header'
 import Story from './components/Story'
+import { bootMotion } from './motion/boot'
 import { Catering, Delivery, Footer, Menu, Policies, Packages, Subscriptions } from './components/Sections'
 import Reviews from './components/Reviews'
 import Chef from './components/Chef'
@@ -9,6 +11,7 @@ import { FEATURES } from './config/features'
 import { OrderProvider } from './components/ui'
 
 export default function App() {
+  useLayoutEffect(() => bootMotion(), [])
   return (
     <OrderProvider>
       <a className="skip" href="#packages">Skip to packages</a>

@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { BIZ, CHEF_FACTS, CHEF_MENU_ITEMS, CHEF_STORY, CHEF_TICKET_01, CHEF_TICKET_03 } from '../config/content'
 import { PORTRAIT } from '../config/photos'
 import { OrderButton } from './ui'
+import CountUp from '../motion/CountUp'
 
 /** Round "CC / Charlotte" stamp (SVG, saffron on charcoal). */
 function Seal() {
@@ -95,7 +96,7 @@ export default function Chef() {
     <section id="chef" ref={sec} className={'sec dark chef' + (ready ? ' js-ready' : '')} data-theme="dark" aria-labelledby="chef-t">
       <div className="wrap">
         <div className="chef-top">
-          <div className="chef-copy">
+          <div className="chef-copy reveal">
             <div className="eyebrow chef-eyebrow">Meet the chef<i /></div>
             <h2 id="chef-t" className="disp">Meet<br /><em>Marsaun Cook.</em></h2>
             <p className="chef-sub">The cook behind every tray.</p>
@@ -105,7 +106,7 @@ export default function Chef() {
               <p>{CHEF_STORY}</p>
             </div>
             <dl className="chef-strip">
-              <div><dt>Years cooking</dt><dd className="v">{CHEF_FACTS.years}</dd></div>
+              <div><dt>Years cooking</dt><dd className="v"><CountUp text={CHEF_FACTS.years} /></dd></div>
               <div><dt>Pickup</dt><dd className="v">Cooked fresh for pickup at {BIZ.address}.</dd></div>
               <div><dt>Signature dish</dt><dd className="v">{CHEF_FACTS.signature}</dd></div>
             </dl>
@@ -115,8 +116,8 @@ export default function Chef() {
             </div>
           </div>
 
-          <div className="chef-pwrap">
-            <figure className="chef-portrait">
+          <div className="chef-pwrap reveal" style={{ '--i': 1 } as React.CSSProperties}>
+            <figure className="chef-portrait reveal clip-reveal">
               {PORTRAIT.ready && (
                 <picture>
                   <source media="(max-width: 820px)" srcSet={`${base}-m.webp`} type="image/webp" />
