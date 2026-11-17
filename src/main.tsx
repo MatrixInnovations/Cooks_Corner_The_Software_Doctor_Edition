@@ -7,6 +7,7 @@ import '@fontsource/barlow/latin-700.css'
 import '@fontsource/barlow-condensed/latin-700.css'
 import './tokens.css'
 import './styles.css'
+import './motion.css'
 import App from './App'
 
 createRoot(document.getElementById('root')!).render(<App />)

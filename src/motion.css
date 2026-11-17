@@ -1,0 +1,143 @@
+/* Motion layer. Everything visible without these rules. Hidden starts exist only under
+   html.motion / html.motion-io, and prefers-reduced-motion puts the final state back. */
+
+/* ---------- page progress (fixed, never catches clicks) ---------- */
+.scroll-progress{position:fixed;inset:0 0 auto 0;height:3px;z-index:80;pointer-events:none}
+.scroll-progress span{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--chili),var(--saffron));transform:scaleX(0);transform-origin:0 50%}
+
+/* ---------- story scrub: the existing pinned tray is the scrubbed "how it works" ---------- */
+.story-scrub{position:absolute;left:0;right:0;bottom:0;height:3px;z-index:7;pointer-events:none}
+.story-scrub i{display:block;height:100%;width:100%;background:var(--saffron);transform:scaleX(0);transform-origin:0 50%}
+
+/* ---------- branded intro: a badge over the food, not a screen lock ---------- */
+.brand-intro{position:fixed;z-index:70;left:68%;top:42%;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:8px;animation:intro-pop 1.05s cubic-bezier(.22,1,.36,1) both}
+.brand-intro-veil{pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:8px}
+.brand-intro img{width:72px;height:72px;object-fit:cover;border-radius:50%;border:2px solid var(--saffron);background:var(--bone);box-shadow:0 0 0 8px rgba(23,20,15,.45)}
+.brand-intro b{font:400 22px/1 var(--font-display);letter-spacing:.04em;color:var(--bone);text-shadow:0 2px 16px rgba(15,13,10,.8)}
+.brand-intro-skip{pointer-events:auto;background:transparent;color:var(--bone);border:1.5px solid var(--saffron);border-radius:var(--r-btn);min-height:36px;padding:0 12px;font:700 11px/1 var(--font-body);letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
+@keyframes intro-pop{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.72)}
+  22%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  68%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.06)}
+}
+@media (max-width:820px){
+  .brand-intro{left:50%;top:20%}
+  .brand-intro img{width:56px;height:56px}
+  .brand-intro b{font-size:16px}
+}
+
+/* ---------- hero entrance (rules drop off once they've played so later hovers can move) ---------- */
+html.motion .site-header:not(.nav-done){animation:nav-drop .72s cubic-bezier(.22,1,.36,1) both}
+@keyframes nav-drop{from{transform:translateY(-100%)}to{transform:translateY(0)}}
+html.motion:not(.entrances-done) #site-nav a{animation:rise .55s cubic-bezier(.22,1,.36,1) both}
+html.motion:not(.entrances-done) #site-nav a:nth-child(1){animation-delay:.12s}
+html.motion:not(.entrances-done) #site-nav a:nth-child(2){animation-delay:.18s}
+html.motion:not(.entrances-done) #site-nav a:nth-child(3){animation-delay:.24s}
+html.motion:not(.entrances-done) #site-nav a:nth-child(4){animation-delay:.3s}
+html.motion .site-header .btn:not(.settled){animation:cta-pop .6s cubic-bezier(.22,1,.36,1) .28s both}
+html.motion:not(.entrances-done) .copy.c1 .eyebrow{animation:rise .65s cubic-bezier(.22,1,.36,1) both}
+html.motion:not(.entrances-done) .copy.c1 .sub{animation:rise .7s cubic-bezier(.22,1,.36,1) .28s both}
+html.motion:not(.entrances-done) .copy.c1 .btns{animation:rise .65s cubic-bezier(.22,1,.36,1) .42s both}
+html.motion:not(.entrances-done) .copy.c1 .hint{animation:rise .6s cubic-bezier(.22,1,.36,1) .62s both}
+html.motion .hero-ch{display:inline-block;vertical-align:baseline}
+html.motion:not(.entrances-done) .hero-ch>span{display:inline-block;animation:hero-ch .78s cubic-bezier(.22,1,.36,1) both;animation-delay:var(--d,0ms)}
+@keyframes hero-ch{from{opacity:0;transform:translateY(.55em)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+html.motion .copy.c1 .btns .btn.p:not(.settled){animation:cta-pop .7s cubic-bezier(.22,1,.36,1) .5s both,cta-glow 1.5s ease-in-out 1.25s 2}
+@keyframes cta-pop{from{opacity:0;transform:translateY(14px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes cta-glow{
+  0%,100%{box-shadow:0 0 0 0 rgba(226,70,31,0)}
+  50%{box-shadow:0 0 22px 2px rgba(226,70,31,.45)}
+}
+html.motion .l-hero img{animation:ken 22s cubic-bezier(.22,.61,.36,1) both;transform-origin:62% 46%}
+@keyframes ken{from{transform:scale(1.08)}to{transform:scale(1)}}
+
+/* ---------- scroll reveals (offscreen only; never applied without the motion class) ---------- */
+@media (prefers-reduced-motion:no-preference){
+  html.motion-io .reveal:not(.in){opacity:0;transform:translateY(28px) scale(.98)}
+  html.motion-io .reveal.in{opacity:1;transform:none;transition:opacity .7s var(--ease-out),transform .7s cubic-bezier(.22,1,.36,1);transition-delay:calc(var(--i,0)*70ms)}
+  /* The tray builder is how people order. Steps may slide, but they stay fully visible and clickable. */
+  html.motion-io .tb .reveal:not(.in){opacity:1;transform:translateY(14px)}
+  html.motion-io .clip-reveal.in{transition:clip-path 1s cubic-bezier(.22,1,.36,1),opacity .7s var(--ease-out),transform .7s cubic-bezier(.22,1,.36,1)}
+}
+@media (prefers-reduced-motion:no-preference) and (min-width:821px){
+  html.motion-io .clip-reveal:not(.in){clip-path:inset(11% 8%)}
+  html.motion-io .clip-reveal.in{clip-path:inset(0%)}
+}
+
+/* ---------- dish ticker (names already on the menu; decorative) ---------- */
+.ticker{overflow:hidden;margin:4px 0 26px;border-block:1px solid rgba(242,182,50,.35);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.ticker-track{display:flex;width:max-content;animation:ticker 48s linear infinite}
+.ticker span{display:inline-flex;align-items:center;font:700 13px/1 var(--font-body);letter-spacing:.22em;text-transform:uppercase;color:var(--saffron);padding:13px 0;white-space:nowrap}
+.ticker i{display:inline-block;width:6px;height:6px;margin:0 18px;border-radius:50%;background:var(--chili)}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+  .ticker:hover .ticker-track{animation-play-state:paused}
+}
+
+/* ---------- count-up: the hold is the real figure (layout + screen readers) ---------- */
+.count{display:inline-grid;vertical-align:baseline}
+.count>span{grid-area:1/1}
+.count-live{opacity:0}
+.count.run .count-hold{color:transparent}
+.count.run .count-live{opacity:1}
+
+/* ---------- hover shine, lift, press ---------- */
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+  .btn.p:not(:disabled):not([aria-disabled=true]){
+    background-image:linear-gradient(110deg,transparent 38%,rgba(255,255,255,.4) 50%,transparent 62%);
+    background-size:220% 100%;
+    background-repeat:no-repeat;
+    background-position:130% 0;
+    transition:background-color 160ms var(--ease-out),background-position .65s var(--ease-out),border-color 160ms var(--ease-out)
+  }
+  .btn.p:not(:disabled):not([aria-disabled=true]):hover{background-color:var(--btn-hover);background-position:-30% 0}
+  .btn.g:hover{
+    background-image:linear-gradient(110deg,transparent 38%,rgba(242,182,50,.4) 50%,transparent 62%);
+    background-size:220% 100%;
+    background-repeat:no-repeat;
+    background-position:-30% 0
+  }
+  .cards,.menu-grid,.sauces,.policy-grid,.rv-track{perspective:900px}
+  .tilt.in{transition:transform .45s var(--ease-out)}
+  .tilt.in:hover{transform:translateY(-8px)}
+}
+.btn.is-pop{animation:cart-pop .42s cubic-bezier(.22,1,.36,1)}
+@keyframes cart-pop{
+  0%{transform:scale(1)}
+  35%{transform:scale(.94)}
+  68%{transform:scale(1.05)}
+  100%{transform:scale(1)}
+}
+
+/* ---------- reduced motion: final state, immediately, no hidden content ---------- */
+@media (prefers-reduced-motion:reduce){
+  html.motion .site-header,
+  html.motion #site-nav a,
+  html.motion .site-header .btn,
+  html.motion .copy.c1 .eyebrow,
+  html.motion .copy.c1 .sub,
+  html.motion .copy.c1 .btns,
+  html.motion .copy.c1 .hint,
+  html.motion .hero-ch>span,
+  html.motion .copy.c1 .btns .btn.p,
+  html.motion .l-hero img,
+  html.motion-io .reveal,
+  html.motion-io .reveal.in,
+  html.motion-io .clip-reveal,
+  html.motion-io .clip-reveal.in,
+  .ticker-track,
+  .btn.is-pop,
+  .brand-intro{
+    animation:none!important;
+    transition:none!important;
+    opacity:1!important;
+    transform:none!important;
+    clip-path:none!important;
+  }
+  .brand-intro,.scroll-progress,.story-scrub{display:none!important}
+  .count-hold{color:inherit!important}
+  .count-live{display:none!important}
+  .hero-ch,.hero-ch>span{opacity:1!important;transform:none!important}
+}

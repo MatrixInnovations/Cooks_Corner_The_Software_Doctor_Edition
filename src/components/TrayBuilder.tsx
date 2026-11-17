@@ -231,7 +231,7 @@ export default function TrayBuilder() {
   return (
     <section id="build" ref={sec} className="sec dark tb" data-theme="dark" aria-labelledby="tb-t">
       <div className="wrap">
-        <div className="tb-intro">
+        <div className="tb-intro reveal">
           <div>
             <div className="eyebrow tb-eyebrow">Order online<i /></div>
             <h2 id="tb-t" className="disp">Build your <em>tray.</em></h2>
@@ -246,7 +246,7 @@ export default function TrayBuilder() {
 
         <div className="tb-grid">
           <div className="tb-steps">
-            <div className="tb-step" role="radiogroup" aria-labelledby={`${idp}-h01`}>
+            <div className="tb-step reveal" style={{ '--i': 0 } as React.CSSProperties} role="radiogroup" aria-labelledby={`${idp}-h01`}>
               <div className="tb-sh"><span className="n">01</span><span id={`${idp}-h01`} className="h2 disp">Pick your package</span><span className="cnt">Selected <b>{s.meals} meals</b></span></div>
               <div className="tb-pk">
                 {ONE_TIME_PACKAGES.map((p) => (
@@ -262,7 +262,7 @@ export default function TrayBuilder() {
               </div>
             </div>
 
-            <div className="tb-step" role="group" aria-labelledby={`${idp}-h02`}>
+            <div className="tb-step reveal" style={{ '--i': 1 } as React.CSSProperties} role="group" aria-labelledby={`${idp}-h02`}>
               <div className="tb-sh"><span className="n">02</span><span id={`${idp}-h02`} className="h2 disp">Choose Proteins</span><span className="cnt"><b>{pad2(s.proteins.length)} of {cap}</b>Proteins</span></div>
               <div className="gl">Protein</div>
               <div className="tb-chips">{MENU_ITEMS.Protein.map((n) => chip('proteins', n))}</div>
@@ -271,7 +271,7 @@ export default function TrayBuilder() {
               <p className="tb-note">{atCap ? <span>You’ve picked the most proteins this package allows. Remove one to swap.</span> : <span>Pick up to {cap} proteins for your {s.meals} meals.</span>}</p>
             </div>
 
-            <div className="tb-step" role="group" aria-labelledby={`${idp}-h03`}>
+            <div className="tb-step reveal" style={{ '--i': 2 } as React.CSSProperties} role="group" aria-labelledby={`${idp}-h03`}>
               <div className="tb-sh"><span className="n">03</span><span id={`${idp}-h03`} className="h2 disp">Choose Sides</span><span className="up">{sides ? `${sides} chosen` : 'Pick any'}</span></div>
               <div className="gl">Vegetable</div>
               <div className="tb-chips">{MENU_ITEMS.Vegetables.map((n) => chip('vegetables', n))}</div>
@@ -280,7 +280,7 @@ export default function TrayBuilder() {
               <p className="tb-note"><span>One vegetable and one starch in every meal.</span>{SHOW_REVIEW_TAGS && <Need>Need from Marsaun: how many side picks per package</Need>}</p>
             </div>
 
-            <div className="tb-step" role="group" aria-labelledby={`${idp}-h04`}>
+            <div className="tb-step reveal" style={{ '--i': 3 } as React.CSSProperties} role="group" aria-labelledby={`${idp}-h04`}>
               <div className="tb-sh"><span className="n">04</span><span id={`${idp}-h04`} className="h2 disp">Pick Sauces</span><span className="up">{s.sauces.length ? `${s.sauces.length} chosen` : 'Pick any'}</span></div>
               <div className="tb-sauce">
                 {SAUCES.map((x) => {
@@ -298,7 +298,7 @@ export default function TrayBuilder() {
               <p className="tb-note"><span>Housemade sauces.</span>{SHOW_REVIEW_TAGS && <Need>Need from Marsaun: sauces per order and any extra cost</Need>}</p>
             </div>
 
-            <div className="tb-step tb-allergy">
+            <div className="tb-step tb-allergy reveal" style={{ '--i': 4 } as React.CSSProperties}>
               <div className="tb-sh"><span className="n">05</span><label htmlFor={`${idp}-allergy`} className="h2 disp">List allergies prior to ordering*</label><span className="up">{s.allergy.length}/{MAX_ALLERGY_NOTE}</span></div>
               <textarea
                 id={`${idp}-allergy`}

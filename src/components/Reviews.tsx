@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { REVIEWS, REVIEW_SUMMARY } from '../config/content'
 import { SHOW_REVIEW_TAGS } from '../config/features'
 import { Need } from './ui'
+import CountUp from '../motion/CountUp'
 
 /**
  * Customer quotes as a native scroll-snap carousel: swipe, trackpad, arrow keys (the track is focusable),
@@ -46,11 +47,11 @@ export default function Reviews() {
   return (
     <section id="reviews" className="sec bone2 reviews" data-theme="light" aria-labelledby="rv-t">
       <div className="wrap">
-        <div className="sec-head">
+        <div className="sec-head reveal">
           <div className="eyebrow rules">Kind words</div>
           <h2 className="disp" id="rv-t">What customers say</h2>
           <p className="rv-score" aria-label={`${REVIEW_SUMMARY.score} stars from ${REVIEW_SUMMARY.count} Google reviews`}>
-            <span aria-hidden="true">{REVIEW_SUMMARY.line}</span>
+            <span aria-hidden="true"><CountUp text={REVIEW_SUMMARY.line} /></span>
           </p>
           {/* PREVIEW ONLY: remove once Marsaun has OK'd publishing these customer quotes. */}
           {SHOW_REVIEW_TAGS && <p><Need>CONFIRM WITH MARSAUN: OK to publish customer quotes</Need></p>}
@@ -59,7 +60,7 @@ export default function Reviews() {
         <div className="rv" role="region" aria-roledescription="carousel" aria-label="Customer quotes">
           <ul className="rv-track" ref={track} tabIndex={0} aria-label="Quotes, scroll sideways or use the arrow keys">
             {REVIEWS.map((r, k) => (
-              <li className="rv-card" key={k} aria-roledescription="slide" aria-label={`${k + 1} of ${n}`}>
+              <li className="rv-card reveal tilt" key={k} aria-roledescription="slide" aria-label={`${k + 1} of ${n}`} style={{ '--i': k % 3 } as React.CSSProperties}>
                 <figure>
                   <span className="rv-mark disp" aria-hidden="true">“</span>
                   <blockquote><p>{r.text}</p></blockquote>
